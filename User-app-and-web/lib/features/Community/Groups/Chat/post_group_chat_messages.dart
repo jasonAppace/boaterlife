@@ -1,0 +1,44 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:hexacom_user/utill/app_constants.dart';
+
+import '../../../../App/dio_service.dart';
+import '../../ChatModels/groupChatMessagesModel.dart';
+
+class GroupChatMessages {
+  var _dioService = DioService.getInstance();
+
+  Future groupChatMessages(String token, String groupID) async {
+    var json = {
+      "group_id": groupID,
+    };
+    try {
+      final response = await _dioService.post(AppConstants.groupChatMessages,
+        options: Options(
+            headers: {
+              HttpHeaders.authorizationHeader: 'Bearer $token',
+              HttpHeaders.contentTypeHeader: "application/json",
+            }),
+        data: jsonEncode(json),
+      );
+      if(response.statusCode == 200){
+        // user found
+        if(response.data["status"] == true){
+          GroupChatMessagesModel Response = GroupChatMessagesModel.fromJson(response.data);
+          return Response;
+        }
+        else {
+          return response.data['data'];
+        }
+      }
+      else{
+        return response.statusMessage;
+      }
+    }
+    catch (e) {
+      dynamic exception= e;
+      return exception.message;
+    }
+  }
+}

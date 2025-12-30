@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "723361840354",
+    "project_id": "boater-s-life",
+    "storage_bucket": "boater-s-life.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723361840354:android:0c3059275a52218029b2bb",
+        "android_client_info": {
+          "package_name": "com.sh.boaterslife"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACKyxHmKR3KHnf-jbxqOy8obJxz8pHY7Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
