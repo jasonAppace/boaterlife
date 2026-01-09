@@ -16,7 +16,8 @@ class WeatherForecastScreen extends StatefulWidget {
   State<WeatherForecastScreen> createState() => _WeatherForecastScreenState();
 }
 
-class _WeatherForecastScreenState extends State<WeatherForecastScreen> with SingleTickerProviderStateMixin {
+class _WeatherForecastScreenState extends State<WeatherForecastScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   Map<String, dynamic>? weatherData;
   bool isLoading = true;
@@ -234,7 +235,10 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> with Sing
     return isLoading
         ? const Center(child: CircularProgressIndicator())
         : weatherData == null
-            ? Center(child: Text(errorMessage.isNotEmpty ? errorMessage : 'No weather data available'))
+            ? Center(
+                child: Text(errorMessage.isNotEmpty
+                    ? errorMessage
+                    : 'No weather data available'))
             : SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -256,7 +260,8 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> with Sing
                           children: [
                             _getCurrentWeatherWidget(),
                             Text(
-                              TemperatureConverterHelper.formatTemperatureF(weatherData!['current']['temperature_2m']),
+                              TemperatureConverterHelper.formatTemperatureF(
+                                  weatherData!['current']['temperature_2m']),
                               style: const TextStyle(
                                 fontSize: 70,
                                 fontWeight: FontWeight.bold,
@@ -289,15 +294,21 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> with Sing
                             const SizedBox(height: 20),
                             // Weather conditions row
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 40),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 40),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   // Wind direction
                                   Column(
                                     children: [
                                       Transform.rotate(
-                                        angle: (weatherData!['current']['wind_direction_10m'] ?? 0) * 3.14159 / 180,
+                                        angle: (weatherData!['current']
+                                                    ['wind_direction_10m'] ??
+                                                0) *
+                                            3.14159 /
+                                            180,
                                         child: const Icon(Icons.navigation),
                                       ),
                                       Text(
@@ -312,7 +323,11 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> with Sing
                                     children: [
                                       const Icon(Icons.water_drop),
                                       Text(
-                                        weatherData!['current']['relative_humidity_2m'] != null ? '${weatherData!['current']['relative_humidity_2m'].round()}%' : '65%',
+                                        weatherData!['current']
+                                                    ['relative_humidity_2m'] !=
+                                                null
+                                            ? '${weatherData!['current']['relative_humidity_2m'].round()}%'
+                                            : '65%',
                                         style: const TextStyle(fontSize: 16),
                                       ),
                                     ],
@@ -355,7 +370,8 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> with Sing
                                 ),
                               ),
                               Text(
-                                formatDateTime(weatherData!['current']['time'], 'MMM d'),
+                                formatDateTime(
+                                    weatherData!['current']['time'], 'MMM d'),
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -377,42 +393,57 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> with Sing
                                 itemCount: 5, // Show next 5 hours
                                 itemBuilder: (context, index) {
                                   // Find the current hour index in the hourly data
-                                  final currentDateTime = DateTime.parse(weatherData!['current']['time']);
-                                  final List<String> timeList = List<String>.from(weatherData!['hourly']['time']);
+                                  final currentDateTime = DateTime.parse(
+                                      weatherData!['current']['time']);
+                                  final List<String> timeList =
+                                      List<String>.from(
+                                          weatherData!['hourly']['time']);
 
                                   // Find the nearest hour index in the hourly data
                                   int currentHourIndex = 0;
                                   for (int i = 0; i < timeList.length; i++) {
-                                    final hourlyTime = DateTime.parse(timeList[i]);
-                                    if (hourlyTime.isAfter(currentDateTime) || hourlyTime.hour == currentDateTime.hour) {
+                                    final hourlyTime =
+                                        DateTime.parse(timeList[i]);
+                                    if (hourlyTime.isAfter(currentDateTime) ||
+                                        hourlyTime.hour ==
+                                            currentDateTime.hour) {
                                       currentHourIndex = i;
                                       break;
                                     }
                                   }
 
                                   // Get the index for this forecast item
-                                  final forecastIndex = currentHourIndex + index;
+                                  final forecastIndex =
+                                      currentHourIndex + index;
                                   if (forecastIndex >= timeList.length) {
-                                    return const SizedBox.shrink(); // Skip if we're out of bounds
+                                    return const SizedBox
+                                        .shrink(); // Skip if we're out of bounds
                                   }
 
                                   // Get forecast data
                                   final forecastTime = timeList[forecastIndex];
-                                  final forecastHour = DateTime.parse(forecastTime).hour;
-                                  final formattedHour = DateFormat('h a').format(DateTime.parse(forecastTime));
+                                  final forecastHour =
+                                      DateTime.parse(forecastTime).hour;
+                                  final formattedHour = DateFormat('h a')
+                                      .format(DateTime.parse(forecastTime));
 
-                                  final forecastTemp = weatherData!['hourly']['temperature_2m'][forecastIndex];
-                                  final forecastIcon = getWeatherIcon(forecastTemp, forecastTime);
+                                  final forecastTemp = weatherData!['hourly']
+                                      ['temperature_2m'][forecastIndex];
+                                  final forecastIcon = getWeatherIcon(
+                                      forecastTemp, forecastTime);
 
                                   return Container(
-                                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 8),
                                     width: 70,
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           index == 0 ? 'Now' : formattedHour,
-                                          style: const TextStyle(fontWeight: FontWeight.w500),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w500),
                                         ),
                                         const SizedBox(height: 12),
                                         Icon(
@@ -422,7 +453,8 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> with Sing
                                         ),
                                         const SizedBox(height: 12),
                                         Text(
-                                          TemperatureConverterHelper.formatTemperatureF(forecastTemp),
+                                          TemperatureConverterHelper
+                                              .formatTemperatureF(forecastTemp),
                                           style: const TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
@@ -461,13 +493,14 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> with Sing
                           ),
                           const SizedBox(height: 8),
                           Container(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 25, vertical: 30),
                             decoration: BoxDecoration(
                               color: Colors.blue.shade50,
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 // Calculate min/max temperature from hourly data for today
                                 _buildMinMaxTemperatureWidget(),
@@ -476,7 +509,8 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> with Sing
                                 Column(
                                   children: [
                                     const Icon(Icons.terrain),
-                                    const Text('Elevation', style: TextStyle(fontSize: 16)),
+                                    const Text('Elevation',
+                                        style: TextStyle(fontSize: 16)),
                                     const SizedBox(height: 4),
                                     Text(
                                       '${weatherData!['elevation']?.toStringAsFixed(0) ?? '0'}m',
@@ -493,7 +527,12 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> with Sing
                                   children: [
                                     const Icon(Icons.air),
                                     // Wind status description based on Beaufort scale
-                                    Text(_getWindDescription(weatherData!['current']['wind_speed_10m'] ?? 0), style: const TextStyle(fontSize: 16)),
+                                    Text(
+                                        _getWindDescription(
+                                            weatherData!['current']
+                                                    ['wind_speed_10m'] ??
+                                                0),
+                                        style: const TextStyle(fontSize: 16)),
                                     const SizedBox(height: 4),
                                     Text(
                                       '${weatherData!['current']['wind_speed_10m']?.round() ?? '0'} km/h',
@@ -647,8 +686,10 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> with Sing
   // Widget to display min/max temperature
   Widget _buildMinMaxTemperatureWidget() {
     // Extract today's hours from the hourly data
-    final List<String> timeList = List<String>.from(weatherData!['hourly']['time']);
-    final List<double> tempList = List<double>.from(weatherData!['hourly']['temperature_2m']);
+    final List<String> timeList =
+        List<String>.from(weatherData!['hourly']['time']);
+    final List<double> tempList =
+        List<double>.from(weatherData!['hourly']['temperature_2m']);
 
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -657,14 +698,18 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> with Sing
     List<double> todayTemps = [];
     for (int i = 0; i < timeList.length; i++) {
       final hourlyTime = DateTime.parse(timeList[i]);
-      if (hourlyTime.year == today.year && hourlyTime.month == today.month && hourlyTime.day == today.day) {
+      if (hourlyTime.year == today.year &&
+          hourlyTime.month == today.month &&
+          hourlyTime.day == today.day) {
         todayTemps.add(tempList[i]);
       }
     }
 
     // Calculate min/max
-    double minTemp = todayTemps.isNotEmpty ? todayTemps.reduce((a, b) => a < b ? a : b) : 0;
-    double maxTemp = todayTemps.isNotEmpty ? todayTemps.reduce((a, b) => a > b ? a : b) : 0;
+    double minTemp =
+        todayTemps.isNotEmpty ? todayTemps.reduce((a, b) => a < b ? a : b) : 0;
+    double maxTemp =
+        todayTemps.isNotEmpty ? todayTemps.reduce((a, b) => a > b ? a : b) : 0;
 
     return Column(
       children: [

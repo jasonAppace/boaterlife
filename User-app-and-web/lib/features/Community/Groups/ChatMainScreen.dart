@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hexacom_user/features/Community/Widgets/extensions.dart';
+import 'package:hexacom_user/utill/color_resources.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
@@ -19,7 +20,8 @@ class ChatMainScreen extends StatefulWidget {
   _ChatMainScreenState createState() => _ChatMainScreenState();
 }
 
-class _ChatMainScreenState extends State<ChatMainScreen> with SingleTickerProviderStateMixin {
+class _ChatMainScreenState extends State<ChatMainScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -50,6 +52,8 @@ class _ChatMainScreenState extends State<ChatMainScreen> with SingleTickerProvid
           top: false,
           bottom: false,
           child: Scaffold(
+            backgroundColor:
+                ColorResources.getHomeScreenBackgroundColor(context),
             appBar: AppBar(
               title: Center(
                 child: TextWidget(
@@ -70,90 +74,121 @@ class _ChatMainScreenState extends State<ChatMainScreen> with SingleTickerProvid
               controller: _tabController,
               children: [
                 // Individual Chat View
-                ListView.separated(
-                  padding: EdgeInsets.only(top: 8),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                type: PageTransitionType.bottomToTop,
-                                child: FeedChatScreen(
-                                  userID: model.allIndividualChatListData?.data?[index].id.toString() ?? "",
-                                  userName: model.allIndividualChatListData?.data?[index].name.toString() ?? "",
-                                  chatType: 'Individual',
-                                )));
-                      },
-                      child: PageHorizontalMargin(
-                        horizontal: 10,
-                        widget: Column(
-                          children: [
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: CachedNetworkImage(
-                                    imageUrl: model.allIndividualChatListData?.data?[index].image ?? "",
-                                    placeholder: (context, url) => const CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) => const Icon(Icons.error),
-                                    fit: BoxFit.cover,
-                                    width: 56,
-                                    height: 56,
+                model.allIndividualChatListData?.data!.length == 0
+                    ? Center(
+                        child: Text("No Messages"),
+                      )
+                    : ListView.separated(
+                        padding: EdgeInsets.only(top: 8),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      type: PageTransitionType.bottomToTop,
+                                      child: FeedChatScreen(
+                                        userID: model.allIndividualChatListData
+                                                ?.data?[index].id
+                                                .toString() ??
+                                            "",
+                                        userName: model
+                                                .allIndividualChatListData
+                                                ?.data?[index]
+                                                .name
+                                                .toString() ??
+                                            "",
+                                        chatType: 'Individual',
+                                      )));
+                            },
+                            child: PageHorizontalMargin(
+                              horizontal: 10,
+                              widget: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 5,
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 3.w,
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                  Row(
                                     children: [
-                                      TextWidget(
-                                        textValue: model.allIndividualChatListData?.data?[index].name ?? "",
-                                        textColor: ColorUtils.black,
-                                        fontFamily: FontUtils.urbanistSemiBold,
-                                        fontSize: 14,
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: CachedNetworkImage(
+                                          imageUrl: model
+                                                  .allIndividualChatListData
+                                                  ?.data?[index]
+                                                  .image ??
+                                              "",
+                                          placeholder: (context, url) =>
+                                              const CircularProgressIndicator(),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                          fit: BoxFit.cover,
+                                          width: 56,
+                                          height: 56,
+                                        ),
                                       ),
-                                      TextWidget(
-                                        textValue: model.allIndividualChatListData?.data?[index].latest?.body ?? "",
-                                        textColor: ColorUtils.hintGrey,
-                                        fontFamily: FontUtils.urbanistRegular,
-                                        fontSize: 14,
+                                      SizedBox(
+                                        width: 3.w,
                                       ),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            TextWidget(
+                                              textValue: model
+                                                      .allIndividualChatListData
+                                                      ?.data?[index]
+                                                      .name ??
+                                                  "",
+                                              textColor: ColorUtils.black,
+                                              fontFamily:
+                                                  FontUtils.urbanistSemiBold,
+                                              fontSize: 14,
+                                            ),
+                                            TextWidget(
+                                              textValue: model
+                                                      .allIndividualChatListData
+                                                      ?.data?[index]
+                                                      .latest
+                                                      ?.body ??
+                                                  "",
+                                              textColor: ColorUtils.hintGrey,
+                                              fontFamily:
+                                                  FontUtils.urbanistRegular,
+                                              fontSize: 14,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      // Column(
+                                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                                      //   children: [
+                                      //     TextWidget(
+                                      //       textValue: "07/21",
+                                      //       textColor: ColorUtils.hintGrey,
+                                      //       fontFamily: FontUtils.urbanistRegular,
+                                      //       fontSize: 14,
+                                      //     ),
+                                      //   ],
+                                      // ),
                                     ],
                                   ),
-                                ),
-                                // Column(
-                                //   crossAxisAlignment: CrossAxisAlignment.start,
-                                //   children: [
-                                //     TextWidget(
-                                //       textValue: "07/21",
-                                //       textColor: ColorUtils.hintGrey,
-                                //       fontFamily: FontUtils.urbanistRegular,
-                                //       fontSize: 14,
-                                //     ),
-                                //   ],
-                                // ),
-                              ],
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                ],
+                              ),
                             ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                          ],
-                        ),
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const Divider();
+                        },
+                        itemCount:
+                            model.allIndividualChatListData?.data?.length ?? 0,
                       ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const Divider();
-                  },
-                  itemCount: model.allIndividualChatListData?.data?.length ?? 0,
-                ),
                 // Group Chat View
                 ListView.separated(
                   padding: EdgeInsets.only(top: 8),
@@ -166,7 +201,10 @@ class _ChatMainScreenState extends State<ChatMainScreen> with SingleTickerProvid
                             PageTransition(
                                 type: PageTransitionType.bottomToTop,
                                 child: FeedChatScreen(
-                                  groupID: model.allGroupChatListData?.data?[index]?.id.toString() ?? "",
+                                  groupID: model.allGroupChatListData
+                                          ?.data?[index]?.id
+                                          .toString() ??
+                                      "",
                                   chatType: "Group",
                                 )));
                       },
@@ -182,9 +220,13 @@ class _ChatMainScreenState extends State<ChatMainScreen> with SingleTickerProvid
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(50),
                                   child: CachedNetworkImage(
-                                    imageUrl: model.allGroupChatListData?.data?[index]?.image ?? "",
-                                    placeholder: (context, url) => const CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                                    imageUrl: model.allGroupChatListData
+                                            ?.data?[index]?.image ??
+                                        "",
+                                    placeholder: (context, url) =>
+                                        const CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
                                     fit: BoxFit.cover,
                                     width: 56,
                                     height: 56,
@@ -195,16 +237,21 @@ class _ChatMainScreenState extends State<ChatMainScreen> with SingleTickerProvid
                                 ),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       TextWidget(
-                                        textValue: model.allGroupChatListData?.data?[index]?.name ?? "",
+                                        textValue: model.allGroupChatListData
+                                                ?.data?[index]?.name ??
+                                            "",
                                         textColor: ColorUtils.black,
                                         fontFamily: FontUtils.urbanistSemiBold,
                                         fontSize: 14,
                                       ),
                                       TextWidget(
-                                        textValue: model.allGroupChatListData?.data?[index]?.description ?? "",
+                                        textValue: model.allGroupChatListData
+                                                ?.data?[index]?.description ??
+                                            "",
                                         textColor: ColorUtils.hintGrey,
                                         fontFamily: FontUtils.urbanistRegular,
                                         fontSize: 14,

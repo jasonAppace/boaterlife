@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hexacom_user/utill/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:hexacom_user/common/models/api_response_model.dart';
@@ -37,6 +38,9 @@ class OnBoardingProvider with ChangeNotifier {
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       _onBoardingList.clear();
       _onBoardingList.addAll(apiResponse.response!.data);
+      if(kDebugMode){
+        print("onboarding list: $_onBoardingList");
+      }
 
     }
     notifyListeners();

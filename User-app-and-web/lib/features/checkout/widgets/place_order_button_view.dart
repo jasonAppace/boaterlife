@@ -24,8 +24,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:universal_html/html.dart' as html;
-import 'dart:convert'as convert;
-
+import 'dart:convert' as convert;
 
 class PlaceOrderButtonView extends StatelessWidget {
   final double? amount;
@@ -40,13 +39,19 @@ class PlaceOrderButtonView extends StatelessWidget {
   final String rate_id;
   final String carrier_id;
 
-  const PlaceOrderButtonView({
-    super.key, required this.amount, required this.deliveryCharge,
-    required this.orderType, required this.kmWiseCharge,
-    required this.cartList, required this.orderNote, this.scrollController, this.dropdownKey,
-    required this.shippment_id, required this.rate_id, required this.carrier_id
-  });
-
+  const PlaceOrderButtonView(
+      {super.key,
+      required this.amount,
+      required this.deliveryCharge,
+      required this.orderType,
+      required this.kmWiseCharge,
+      required this.cartList,
+      required this.orderNote,
+      this.scrollController,
+      this.dropdownKey,
+      required this.shippment_id,
+      required this.rate_id,
+      required this.carrier_id});
 
   void _openDropdown() {
     final dropdownContext = dropdownKey?.currentContext;
@@ -62,6 +67,7 @@ class PlaceOrderButtonView extends StatelessWidget {
           }
         });
       }
+
       searchGestureDetector(dropdownContext);
 
       detector?.onTap?.call();
@@ -70,131 +76,177 @@ class PlaceOrderButtonView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AddressProvider locationProvider = Provider.of<AddressProvider>(context, listen: false);
-    final ProfileProvider profileProvider = Provider.of<ProfileProvider>(context, listen: false);
-    final AuthProvider authProvider = Provider.of<AuthProvider>(Get.context!, listen: false);
+    final AddressProvider locationProvider =
+        Provider.of<AddressProvider>(context, listen: false);
+    final ProfileProvider profileProvider =
+        Provider.of<ProfileProvider>(context, listen: false);
+    final AuthProvider authProvider =
+        Provider.of<AuthProvider>(Get.context!, listen: false);
     bool selfPickup = orderType == 'self_pickup';
-    final List<Branches> branches = Provider.of<SplashProvider>(context, listen: false).configModel!.branches ?? [];
+    final List<Branches> branches =
+        Provider.of<SplashProvider>(context, listen: false)
+                .configModel!
+                .branches ??
+            [];
     final Size size = MediaQuery.of(context).size;
 
-
-    return Consumer<CheckoutProvider>(
-        builder: (context, checkoutProvider, _) {
-          return Container(
-            width: Dimensions.webScreenWidth,
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-            child: Consumer<OrderProvider>(
-              builder: (context, orderProvider, _) {
-                return CustomButtonWidget(isLoading: orderProvider.isLoading, btnTxt: getTranslated('confirm_order', context), onTap: () async {
-                  if(amount! < Provider.of<SplashProvider>(context, listen: false).configModel!.minimumOrderValue!) {
-                    showCustomSnackBar('${getTranslated('minimum_order_amount_is', context)} ${Provider.of<SplashProvider>(context, listen: false).configModel!.minimumOrderValue}', context);
-                  }else if(checkoutProvider.selectedPaymentMethod == null){
-                    if(!ResponsiveHelper.isMobile(context)){
-                      showDialog(
-                        context: context,
-                        builder: (con) => const PaymentMethodBottomSheetWidget(),
-                      );
-                    }else{
-                      showModalBottomSheet(
-                        context: context, isScrollControlled: true, backgroundColor: Colors.transparent,
-                        builder: (con) => const PaymentMethodBottomSheetWidget(),
-                      );
-                    }
-                
-                  } else if(!selfPickup && (locationProvider.addressList == null || locationProvider.addressList!.isEmpty || checkoutProvider.orderAddressIndex < 0)) {
-                    showCustomSnackBar(getTranslated('select_an_address', context), context);
-                  }
-                  // else if (!selfPickup && kmWiseCharge && checkoutProvider.distance == -1) {
-                  //   showCustomSnackBar(getTranslated('delivery_fee_not_set_yet', context), context);
-                  // }
-                  else if((CheckOutHelper.getDeliveryChargeType(context) == DeliveryChargeType.area.name) && (orderProvider.selectedAreaID == null) && !selfPickup){
-                    await scrollController?.animateTo(ResponsiveHelper.isDesktop(context) ? size.height * 0.08 : 0, duration: const Duration(milliseconds: 100), curve: Curves.ease);
-                    _openDropdown();
-                  }else {
-                    List<Cart> carts = [];
-                    for (int index = 0; index < cartList.length; index++) {
-                      CartModel cart = cartList[index]!;
-                      carts.add(Cart(
-                        cart.product!.id.toString(), cart.discountedPrice.toString(), '', cart.variation,
-                        cart.discountAmount, cart.quantity, cart.taxAmount,
-                      ));
-                    }
-                    PlaceOrderModel placeOrderBody = PlaceOrderModel(
-                      cart: carts, couponDiscountAmount: Provider.of<CouponProvider>(context, listen: false).discount, couponDiscountTitle: '',
-                      deliveryAddressId: !selfPickup ? locationProvider.addressList![checkoutProvider.orderAddressIndex].id : 0,
-                      orderAmount: amount!+ (deliveryCharge ?? 0),
-                      orderNote: orderNote ?? '', orderType: orderType,
-                      paymentMethod: checkoutProvider.selectedPaymentMethod!.getWay!,
-                      couponCode: Provider.of<CouponProvider>(context, listen: false).coupon?.code,
-                      branchId: branches[checkoutProvider.branchIndex].id,
-                      distance: selfPickup ? 0 : checkoutProvider.distance,
-                      selectedDeliveryArea: orderProvider.selectedAreaID,
-                      shippment_id: shippment_id,
-                      rate_id: rate_id,
-                      carrier_id: carrier_id,
+    return Consumer<CheckoutProvider>(builder: (context, checkoutProvider, _) {
+      return Container(
+        width: Dimensions.webScreenWidth,
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+        child: Consumer<OrderProvider>(builder: (context, orderProvider, _) {
+          return CustomButtonWidget(
+              isLoading: orderProvider.isLoading,
+              btnTxt: getTranslated('confirm_order', context),
+              onTap: () async {
+                if (amount! <
+                    Provider.of<SplashProvider>(context, listen: false)
+                        .configModel!
+                        .minimumOrderValue!) {
+                  showCustomSnackBar(
+                      '${getTranslated('minimum_order_amount_is', context)} ${Provider.of<SplashProvider>(context, listen: false).configModel!.minimumOrderValue}',
+                      context);
+                } else if (checkoutProvider.selectedPaymentMethod == null) {
+                  if (!ResponsiveHelper.isMobile(context)) {
+                    showDialog(
+                      context: context,
+                      builder: (con) => const PaymentMethodBottomSheetWidget(),
                     );
-                    if(placeOrderBody.paymentMethod == 'cash_on_delivery'){
-
-                      print('------------(PLACE ORDER MODEL)-------------${placeOrderBody.toJson().toString()}');
-
-                      orderProvider.placeOrder(context, placeOrderBody, _callback);
-                    }else{
-                      String? hostname = html.window.location.hostname;
-                      String protocol = html.window.location.protocol;
-                      String port = html.window.location.port;
-                      String isGuest = authProvider.isLoggedIn() ? "0" : "1";
-                      final String placeOrder =  convert.base64Url.encode(convert.utf8.encode(convert.jsonEncode(placeOrderBody.toJson())));
-                
-                      String url = "customer_id=${profileProvider.userInfoModel?.id??""}&&is_guest=$isGuest"
-                          "&&callback=${AppConstants.baseUrl}${RouteHelper.orderSuccessScreen}&&order_amount=${(placeOrderBody.orderAmount! + (deliveryCharge ?? 0)).toStringAsFixed(2)}";
-                
-                      String webUrl = "customer_id=${profileProvider.userInfoModel?.id??""}&&is_guest=$isGuest"
-                          "&&callback=$protocol//$hostname${kDebugMode ? ':$port' : ''}${RouteHelper.orderWebPayment}&&order_amount=${(amount! + (deliveryCharge ?? 0)).toStringAsFixed(2)}&&status=";
-                
-                      String tokenUrl = convert.base64Encode(convert.utf8.encode(ResponsiveHelper.isWeb() ? webUrl : url));
-                      String selectedUrl = '${AppConstants.baseUrl}/payment-mobile?token=$tokenUrl&&payment_method=${checkoutProvider.selectedPaymentMethod?.getWay}&&payment_platform=${kIsWeb ? 'web' : 'app'}';
-                
-                
-                      orderProvider.clearPlaceOrderData().then((_) => orderProvider.setPlaceOrderData(placeOrder).then((value) {
-                        if(ResponsiveHelper.isWeb()){
-
-                          html.window.open(selectedUrl,"_self");
-
-                        }else{
-                          RouteHelper.getPaymentRoute(context, url: selectedUrl, action: RouteAction.push);
-                        }
-                
-                      }));
-                    }
+                  } else {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (con) => const PaymentMethodBottomSheetWidget(),
+                    );
                   }
-                });
-              }
-            ),
-          );
-        }
-    );
+                } else if (!selfPickup &&
+                    (locationProvider.addressList == null ||
+                        locationProvider.addressList!.isEmpty ||
+                        checkoutProvider.orderAddressIndex < 0)) {
+                  showCustomSnackBar(
+                      getTranslated('select_an_address', context), context);
+                }
+                // else if (!selfPickup && kmWiseCharge && checkoutProvider.distance == -1) {
+                //   showCustomSnackBar(getTranslated('delivery_fee_not_set_yet', context), context);
+                // }
+                else if ((CheckOutHelper.getDeliveryChargeType(context) ==
+                        DeliveryChargeType.area.name) &&
+                    (orderProvider.selectedAreaID == null) &&
+                    !selfPickup) {
+                  await scrollController?.animateTo(
+                      ResponsiveHelper.isDesktop(context)
+                          ? size.height * 0.08
+                          : 0,
+                      duration: const Duration(milliseconds: 100),
+                      curve: Curves.ease);
+                  _openDropdown();
+                } else {
+                  List<Cart> carts = [];
+                  for (int index = 0; index < cartList.length; index++) {
+                    CartModel cart = cartList[index]!;
+                    carts.add(Cart(
+                      cart.product!.id.toString(),
+                      cart.discountedPrice.toString(),
+                      '',
+                      cart.variation,
+                      cart.discountAmount,
+                      cart.quantity,
+                      cart.taxAmount,
+                    ));
+                  }
+                  PlaceOrderModel placeOrderBody = PlaceOrderModel(
+                    cart: carts,
+                    couponDiscountAmount:
+                        Provider.of<CouponProvider>(context, listen: false)
+                            .discount,
+                    couponDiscountTitle: '',
+                    deliveryAddressId: !selfPickup
+                        ? locationProvider
+                            .addressList![checkoutProvider.orderAddressIndex].id
+                        : 0,
+                    orderAmount: amount! + (deliveryCharge ?? 0),
+                    orderNote: orderNote ?? '',
+                    orderType: orderType,
+                    paymentMethod:
+                        checkoutProvider.selectedPaymentMethod!.getWay!,
+                    couponCode:
+                        Provider.of<CouponProvider>(context, listen: false)
+                            .coupon
+                            ?.code,
+                    branchId: branches[checkoutProvider.branchIndex].id,
+                    distance: selfPickup ? 0 : checkoutProvider.distance,
+                    selectedDeliveryArea: orderProvider.selectedAreaID,
+                    shippment_id: shippment_id,
+                    rate_id: rate_id,
+                    carrier_id: carrier_id,
+                  );
+                  if (placeOrderBody.paymentMethod == 'cash_on_delivery') {
+                    print(
+                        '------------(PLACE ORDER MODEL)-------------${placeOrderBody.toJson().toString()}');
 
+                    orderProvider.placeOrder(
+                        context, placeOrderBody, _callback);
+                  } else {
+                    String? hostname = html.window.location.hostname;
+                    String protocol = html.window.location.protocol;
+                    String port = html.window.location.port;
+                    String isGuest = authProvider.isLoggedIn() ? "0" : "1";
+                    final String placeOrder = convert.base64Url.encode(convert
+                        .utf8
+                        .encode(convert.jsonEncode(placeOrderBody.toJson())));
+
+                    String url =
+                        "customer_id=${profileProvider.userInfoModel?.id ?? ""}&&is_guest=$isGuest"
+                        "&&callback=${AppConstants.baseUrl}${RouteHelper.orderSuccessScreen}&&order_amount=${(placeOrderBody.orderAmount! + (deliveryCharge ?? 0)).toStringAsFixed(2)}";
+
+                    String webUrl =
+                        "customer_id=${profileProvider.userInfoModel?.id ?? ""}&&is_guest=$isGuest"
+                        "&&callback=$protocol//$hostname${kDebugMode ? ':$port' : ''}${RouteHelper.orderWebPayment}&&order_amount=${(amount! + (deliveryCharge ?? 0)).toStringAsFixed(2)}&&status=";
+
+                    String tokenUrl = convert.base64Encode(convert.utf8
+                        .encode(ResponsiveHelper.isWeb() ? webUrl : url));
+                    String selectedUrl =
+                        '${AppConstants.baseUrl}/payment-mobile?token=$tokenUrl&&payment_method=${checkoutProvider.selectedPaymentMethod?.getWay}&&payment_platform=${kIsWeb ? 'web' : 'app'}';
+
+                    orderProvider.clearPlaceOrderData().then((_) =>
+                        orderProvider
+                            .setPlaceOrderData(placeOrder)
+                            .then((value) {
+                          if (ResponsiveHelper.isWeb()) {
+                            html.window.open(selectedUrl, "_self");
+                          } else {
+                            RouteHelper.getPaymentRoute(context,
+                                url: selectedUrl, action: RouteAction.push);
+                          }
+                        }));
+                  }
+                }
+              });
+        }),
+      );
+    });
   }
 
-  void _callback(BuildContext context, bool isSuccess, String message, String orderID) async {
+  void _callback(BuildContext context, bool isSuccess, String message,
+      String orderID) async {
+    final CheckoutProvider checkoutProvider =
+        Provider.of<CheckoutProvider>(Get.context!, listen: false);
 
-    final CheckoutProvider checkoutProvider = Provider.of<CheckoutProvider>(Get.context!, listen: false);
-
-    if(isSuccess) {
+    if (isSuccess) {
       Provider.of<CartProvider>(Get.context!, listen: false).clearCartList();
 
-      if(checkoutProvider.selectedPaymentMethod?.getWay == 'cash_on_delivery') {
+      if (checkoutProvider.selectedPaymentMethod?.getWay ==
+          'cash_on_delivery') {
         // if(ResponsiveHelper.isWeb()) {
         //   Navigator.pop(Get.context!);
         // }
-        RouteHelper.getOrderSuccessScreen(context, orderID, "success", action: RouteAction.push);
+        RouteHelper.getOrderSuccessScreen(context, orderID, "success",
+            action: RouteAction.push);
       }
-
-    }else {
+    } else {
       showCustomSnackBar(message, Get.context!, isError: true);
-
     }
   }
-
 }

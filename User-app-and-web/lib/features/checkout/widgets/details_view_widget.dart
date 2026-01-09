@@ -29,21 +29,20 @@ class DetailsViewWidget extends StatefulWidget {
   final String carrierShipmentID;
   final ValueNotifier<Carrier?>? carrierNotifier;
 
-  const DetailsViewWidget({
-    super.key,
-    required this.kmWiseCharge,
-    required this.selfPickup,
-    required this.deliveryCharge,
-    required this.orderNoteController,
-    required this.amount,
-    required this.cartList,
-    required this.orderType,
-    required this.carierSelected,
-    required this.carrierShipmentID,
-    this.carrierNotifier,
-    this.scrollController,
-    this.dropdownKey
-  });
+  const DetailsViewWidget(
+      {super.key,
+      required this.kmWiseCharge,
+      required this.selfPickup,
+      required this.deliveryCharge,
+      required this.orderNoteController,
+      required this.amount,
+      required this.cartList,
+      required this.orderType,
+      required this.carierSelected,
+      required this.carrierShipmentID,
+      this.carrierNotifier,
+      this.scrollController,
+      this.dropdownKey});
 
   @override
   State<DetailsViewWidget> createState() => _DetailsViewWidgetState();
@@ -136,32 +135,52 @@ class _DetailsViewWidgetState extends State<DetailsViewWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const PaymentInfoWidget(),
-
         CustomShadowWidget(
-          margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeSmall),
-          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeSmall),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(getTranslated('add_delivery_note', context), style: rubikMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
-            const SizedBox(height: Dimensions.paddingSizeSmall),
-
-            CustomTextFieldWidget(
-              fillColor: Theme.of(context).canvasColor,
-              isShowBorder: true,
-              controller: widget.orderNoteController,
-              hintText: getTranslated('type', context),
-              maxLines: 5,
-              inputType: TextInputType.multiline,
-              inputAction: TextInputAction.newline,
-              capitalization: TextCapitalization.sentences,
-            ),
-          ]),
-        ),
-
-        CustomShadowWidget(
-          margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeSmall),
-          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeDefault),
+          margin: const EdgeInsets.symmetric(
+              horizontal: Dimensions.paddingSizeSmall,
+              vertical: Dimensions.paddingSizeSmall),
+          padding: const EdgeInsets.symmetric(
+              horizontal: Dimensions.paddingSizeSmall,
+              vertical: Dimensions.paddingSizeSmall),
+          boxShadow: BoxShadow(
+              offset: const Offset(0, 0),
+              blurRadius: 0,
+              color: Colors.transparent),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
+            padding: const EdgeInsets.all(8.0),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(getTranslated('add_delivery_note', context),
+                  style:
+                      rubikBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
+              CustomTextFieldWidget(
+                // fillColor: Colors.white,
+                isShowBorder: true,
+                controller: widget.orderNoteController,
+                hintText: getTranslated('type', context),
+                maxLines: 5,
+                inputType: TextInputType.multiline,
+                inputAction: TextInputAction.newline,
+                capitalization: TextCapitalization.sentences,
+              ),
+            ]),
+          ),
+        ),
+        CustomShadowWidget(
+          margin: const EdgeInsets.symmetric(
+              horizontal: Dimensions.paddingSizeSmall,
+              vertical: Dimensions.paddingSizeSmall),
+          padding: const EdgeInsets.symmetric(
+              horizontal: Dimensions.paddingSizeSmall,
+              vertical: Dimensions.paddingSizeDefault),
+          boxShadow: BoxShadow(
+              offset: const Offset(0, 0),
+              blurRadius: 0,
+              color: Colors.transparent),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: Dimensions.paddingSizeSmall),
             child: Column(children: [
               CartItemWidget(
                 title: getTranslated('subtotal', context),
@@ -169,92 +188,95 @@ class _DetailsViewWidgetState extends State<DetailsViewWidget> {
                 style: rubikMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
               ),
               const SizedBox(height: 10),
-
-              if(!widget.selfPickup)...[
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          getTranslated('delivery_fee', context),
-                          style: rubikRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
-                        ),
-                        if (_currentCarrier != null) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            _currentCarrier!.servicelevelName,
-                            style: rubikRegular.copyWith(
-                              fontSize: Dimensions.fontSizeSmall,
-                              color: Colors.grey[600],
+              if (!widget.selfPickup) ...[
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              getTranslated('delivery_fee', context),
+                              style: rubikMedium.copyWith(
+                                  fontSize: Dimensions.fontSizeLarge),
                             ),
-                          ),
-                        ],
-                        // Debug info (remove in production)
-                        if (_deliveryFee == 0.0) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            'Debug: Carrier null: ${_currentCarrier == null}, Amount: ${_currentCarrier?.amount}',
-                            style: TextStyle(fontSize: 10, color: Colors.red),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  CustomDirectionalityWidget(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          '(+) ${PriceConverterHelper.convertPrice(_deliveryFee)}',
-                          style: rubikRegular.copyWith(
-                            fontSize: Dimensions.fontSizeLarge,
-                            // Highlight if zero for debugging
-                            color: _deliveryFee == 0.0 ? Colors.red : null,
-                          ),
+                            if (_currentCarrier != null) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                _currentCarrier!.servicelevelName,
+                                style: rubikRegular.copyWith(
+                                  fontSize: Dimensions.fontSizeSmall,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                            // Debug info (remove in production)
+                            if (_deliveryFee == 0.0) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                'Debug: Carrier null: ${_currentCarrier == null}, Amount: ${_currentCarrier?.amount}',
+                                style:
+                                    TextStyle(fontSize: 10, color: Colors.red),
+                              ),
+                            ],
+                          ],
                         ),
-                        if (_currentCarrier != null) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            'Est. ${_currentCarrier!.estimatedDays} day${_currentCarrier!.estimatedDays > 1 ? 's' : ''}',
-                            style: rubikRegular.copyWith(
-                              fontSize: Dimensions.fontSizeSmall,
-                              color: Colors.grey[600],
+                      ),
+                      CustomDirectionalityWidget(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              '(+) ${PriceConverterHelper.convertPrice(_deliveryFee)}',
+                              style: rubikRegular.copyWith(
+                                fontSize: Dimensions.fontSizeLarge,
+                                // Highlight if zero for debugging
+                                color: _deliveryFee == 0.0 ? Colors.red : null,
+                              ),
                             ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ]),
+                            if (_currentCarrier != null) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                'Est. ${_currentCarrier!.estimatedDays} day${_currentCarrier!.estimatedDays > 1 ? 's' : ''}',
+                                style: rubikRegular.copyWith(
+                                  fontSize: Dimensions.fontSizeSmall,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ]),
               ],
-
               const Padding(
-                padding: EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
+                padding:
+                    EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
                 child: Divider(),
               ),
-
               CartItemWidget(
                 title: getTranslated('total_amount', context),
                 subTitle: PriceConverterHelper.convertPrice(_totalAmount),
-                style: rubikMedium.copyWith(fontSize: Dimensions.fontSizeExtraLarge),
+                style:
+                    rubikSemiBold.copyWith(fontSize: Dimensions.fontSizeLarge),
               ),
-
-              if(ResponsiveHelper.isDesktop(context)) const SizedBox(height: Dimensions.paddingSizeDefault),
-
-              if(ResponsiveHelper.isDesktop(context)) PlaceOrderButtonView(
-                amount: widget.amount,
-                deliveryCharge: _deliveryFee,
-                orderType: widget.orderType,
-                kmWiseCharge: widget.kmWiseCharge,
-                cartList: widget.cartList,
-                orderNote: widget.orderNoteController.text,
-                scrollController: widget.scrollController,
-                dropdownKey: widget.dropdownKey,
-                shippment_id: widget.carrierShipmentID,
-                rate_id: _currentCarrier?.rateId ?? '',
-                carrier_id: _currentCarrier?.carrierAccount ?? '',
-              )
+              if (ResponsiveHelper.isDesktop(context))
+                const SizedBox(height: Dimensions.paddingSizeDefault),
+              if (ResponsiveHelper.isDesktop(context))
+                PlaceOrderButtonView(
+                  amount: widget.amount,
+                  deliveryCharge: _deliveryFee,
+                  orderType: widget.orderType,
+                  kmWiseCharge: widget.kmWiseCharge,
+                  cartList: widget.cartList,
+                  orderNote: widget.orderNoteController.text,
+                  scrollController: widget.scrollController,
+                  dropdownKey: widget.dropdownKey,
+                  shippment_id: widget.carrierShipmentID,
+                  rate_id: _currentCarrier?.rateId ?? '',
+                  carrier_id: _currentCarrier?.carrierAccount ?? '',
+                )
             ]),
           ),
         ),
@@ -282,7 +304,8 @@ class CarrierDebugWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('DEBUG INFO:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+          Text('DEBUG INFO:',
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
           Text('Carrier: ${carrier != null ? 'Not null' : 'NULL'}'),
           if (carrier != null) ...[
             Text('Amount: ${carrier!.amount}'),

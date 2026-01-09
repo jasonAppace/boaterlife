@@ -1,4 +1,3 @@
-
 import 'package:hexacom_user/common/widgets/custom_app_bar_widget.dart';
 import 'package:hexacom_user/utill/styles.dart';
 import 'package:flutter/material.dart';
@@ -31,8 +30,12 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ResponsiveHelper.isDesktop(context) ? const CustomAppBarWidget() : null,
-      body: SafeArea(child: Center(child: SizedBox(
+      appBar: ResponsiveHelper.isDesktop(context)
+          ? const CustomAppBarWidget()
+          : null,
+      body: SafeArea(
+          child: Center(
+              child: SizedBox(
         width: Dimensions.webScreenWidth,
         child: Consumer<SearchProvider>(
           builder: (context, searchProvider, child) => Column(
@@ -40,38 +43,52 @@ class _SearchScreenState extends State<SearchScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  boxShadow: [BoxShadow(
-                    color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.05),
-                    offset: const Offset(0, 2),
-                    blurRadius: 30,
-                  )]
-                ),
+                    color: Theme.of(context).cardColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .color!
+                            .withOpacity(0.05),
+                        offset: const Offset(0, 2),
+                        blurRadius: 30,
+                      )
+                    ]),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Dimensions.paddingSizeLarge),
                   child: Column(children: [
                     const SizedBox(height: Dimensions.paddingSizeDefault),
                     Row(children: [
-                      Expanded(child: Container(
+                      Expanded(
+                          child: Container(
                         height: 45,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Theme.of(context).hintColor.withOpacity(0.2), width: 1),
-                          borderRadius: BorderRadius.circular(40),
+                          border: Border.all(
+                              color:
+                                  Theme.of(context).hintColor.withOpacity(0.2),
+                              width: 1),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(40),
+                          borderRadius: BorderRadius.circular(10),
                           child: CustomTextFieldWidget(
-                            fillColor: Theme.of(context).primaryColor.withOpacity(0.04),
-                            hintText: getTranslated('search_for_products', context),
+                            fillColor: Theme.of(context).cardColor,
+                            hintText:
+                                getTranslated('search_for_products', context),
                             isShowPrefixIcon: true,
-                            prefixAssetImageColor: Theme.of(context).primaryColor,
+                            prefixAssetImageColor:
+                                Theme.of(context).primaryColor,
                             prefixAssetUrl: Images.search,
                             onSuffixTap: () {
                               if (_searchController.text.isNotEmpty) {
-                                searchProvider.saveSearchAddress(_searchController.text);
+                                searchProvider
+                                    .saveSearchAddress(_searchController.text);
 
-                                RouteHelper.getSearchResultRoute(context, text: _searchController.text, action: RouteAction.push);
-
+                                RouteHelper.getSearchResultRoute(context,
+                                    text: _searchController.text,
+                                    action: RouteAction.push);
                               }
                             },
                             controller: _searchController,
@@ -79,19 +96,25 @@ class _SearchScreenState extends State<SearchScreen> {
                             isIcon: true,
                             onSubmit: (text) {
                               if (_searchController.text.isNotEmpty) {
-                                searchProvider.saveSearchAddress(_searchController.text);
-                                RouteHelper.getSearchResultRoute(context, text: _searchController.text, action: RouteAction.push);
+                                searchProvider
+                                    .saveSearchAddress(_searchController.text);
+                                RouteHelper.getSearchResultRoute(context,
+                                    text: _searchController.text,
+                                    action: RouteAction.push);
                               }
                             },
                           ),
                         ),
                       )),
-
                       IconButton(
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        icon: Icon(Icons.close, color: Theme.of(context).disabledColor, size: 25, ),
+                        icon: Icon(
+                          Icons.close,
+                          color: Theme.of(context).disabledColor,
+                          size: 25,
+                        ),
                       ),
                     ]),
                     const SizedBox(height: 10),
@@ -100,65 +123,73 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               const SizedBox(height: Dimensions.paddingSizeDefault),
 
-              if(searchProvider.historyList.isNotEmpty) Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      getTranslated('recent_search', context),
-                      style: rubikMedium,
-                    ),
-
-                    searchProvider.historyList.isNotEmpty
-                        ? TextButton(
-                        onPressed: searchProvider.clearSearchAddress,
-                        child: Text(
-                          getTranslated('remove_all', context),
-                          style: rubikRegular.copyWith(color: Theme.of(context).colorScheme.error),
-                        ))
-                        : const SizedBox.shrink(),
-                  ],
+              if (searchProvider.historyList.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Dimensions.paddingSizeLarge),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        getTranslated('recent_search', context),
+                        style: rubikMedium,
+                      ),
+                      searchProvider.historyList.isNotEmpty
+                          ? TextButton(
+                              onPressed: searchProvider.clearSearchAddress,
+                              child: Text(
+                                getTranslated('remove_all', context),
+                                style: rubikRegular.copyWith(
+                                    color: Theme.of(context).colorScheme.error),
+                              ))
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
                 ),
-              ),
 
               // for recent search list section
-              Expanded(child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
+              Expanded(
+                  child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimensions.paddingSizeLarge),
                 child: ListView.builder(
                   itemCount: searchProvider.historyList.length,
                   physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) => InkWell(
                     onTap: () {
-
-                      RouteHelper.getSearchResultRoute(context, text: searchProvider.historyList[index], action: RouteAction.push);
-
+                      RouteHelper.getSearchResultRoute(context,
+                          text: searchProvider.historyList[index],
+                          action: RouteAction.push);
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                      padding:
+                          const EdgeInsets.all(Dimensions.paddingSizeSmall),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.history, size: 20, color: Theme.of(context).hintColor),
+                              Icon(Icons.history,
+                                  size: 20, color: Theme.of(context).hintColor),
                               const SizedBox(width: 13),
                               Text(
                                 searchProvider.historyList[index],
-                                style: rubikMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
+                                style: rubikMedium.copyWith(
+                                    fontSize: Dimensions.fontSizeSmall),
                               )
                             ],
                           ),
                           Transform.rotate(
                               angle: 45,
-                              child: Icon(Icons.arrow_upward, size: 20, color: Theme.of(context).hintColor)),
+                              child: Icon(Icons.arrow_upward,
+                                  size: 20,
+                                  color: Theme.of(context).hintColor)),
                         ],
                       ),
                     ),
                   ),
                 ),
               ))
-
             ],
           ),
         ),

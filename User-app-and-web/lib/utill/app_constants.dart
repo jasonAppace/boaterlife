@@ -7,8 +7,9 @@ class AppConstants {
   static const double appVersion = 1.2;
   static const AppMode appMode = AppMode.release;
   static const String fontFamily = 'Exo';
-  static const String baseUrl = 'https://boaterslife.com/dashboard';
-  //static const String baseUrl = 'https://pro-fixer.demoappprojects.com/boatersLife';
+  // static const String baseUrl = 'https://boaterslife.com/dashboard';
+  static const String baseUrl =
+      'https://pro-fixer.demoappprojects.com/boatersLife';
   //static const String baseUrl = 'https://79ee-110-93-228-168.ngrok-free.app';
   static const String categoryUri = '/api/v1/categories';
   static const String bannerUri = '/api/v1/banners';
@@ -33,7 +34,8 @@ class AppConstants {
   static const String tokenUri = '/api/v1/customer/cm-firebase-token';
   static const String placeOrderUri = '/api/v1/customer/order/place';
   static const String addressListUri = '/api/v1/customer/address/list';
-  static const String removeAddressUri = '/api/v1/customer/address/delete?address_id=';
+  static const String removeAddressUri =
+      '/api/v1/customer/address/delete?address_id=';
   static const String addAddressUri = '/api/v1/customer/address/add';
   static const String updateAddressUri = '/api/v1/customer/address/update/';
   static const String offerProductUri = '/api/v1/products/discounted';
@@ -51,11 +53,14 @@ class AppConstants {
   static const String searchUri = '/api/v1/products/search';
   static const String reviewUri = '/api/v1/products/reviews/submit';
   static const String productDetailsUri = '/api/v1/products/details/';
-  static const String lastLocationUri = '/api/v1/delivery-man/last-location?order_id=';
-  static const String deliverManReviewUri = '/api/v1/delivery-man/reviews/submit';
+  static const String lastLocationUri =
+      '/api/v1/delivery-man/last-location?order_id=';
+  static const String deliverManReviewUri =
+      '/api/v1/delivery-man/reviews/submit';
   static const String productReviewUri = '/api/v1/products/reviews/';
   static const String distanceMatrixUri = '/api/v1/mapapi/distance-api';
-  static const String searchLocationUri = '/api/v1/mapapi/place-api-autocomplete';
+  static const String searchLocationUri =
+      '/api/v1/mapapi/place-api-autocomplete';
   static const String placeDetailsUri = '/api/v1/mapapi/place-api-details';
   static const String geocodeUri = '/api/v1/mapapi/geocode-api';
   static const String emailSubscribeUri = '/api/v1/subscribe-newsletter';
@@ -68,12 +73,12 @@ class AppConstants {
   static const String featureCategory = '/api/v1/categories/featured';
   static const String reorderProductList = '/api/v1/customer/reorder/products';
   static const String registerWithOtp = '/api/v1/auth/registration-with-otp';
-  static const String registerWithSocialMedia = '/api/v1/auth/registration-with-social-media';
-  static const String verifyProfileInfo = '/api/v1/customer/verify-profile-info';
+  static const String registerWithSocialMedia =
+      '/api/v1/auth/registration-with-social-media';
+  static const String verifyProfileInfo =
+      '/api/v1/customer/verify-profile-info';
   static const String getDeliveryInfo = '/api/v1/config/delivery-fee';
   static const String firebaseAuthVerify = '/api/v1/auth/firebase-auth-verify';
-
-
 
   // static const String communityList = "/api/v1/post/view/all";
   // static const String communityListAdd = "/api/v1/post/add/new";
@@ -82,12 +87,17 @@ class AppConstants {
   // static const String communityPostDetail = "/api/v1/post/detail";
 
   //MESSAGING
-  static const String getDeliverymanMessageUri = '/api/v1/customer/message/get-order-message';
-  static const String getAdminMessageUrl = '/api/v1/customer/message/get-admin-message';
-  static const String sendMessageToAdminUrl = '/api/v1/customer/message/send-admin-message';
-  static const String sendMessageToDeliveryManUrl = '/api/v1/customer/message/send/customer';
+  static const String getDeliverymanMessageUri =
+      '/api/v1/customer/message/get-order-message';
+  static const String getAdminMessageUrl =
+      '/api/v1/customer/message/get-admin-message';
+  static const String sendMessageToAdminUrl =
+      '/api/v1/customer/message/send-admin-message';
+  static const String sendMessageToDeliveryManUrl =
+      '/api/v1/customer/message/send/customer';
   static const String addGuest = '/api/v1/guest/add';
-  static const String existingAccountCheck = '/api/v1/auth/existing-account-check';
+  static const String existingAccountCheck =
+      '/api/v1/auth/existing-account-check';
 
   // Shared Key
   static const String theme = 'theme';
@@ -107,7 +117,7 @@ class AppConstants {
   static const String guestId = 'guest_id';
 
   static String createGroup = "/api/v1/create/group";
-  static String myGroups  = "/api/v1/my/groups";
+  static String myGroups = "/api/v1/my/groups";
   static String joinedGroups = "/api/v1/joined/groups";
   static String groupDetail = "/api/v1/group/info/";
   static String groupMembers = "/api/v1/group/members/";
@@ -143,9 +153,16 @@ class AppConstants {
   static const String pusherApiKey = '782aa16a8f74fb9fb636';
   static const String pusherCluster = 'ap2';
 
-
   static List<LanguageModel> languages = [
-    LanguageModel(imageUrl: Images.unitedKingdom, languageName: 'English', countryCode: 'US', languageCode: 'en'),
-    LanguageModel(imageUrl: Images.arabic, languageName: 'Arabic', countryCode: 'SA', languageCode: 'ar'),
+    LanguageModel(
+        imageUrl: Images.unitedKingdom,
+        languageName: 'English',
+        countryCode: 'US',
+        languageCode: 'en'),
+    LanguageModel(
+        imageUrl: Images.arabic,
+        languageName: 'Arabic',
+        countryCode: 'SA',
+        languageCode: 'ar'),
   ];
 }

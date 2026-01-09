@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hexacom_user/features/Community/Widgets/extensions.dart';
+import 'package:hexacom_user/utill/color_resources.dart';
 import 'package:hexacom_user/utill/styles.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -28,14 +29,17 @@ class GroupDetailScreen extends StatefulWidget {
 class _GroupDetailScreenState extends State<GroupDetailScreen> {
   @override
   Widget build(BuildContext context) {
-    final SplashProvider splashProvider = Provider.of<SplashProvider>(context, listen: false);
+    final SplashProvider splashProvider =
+        Provider.of<SplashProvider>(context, listen: false);
     return ViewModelBuilder<MainViewModel>.reactive(
       viewModelBuilder: () => locator<MainViewModel>(),
       disposeViewModel: false,
       onViewModelReady: (model) async {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
-          await model.doGroupDetail(context, model.userToken ?? "", widget.groupID ?? 0);
-          await model.doGroupMember(context, model.userToken ?? "", widget.groupID ?? 0);
+          await model.doGroupDetail(
+              context, model.userToken ?? "", widget.groupID ?? 0);
+          await model.doGroupMember(
+              context, model.userToken ?? "", widget.groupID ?? 0);
         });
       },
       builder: (context, model, child) {
@@ -43,7 +47,8 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
           top: false,
           bottom: false,
           child: Scaffold(
-            backgroundColor: const Color(0xFFF9FCFE),
+            backgroundColor:
+                ColorResources.getHomeScreenBackgroundColor(context),
             appBar: AppBar(
               backgroundColor: Colors.white,
               elevation: 0,
@@ -106,7 +111,9 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(50),
                                   child: CachedNetworkImage(
-                                    imageUrl: model.allGroupDetailData?.data?.image ?? "",
+                                    imageUrl:
+                                        model.allGroupDetailData?.data?.image ??
+                                            "",
                                     placeholder: (context, url) => Container(
                                       width: 80,
                                       height: 80,
@@ -121,14 +128,16 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                         ),
                                       ),
                                     ),
-                                    errorWidget: (context, url, error) => Container(
+                                    errorWidget: (context, url, error) =>
+                                        Container(
                                       width: 80,
                                       height: 80,
                                       decoration: BoxDecoration(
                                         color: ColorUtils.grey.withOpacity(0.3),
                                         borderRadius: BorderRadius.circular(50),
                                       ),
-                                      child: Icon(Icons.group, color: ColorUtils.grey),
+                                      child: Icon(Icons.group,
+                                          color: ColorUtils.grey),
                                     ),
                                     fit: BoxFit.cover,
                                     width: 80,
@@ -138,13 +147,17 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                               ),
                               const SizedBox(height: 12),
                               TextWidget(
-                                textValue: model.allGroupDetailData?.data?.name ?? "",
+                                textValue:
+                                    model.allGroupDetailData?.data?.name ?? "",
                                 textColor: ColorUtils.black,
                                 fontFamily: FontUtils.urbanistBold,
                                 fontSize: 18,
                               ),
                               const SizedBox(height: 12),
-                              if ((model.allGroupDetailData?.data?.userId.toString() ?? "0") != model.userID)
+                              if ((model.allGroupDetailData?.data?.userId
+                                          .toString() ??
+                                      "0") !=
+                                  model.userID)
                                 ElevatedButton(
                                   onPressed: model.loadingWidget == true
                                       ? null
@@ -156,13 +169,15 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                           );
                                         },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red.withOpacity(0.1),
+                                    backgroundColor:
+                                        Colors.red.withOpacity(0.1),
                                     foregroundColor: Colors.red,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(14),
                                     ),
                                     elevation: 0,
-                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10),
                                   ),
                                   child: TextWidget(
                                     textValue: "Leave Group",
@@ -171,7 +186,10 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                     fontSize: 14,
                                   ),
                                 ),
-                              if ((model.allGroupDetailData?.data?.userId.toString() ?? "0") == model.userID)
+                              if ((model.allGroupDetailData?.data?.userId
+                                          .toString() ??
+                                      "0") ==
+                                  model.userID)
                                 ElevatedButton(
                                   onPressed: model.loadingWidget == true
                                       ? null
@@ -183,16 +201,23 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                           );
                                         },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Theme.of(context).primaryColor,
+                                    backgroundColor:
+                                        Theme.of(context).primaryColor,
                                     foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(14),
                                     ),
                                     elevation: 0,
-                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10),
                                   ),
                                   child: TextWidget(
-                                    textValue: (model.allGroupDetailData?.data?.active ?? 0) == 1 ? "Activate Group" : "Deactivate Group",
+                                    textValue: (model.allGroupDetailData?.data
+                                                    ?.active ??
+                                                0) ==
+                                            1
+                                        ? "Activate Group"
+                                        : "Deactivate Group",
                                     textColor: Colors.white,
                                     fontFamily: FontUtils.urbanistSemiBold,
                                     fontSize: 14,
@@ -226,7 +251,9 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                               ),
                               const SizedBox(height: 12),
                               ExpandableTextWidget(
-                                textValue: model.allGroupDetailData?.data?.description ?? "",
+                                textValue: model.allGroupDetailData?.data
+                                        ?.description ??
+                                    "",
                                 textColor: ColorUtils.black,
                                 fontFamily: FontUtils.urbanistRegular,
                                 fontSize: 15,
@@ -253,10 +280,12 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   TextWidget(
-                                    textValue: "${model.allGroupMemberData?.data?.length ?? 0} Members",
+                                    textValue:
+                                        "${model.allGroupMemberData?.data?.length ?? 0} Members",
                                     textColor: ColorUtils.black,
                                     fontFamily: FontUtils.urbanistBold,
                                     fontSize: 18,
@@ -272,7 +301,8 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                   ),
                 ),
                 SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
@@ -314,29 +344,38 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(25),
                                       child: CachedNetworkImage(
-                                        imageUrl: '${splashProvider.baseUrls!.customerImageUrl}/${member?.image ?? ""}',
-                                        placeholder: (context, url) => Container(
+                                        imageUrl:
+                                            '${splashProvider.baseUrls!.customerImageUrl}/${member?.image ?? ""}',
+                                        placeholder: (context, url) =>
+                                            Container(
                                           width: 44,
                                           height: 44,
                                           decoration: BoxDecoration(
-                                            color: ColorUtils.grey.withOpacity(0.3),
-                                            borderRadius: BorderRadius.circular(25),
+                                            color: ColorUtils.grey
+                                                .withOpacity(0.3),
+                                            borderRadius:
+                                                BorderRadius.circular(25),
                                           ),
                                           child: Center(
                                             child: CircularProgressIndicator(
                                               strokeWidth: 2,
-                                              color: Theme.of(context).primaryColor,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
                                             ),
                                           ),
                                         ),
-                                        errorWidget: (context, url, error) => Container(
+                                        errorWidget: (context, url, error) =>
+                                            Container(
                                           width: 44,
                                           height: 44,
                                           decoration: BoxDecoration(
-                                            color: ColorUtils.grey.withOpacity(0.3),
-                                            borderRadius: BorderRadius.circular(25),
+                                            color: ColorUtils.grey
+                                                .withOpacity(0.3),
+                                            borderRadius:
+                                                BorderRadius.circular(25),
                                           ),
-                                          child: Icon(Icons.person, color: ColorUtils.grey),
+                                          child: Icon(Icons.person,
+                                              color: ColorUtils.grey),
                                         ),
                                         fit: BoxFit.cover,
                                         width: 44,
@@ -347,19 +386,22 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         TextWidget(
                                           textValue: member?.name ?? "",
                                           textColor: ColorUtils.black,
-                                          fontFamily: FontUtils.urbanistSemiBold,
+                                          fontFamily:
+                                              FontUtils.urbanistSemiBold,
                                           fontSize: 14,
                                         ),
                                         if (isAdmin)
                                           TextWidget(
                                             textValue: "Admin",
                                             textColor: ColorUtils.grey3,
-                                            fontFamily: FontUtils.urbanistMedium,
+                                            fontFamily:
+                                                FontUtils.urbanistMedium,
                                             fontSize: 12,
                                           ),
                                       ],
@@ -372,8 +414,10 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                           width: 80,
                                           height: 32,
                                           decoration: BoxDecoration(
-                                            color: Theme.of(context).primaryColor,
-                                            borderRadius: BorderRadius.circular(14),
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(14),
                                           ),
                                           child: Material(
                                             color: Colors.transparent,
@@ -382,20 +426,25 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                                 Navigator.push(
                                                   context,
                                                   PageTransition(
-                                                    type: PageTransitionType.bottomToTop,
+                                                    type: PageTransitionType
+                                                        .bottomToTop,
                                                     child: FeedChatScreen(
-                                                      userID: member?.id.toString() ?? "",
+                                                      userID: member?.id
+                                                              .toString() ??
+                                                          "",
                                                       chatType: 'Individual',
                                                     ),
                                                   ),
                                                 );
                                               },
-                                              borderRadius: BorderRadius.circular(14),
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
                                               child: Center(
                                                 child: TextWidget(
                                                   textValue: "Chat",
                                                   textColor: Colors.white,
-                                                  fontFamily: FontUtils.urbanistSemiBold,
+                                                  fontFamily: FontUtils
+                                                      .urbanistSemiBold,
                                                   fontSize: 13,
                                                 ),
                                               ),
@@ -408,13 +457,15 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                           height: 32,
                                           decoration: BoxDecoration(
                                             color: Colors.red.withOpacity(0.1),
-                                            borderRadius: BorderRadius.circular(14),
+                                            borderRadius:
+                                                BorderRadius.circular(14),
                                           ),
                                           child: Material(
                                             color: Colors.transparent,
                                             child: InkWell(
                                               onTap: () {
-                                                if (model.loadingWidget == true) return;
+                                                if (model.loadingWidget == true)
+                                                  return;
                                                 model.doGroupMemberBlockUnblock(
                                                   context,
                                                   model.userToken ?? "",
@@ -422,12 +473,19 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                                   member?.id ?? 0,
                                                 );
                                               },
-                                              borderRadius: BorderRadius.circular(14),
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
                                               child: Center(
                                                 child: TextWidget(
-                                                  textValue: (member?.pivot?.blocked ?? 0) == 0 ? "Block" : "Unblock",
+                                                  textValue:
+                                                      (member?.pivot?.blocked ??
+                                                                  0) ==
+                                                              0
+                                                          ? "Block"
+                                                          : "Unblock",
                                                   textColor: Colors.red,
-                                                  fontFamily: FontUtils.urbanistSemiBold,
+                                                  fontFamily: FontUtils
+                                                      .urbanistSemiBold,
                                                   fontSize: 13,
                                                 ),
                                               ),
@@ -448,12 +506,14 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                         color: Colors.transparent,
                                         child: InkWell(
                                           onTap: () {},
-                                          borderRadius: BorderRadius.circular(14),
+                                          borderRadius:
+                                              BorderRadius.circular(14),
                                           child: Center(
                                             child: TextWidget(
                                               textValue: "You",
                                               textColor: Colors.white,
-                                              fontFamily: FontUtils.urbanistSemiBold,
+                                              fontFamily:
+                                                  FontUtils.urbanistSemiBold,
                                               fontSize: 13,
                                             ),
                                           ),

@@ -34,7 +34,7 @@ class _DashedBorderContainerState extends State<DashedBorderContainer> {
   Future<void> _pickImage() async {
     final PickedFile? pickedFile = (await _picker.pickImage(
       source:
-      ImageSource.gallery, // Set to ImageSource.camera for camera option
+          ImageSource.gallery, // Set to ImageSource.camera for camera option
     )) as PickedFile?;
 
     if (pickedFile != null) {
@@ -52,26 +52,26 @@ class _DashedBorderContainerState extends State<DashedBorderContainer> {
         decoration: BoxDecoration(
           border: Border.all(
               color:
-              Colors.transparent), // To make the default border invisible
+                  Colors.transparent), // To make the default border invisible
         ),
         child: CustomPaint(
           painter: DashedBorderPainter(),
           child: ClipRRect(
             borderRadius:
-            BorderRadius.circular(12.0), // Optional for rounded corners
+                BorderRadius.circular(12.0), // Optional for rounded corners
             child: _image == null
                 ? SvgPicture.asset(
-              Images.imageUpload,
-              fit: BoxFit.fitWidth,
-              width: 200,
-              height: 200,
-            )
+                    Images.imageUpload,
+                    fit: BoxFit.fitWidth,
+                    width: 200,
+                    height: 200,
+                  )
                 : Image.file(
-              _image!, // Display the selected image
-              fit: BoxFit.fitWidth,
-              width: 200,
-              height: 200,
-            ),
+                    _image!, // Display the selected image
+                    fit: BoxFit.fitWidth,
+                    width: 200,
+                    height: 200,
+                  ),
           ),
         ),
       ),
@@ -186,37 +186,36 @@ class _image_picker_2State extends State<image_picker_2> {
           ],
         ),
         child: CustomPaint(
-
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12.0),
             child: _image == null
                 ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    Images.imgUpload,
-                    fit: BoxFit.contain,
-                    width: 52,
-                    height: 52,
-                    color: ColorUtils.grey3,
-                  ),
-                  // SizedBox(height: 8),
-                  // TextWidget(
-                  //   textValue: 'Add Image',
-                  //   textColor: ColorUtils.grey3,
-                  //   fontFamily: FontUtils.urbanistMedium,
-                  //   fontSize: 14,
-                  // ),
-                ],
-              ),
-            )
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          Images.imgUpload,
+                          fit: BoxFit.contain,
+                          width: 70,
+                          height: 70,
+                          color: ColorUtils.grey3,
+                        ),
+                        // SizedBox(height: 8),
+                        // TextWidget(
+                        //   textValue: 'Add Image',
+                        //   textColor: ColorUtils.grey3,
+                        //   fontFamily: FontUtils.urbanistMedium,
+                        //   fontSize: 14,
+                        // ),
+                      ],
+                    ),
+                  )
                 : Image.file(
-              _image!, // Display the selected image
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: 120,
-            ),
+                    _image!, // Display the selected image
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: 120,
+                  ),
           ),
         ),
       ),

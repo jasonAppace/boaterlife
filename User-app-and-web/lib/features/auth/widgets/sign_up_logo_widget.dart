@@ -16,23 +16,32 @@ class SignUpLogoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final logoPath = Images.getLogoByCountryCode(countryCode);
-    print('----(SIGN UP LOGO WIDGET)---- Country Code: $countryCode, Logo Path: $logoPath');
-    
+    print(
+        '----(SIGN UP LOGO WIDGET)---- Country Code: $countryCode, Logo Path: $logoPath');
+
     return Container(
       color: Theme.of(context).cardColor,
       child: Column(mainAxisSize: MainAxisSize.min, children: [
-        const SizedBox(height: Dimensions.paddingSizeDefault),
+        const SizedBox(height: Dimensions.paddingSizeSmall),
         Image.asset(
           logoPath,
-          height: ResponsiveHelper.isDesktop(context) ? 100.0 : 80,
+          height: ResponsiveHelper.isDesktop(context) ? 100.0 : 130,
           fit: BoxFit.scaleDown,
           matchTextDirection: true,
         ),
         const SizedBox(height: Dimensions.paddingSizeSmall),
-        Text(getTranslated('signup', context), style: rubikMedium.copyWith(
-          fontSize: Dimensions.fontSizeOverLarge,
-        )),
-        const SizedBox(height: Dimensions.paddingSizeLarge),
+        Text(getTranslated('signup', context),
+            style: rubikBold.copyWith(
+              fontSize: Dimensions.fontSizeThirty,
+            )),
+        const SizedBox(height: Dimensions.paddingSizeDefault),
+        SizedBox(
+          width: 300,
+          child: Text(getTranslated('login_description', context),
+              textAlign: TextAlign.center,
+              style:
+                  rubikRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
+        ),
       ]),
     );
   }

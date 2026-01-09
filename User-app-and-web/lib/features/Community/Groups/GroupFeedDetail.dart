@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hexacom_user/features/Community/CommunityUser/UserDetailScreen.dart';
 import 'package:hexacom_user/features/Community/Widgets/extensions.dart';
+import 'package:hexacom_user/utill/color_resources.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:hexacom_user/helper/date_converter_helper.dart';
@@ -37,7 +40,8 @@ class GroupFeedDetailScreen extends StatefulWidget {
 class _GroupFeedDetailScreenState extends State<GroupFeedDetailScreen> {
   @override
   Widget build(BuildContext context) {
-    final SplashProvider splashProvider = Provider.of<SplashProvider>(context, listen: false);
+    final SplashProvider splashProvider =
+        Provider.of<SplashProvider>(context, listen: false);
     return ViewModelBuilder<MainViewModel>.reactive(
       viewModelBuilder: () => locator<MainViewModel>(),
       disposeViewModel: false,
@@ -55,7 +59,8 @@ class _GroupFeedDetailScreenState extends State<GroupFeedDetailScreen> {
           top: false,
           bottom: false,
           child: Scaffold(
-            backgroundColor: Color(0xFFF9FCFE), // Solid color matching CommunityScreen
+            backgroundColor: ColorResources.getHomeScreenBackgroundColor(
+                context), // Solid color matching CommunityScreen
             resizeToAvoidBottomInset: true, // This is key for keyboard handling
             body: Column(
               children: [
@@ -74,7 +79,8 @@ class _GroupFeedDetailScreenState extends State<GroupFeedDetailScreen> {
                               horizontal: 16, // Match CommunityScreen padding
                               widget: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white, // Match CommunityScreen card
+                                  color: Colors
+                                      .white, // Match CommunityScreen card
                                   borderRadius: BorderRadius.circular(16),
                                   boxShadow: [
                                     BoxShadow(
@@ -87,47 +93,64 @@ class _GroupFeedDetailScreenState extends State<GroupFeedDetailScreen> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
                                           Container(
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(25),
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
                                               boxShadow: [
                                                 BoxShadow(
-                                                  color: Colors.black.withOpacity(0.1),
+                                                  color: Colors.black
+                                                      .withOpacity(0.1),
                                                   blurRadius: 8,
                                                   offset: Offset(0, 2),
                                                 ),
                                               ],
                                             ),
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(25),
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
                                               child: CachedNetworkImage(
-                                                imageUrl: '${splashProvider.baseUrls!.customerImageUrl}/${model.allGroupPostIndividualData?.users?.image ?? ""}',
-                                                placeholder: (context, url) => Container(
+                                                imageUrl:
+                                                    '${splashProvider.baseUrls!.customerImageUrl}/${model.allGroupPostIndividualData?.users?.image ?? ""}',
+                                                placeholder: (context, url) =>
+                                                    Container(
                                                   width: 44,
                                                   height: 44,
                                                   decoration: BoxDecoration(
-                                                    color: ColorUtils.grey.withOpacity(0.3),
-                                                    borderRadius: BorderRadius.circular(25),
+                                                    color: ColorUtils.grey
+                                                        .withOpacity(0.3),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            25),
                                                   ),
                                                   child: Center(
-                                                    child: CircularProgressIndicator(
+                                                    child:
+                                                        CircularProgressIndicator(
                                                       strokeWidth: 2,
-                                                      color: Theme.of(context).primaryColor,
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
                                                     ),
                                                   ),
                                                 ),
-                                                errorWidget: (context, url, error) => Container(
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Container(
                                                   width: 44,
                                                   height: 44,
                                                   decoration: BoxDecoration(
-                                                    color: ColorUtils.grey.withOpacity(0.3),
-                                                    borderRadius: BorderRadius.circular(25),
+                                                    color: ColorUtils.grey
+                                                        .withOpacity(0.3),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            25),
                                                   ),
-                                                  child: Icon(Icons.person, color: ColorUtils.grey),
+                                                  child: Icon(Icons.person,
+                                                      color: ColorUtils.grey),
                                                 ),
                                                 fit: BoxFit.cover,
                                                 width: 44,
@@ -138,12 +161,17 @@ class _GroupFeedDetailScreenState extends State<GroupFeedDetailScreen> {
                                           SizedBox(width: 12),
                                           Expanded(
                                             child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 TextWidget(
-                                                  textValue: model.allGroupPostIndividualData?.title ?? "",
+                                                  textValue: model
+                                                          .allGroupPostIndividualData
+                                                          ?.title ??
+                                                      "",
                                                   textColor: ColorUtils.black,
-                                                  fontFamily: FontUtils.urbanistSemiBold,
+                                                  fontFamily: FontUtils
+                                                      .urbanistSemiBold,
                                                   fontSize: 16,
                                                   maxLines: 2,
                                                 ),
@@ -151,9 +179,12 @@ class _GroupFeedDetailScreenState extends State<GroupFeedDetailScreen> {
                                                 Row(
                                                   children: [
                                                     TextWidget(
-                                                      textValue: "${model.allGroupPostIndividualData?.users?.firstName ?? ""} ${model.allGroupPostIndividualData?.users?.lastName ?? ""}",
-                                                      textColor: ColorUtils.grey3,
-                                                      fontFamily: FontUtils.urbanistMedium,
+                                                      textValue:
+                                                          "${model.allGroupPostIndividualData?.users?.firstName ?? ""} ${model.allGroupPostIndividualData?.users?.lastName ?? ""}",
+                                                      textColor:
+                                                          ColorUtils.grey3,
+                                                      fontFamily: FontUtils
+                                                          .urbanistMedium,
                                                       fontSize: 13,
                                                     ),
                                                     SizedBox(width: 8),
@@ -162,14 +193,22 @@ class _GroupFeedDetailScreenState extends State<GroupFeedDetailScreen> {
                                                       height: 4,
                                                       decoration: BoxDecoration(
                                                         color: ColorUtils.grey3,
-                                                        borderRadius: BorderRadius.circular(2),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(2),
                                                       ),
                                                     ),
                                                     SizedBox(width: 8),
                                                     TextWidget(
-                                                      textValue: DateConverterHelper.convertToAgo(model.allGroupPostIndividualData?.updatedAt ?? ""),
-                                                      textColor: ColorUtils.grey3,
-                                                      fontFamily: FontUtils.urbanistRegular,
+                                                      textValue: DateConverterHelper
+                                                          .convertToAgo(model
+                                                                  .allGroupPostIndividualData
+                                                                  ?.updatedAt ??
+                                                              ""),
+                                                      textColor:
+                                                          ColorUtils.grey3,
+                                                      fontFamily: FontUtils
+                                                          .urbanistRegular,
                                                       fontSize: 12,
                                                     ),
                                                   ],
@@ -180,83 +219,154 @@ class _GroupFeedDetailScreenState extends State<GroupFeedDetailScreen> {
                                           Container(
                                             padding: EdgeInsets.all(8),
                                             decoration: BoxDecoration(
-                                              color: ColorUtils.grey.withOpacity(0.1),
-                                              borderRadius: BorderRadius.circular(8),
+                                              color: ColorUtils.grey
+                                                  .withOpacity(0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                             ),
                                             child: GestureDetector(
                                               onTap: () {
                                                 showModalBottomSheet(
                                                   context: context,
-                                                  backgroundColor: Colors.transparent,
+                                                  backgroundColor:
+                                                      Colors.transparent,
                                                   builder: (context) {
                                                     return Container(
-                                                      margin: EdgeInsets.all(16),
+                                                      margin:
+                                                          EdgeInsets.all(16),
                                                       decoration: BoxDecoration(
                                                         color: Colors.white,
-                                                        borderRadius: BorderRadius.circular(20),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
                                                       ),
                                                       child: Column(
-                                                        mainAxisSize: MainAxisSize.min,
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
                                                         children: [
                                                           Container(
                                                             width: 40,
                                                             height: 4,
-                                                            margin: EdgeInsets.only(top: 12),
-                                                            decoration: BoxDecoration(
-                                                              color: ColorUtils.grey.withOpacity(0.3),
-                                                              borderRadius: BorderRadius.circular(2),
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                    top: 12),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: ColorUtils
+                                                                  .grey
+                                                                  .withOpacity(
+                                                                      0.3),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          2),
                                                             ),
                                                           ),
                                                           SizedBox(height: 20),
-                                                          if (model.allGroupPostIndividualData?.users?.id.toString() == model.userID) ...[
+                                                          if (model
+                                                                  .allGroupPostIndividualData
+                                                                  ?.users
+                                                                  ?.id
+                                                                  .toString() ==
+                                                              model.userID) ...[
                                                             ListTile(
-                                                              leading: Container(
-                                                                padding: EdgeInsets.all(8),
-                                                                decoration: BoxDecoration(
-                                                                  color: Colors.red.withOpacity(0.1),
-                                                                  borderRadius: BorderRadius.circular(8),
+                                                              leading:
+                                                                  Container(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(8),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: Colors
+                                                                      .red
+                                                                      .withOpacity(
+                                                                          0.1),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8),
                                                                 ),
-                                                                child: Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                                                                child: Icon(
+                                                                    Icons
+                                                                        .delete_outline,
+                                                                    color: Colors
+                                                                        .red,
+                                                                    size: 20),
                                                               ),
                                                               title: Text(
                                                                 'Delete Post',
-                                                                style: TextStyle(
-                                                                  color: Colors.red,
-                                                                  fontFamily: FontUtils.urbanistSemiBold,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .red,
+                                                                  fontFamily:
+                                                                      FontUtils
+                                                                          .urbanistSemiBold,
                                                                 ),
                                                               ),
                                                               onTap: () async {
-                                                                await model.doGroupPostDelete(
+                                                                await model
+                                                                    .doGroupPostDelete(
                                                                   context,
-                                                                  model.userToken ?? "",
-                                                                  model.allGroupPostIndividualData?.id ?? 0,
-                                                                  model.allGroupPostIndividualData?.groupId ?? 0,
+                                                                  model.userToken ??
+                                                                      "",
+                                                                  model.allGroupPostIndividualData
+                                                                          ?.id ??
+                                                                      0,
+                                                                  model.allGroupPostIndividualData
+                                                                          ?.groupId ??
+                                                                      0,
                                                                 );
                                                               },
                                                             ),
                                                           ] else ...[
                                                             ListTile(
-                                                              leading: Container(
-                                                                padding: EdgeInsets.all(8),
-                                                                decoration: BoxDecoration(
-                                                                  color: Colors.red.withOpacity(0.1),
-                                                                  borderRadius: BorderRadius.circular(8),
+                                                              leading:
+                                                                  Container(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(8),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: Colors
+                                                                      .red
+                                                                      .withOpacity(
+                                                                          0.1),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8),
                                                                 ),
-                                                                child: Icon(Icons.report_outlined, color: Colors.red, size: 20),
+                                                                child: Icon(
+                                                                    Icons
+                                                                        .report_outlined,
+                                                                    color: Colors
+                                                                        .red,
+                                                                    size: 20),
                                                               ),
                                                               title: Text(
                                                                 'Report Post',
-                                                                style: TextStyle(
-                                                                  color: Colors.red,
-                                                                  fontFamily: FontUtils.urbanistSemiBold,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .red,
+                                                                  fontFamily:
+                                                                      FontUtils
+                                                                          .urbanistSemiBold,
                                                                 ),
                                                               ),
                                                               onTap: () async {
-                                                                await model.doGroupPostReport(
+                                                                await model
+                                                                    .doGroupPostReport(
                                                                   context,
-                                                                  model.userToken ?? "",
-                                                                  model.allGroupPostIndividualData?.id ?? 0,
-                                                                  model.allGroupPostIndividualData?.groupId ?? 0,
+                                                                  model.userToken ??
+                                                                      "",
+                                                                  model.allGroupPostIndividualData
+                                                                          ?.id ??
+                                                                      0,
+                                                                  model.allGroupPostIndividualData
+                                                                          ?.groupId ??
+                                                                      0,
                                                                 );
                                                               },
                                                             ),
@@ -279,50 +389,73 @@ class _GroupFeedDetailScreenState extends State<GroupFeedDetailScreen> {
                                       ),
                                       SizedBox(height: 12),
                                       ExpandableTextWidget(
-                                        textValue: model.allGroupPostIndividualData?.description ?? "",
+                                        textValue: model
+                                                .allGroupPostIndividualData
+                                                ?.description ??
+                                            "",
                                         textColor: ColorUtils.black,
                                         fontFamily: FontUtils.urbanistRegular,
                                         fontSize: 15,
                                         maxLines: 3,
                                       ),
                                       SizedBox(height: 12),
-                                      if (model.allGroupPostIndividualData?.content?.isNotEmpty == true)
+                                      if (model.allGroupPostIndividualData
+                                              ?.content?.isNotEmpty ==
+                                          true)
                                         Container(
                                           decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(12),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.black.withOpacity(0.1),
+                                                color: Colors.black
+                                                    .withOpacity(0.1),
                                                 blurRadius: 10,
                                                 offset: Offset(0, 4),
                                               ),
                                             ],
                                           ),
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(12),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
                                             child: CachedNetworkImage(
-                                              imageUrl: model.allGroupPostIndividualData?.content?.first ?? "",
-                                              placeholder: (context, url) => Container(
+                                              imageUrl: model
+                                                      .allGroupPostIndividualData
+                                                      ?.content
+                                                      ?.first ??
+                                                  "",
+                                              placeholder: (context, url) =>
+                                                  Container(
                                                 height: 200,
                                                 decoration: BoxDecoration(
-                                                  color: ColorUtils.grey.withOpacity(0.1),
-                                                  borderRadius: BorderRadius.circular(12),
+                                                  color: ColorUtils.grey
+                                                      .withOpacity(0.1),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
                                                 ),
                                                 child: Center(
-                                                  child: CircularProgressIndicator(
+                                                  child:
+                                                      CircularProgressIndicator(
                                                     strokeWidth: 2,
-                                                    color: Theme.of(context).primaryColor,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
                                                   ),
                                                 ),
                                               ),
-                                              errorWidget: (context, url, error) => Container(
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Container(
                                                 height: 200,
                                                 decoration: BoxDecoration(
-                                                  color: ColorUtils.grey.withOpacity(0.1),
-                                                  borderRadius: BorderRadius.circular(12),
+                                                  color: ColorUtils.grey
+                                                      .withOpacity(0.1),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
                                                 ),
                                                 child: Center(
-                                                  child: Icon(Icons.image_not_supported, color: ColorUtils.grey),
+                                                  child: Icon(
+                                                      Icons.image_not_supported,
+                                                      color: ColorUtils.grey),
                                                 ),
                                               ),
                                               fit: BoxFit.cover,
@@ -332,234 +465,352 @@ class _GroupFeedDetailScreenState extends State<GroupFeedDetailScreen> {
                                           ),
                                         ),
                                       SizedBox(height: 16),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                padding: EdgeInsets.all(4),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.red.withOpacity(0.1),
-                                                  borderRadius: BorderRadius.circular(20),
-                                                ),
-                                                child: Icon(Icons.favorite, color: Colors.red, size: 14),
-                                              ),
-                                              SizedBox(width: 6),
-                                              TextWidget(
-                                                textValue: '${model.allGroupPostIndividualData?.likes?.length ?? 0}',
-                                                textColor: ColorUtils.grey3,
-                                                fontFamily: FontUtils.urbanistSemiBold,
-                                                fontSize: 13,
-                                              ),
-                                            ],
-                                          ),
-                                          TextWidget(
-                                            textValue: '${model.allGroupPostIndividualData?.comments?.length ?? 0} comments',
-                                            textColor: ColorUtils.grey3,
-                                            fontFamily: FontUtils.urbanistMedium,
-                                            fontSize: 13,
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 12),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(vertical: 8),
-                                        decoration: BoxDecoration(
-                                          color: ColorUtils.grey.withOpacity(0.05),
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Expanded(
-                                              child: InkWell(
-                                                onTap: () async {
-                                                  await model.doGroupPostLikeAddApi(
-                                                    context,
-                                                    model.userToken ?? "",
-                                                    model.allGroupPostIndividualData?.id ?? 0,
-                                                    model.allGroupPostIndividualData?.groupId ?? 0,
-                                                  );
-                                                },
-                                                borderRadius: BorderRadius.circular(8),
-                                                child: Container(
-                                                  padding: EdgeInsets.symmetric(vertical: 8),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      Icon(
-                                                        model.allGroupPostIndividualData?.likes?.any((like) => like.userId.toString() == model.userID) ?? false
-                                                            ? Icons.favorite
-                                                            : Icons.favorite_outline,
-                                                        color: model.allGroupPostIndividualData?.likes?.any((like) => like.userId.toString() == model.userID) ?? false
-                                                            ? Colors.red
-                                                            : ColorUtils.grey3,
-                                                        size: 18,
-                                                      ),
-                                                      SizedBox(width: 6),
-                                                      TextWidget(
-                                                        textValue: 'Like',
-                                                        textColor: model.allGroupPostIndividualData?.likes?.any((like) => like.userId.toString() == model.userID) ?? false
-                                                            ? Colors.red
-                                                            : ColorUtils.grey3,
-                                                        fontFamily: FontUtils.urbanistMedium,
-                                                        fontSize: 13,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 1,
-                                              height: 20,
-                                              color: ColorUtils.grey.withOpacity(0.2),
-                                            ),
-                                            Expanded(
-                                              child: InkWell(
-                                                onTap: () {
-                                                  // Handle comment action
-                                                },
-                                                borderRadius: BorderRadius.circular(8),
-                                                child: Container(
-                                                  padding: EdgeInsets.symmetric(vertical: 8),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      Icon(
-                                                        Icons.chat_bubble_outline,
-                                                        color: ColorUtils.grey3,
-                                                        size: 18,
-                                                      ),
-                                                      SizedBox(width: 6),
-                                                      TextWidget(
-                                                        textValue: 'Comment',
-                                                        textColor: ColorUtils.grey3,
-                                                        fontFamily: FontUtils.urbanistMedium,
-                                                        fontSize: 13,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(height: 16),
-                                      TextWidget(
-                                        textValue: "Comments",
-                                        textColor: ColorUtils.black,
-                                        fontFamily: FontUtils.urbanistBold,
-                                        fontSize: 18, // Match CommunityScreen section headers
-                                      ),
+                                      //           Row(
+                                      //             mainAxisAlignment:
+                                      //                 MainAxisAlignment.spaceBetween,
+                                      //             children: [
+                                      //               Row(
+                                      //                 children: [
+                                      //                   Container(
+                                      //                     padding: EdgeInsets.all(4),
+                                      //                     decoration: BoxDecoration(
+                                      //                       color: Colors.red
+                                      //                           .withOpacity(0.1),
+                                      //                       borderRadius:
+                                      //                           BorderRadius.circular(20),
+                                      //                     ),
+                                      //                     child: Icon(Icons.favorite,
+                                      //                         color: Colors.red,
+                                      //                         size: 14),
+                                      //                   ),
+                                      //                   SizedBox(width: 6),
+                                      //                   TextWidget(
+                                      //                     textValue:
+                                      //                         '${model.allGroupPostIndividualData?.likes?.length ?? 0}',
+                                      //                     textColor: ColorUtils.grey3,
+                                      //                     fontFamily:
+                                      //                         FontUtils.urbanistSemiBold,
+                                      //                     fontSize: 13,
+                                      //                   ),
+                                      //                 ],
+                                      //               ),
+                                      //               TextWidget(
+                                      //                 textValue:
+                                      //                     '${model.allGroupPostIndividualData?.comments?.length ?? 0} comments',
+                                      //                 textColor: ColorUtils.grey3,
+                                      //                 fontFamily:
+                                      //                     FontUtils.urbanistMedium,
+                                      //                 fontSize: 13,
+                                      //               ),
+                                      //             ],
+                                      //           ),
+                                      //           SizedBox(height: 12),
+                                      //           Container(
+                                      //             padding:
+                                      //                 EdgeInsets.symmetric(vertical: 8),
+                                      //             decoration: BoxDecoration(
+                                      //               color:
+                                      //                   ColorUtils.grey.withOpacity(0.05),
+                                      //               borderRadius:
+                                      //                   BorderRadius.circular(12),
+                                      //             ),
+                                      //             child: Row(
+                                      //               mainAxisAlignment:
+                                      //                   MainAxisAlignment.spaceEvenly,
+                                      //               children: [
+                                      //                 Expanded(
+                                      //                   child: InkWell(
+                                      //                     onTap: () async {
+                                      //                       await model
+                                      //                           .doGroupPostLikeAddApi(
+                                      //                         context,
+                                      //                         model.userToken ?? "",
+                                      //                         model.allGroupPostIndividualData
+                                      //                                 ?.id ??
+                                      //                             0,
+                                      //                         model.allGroupPostIndividualData
+                                      //                                 ?.groupId ??
+                                      //                             0,
+                                      //                       );
+                                      //                     },
+                                      //                     borderRadius:
+                                      //                         BorderRadius.circular(8),
+                                      //                     child: Container(
+                                      //                       padding: EdgeInsets.symmetric(
+                                      //                           vertical: 8),
+                                      //                       child: Row(
+                                      //                         mainAxisAlignment:
+                                      //                             MainAxisAlignment
+                                      //                                 .center,
+                                      //                         children: [
+                                      //                           Icon(
+                                      //                             model.allGroupPostIndividualData
+                                      //                                         ?.likes
+                                      //                                         ?.any((like) =>
+                                      //                                             like.userId
+                                      //                                                 .toString() ==
+                                      //                                             model
+                                      //                                                 .userID) ??
+                                      //                                     false
+                                      //                                 ? Icons.favorite
+                                      //                                 : Icons
+                                      //                                     .favorite_outline,
+                                      //                             color: model.allGroupPostIndividualData
+                                      //                                         ?.likes
+                                      //                                         ?.any((like) =>
+                                      //                                             like.userId
+                                      //                                                 .toString() ==
+                                      //                                             model
+                                      //                                                 .userID) ??
+                                      //                                     false
+                                      //                                 ? Colors.red
+                                      //                                 : ColorUtils.grey3,
+                                      //                             size: 18,
+                                      //                           ),
+                                      //                           SizedBox(width: 6),
+                                      //                           TextWidget(
+                                      //                             textValue: 'Like',
+                                      //                             textColor: model
+                                      //                                         .allGroupPostIndividualData
+                                      //                                         ?.likes
+                                      //                                         ?.any((like) =>
+                                      //                                             like.userId
+                                      //                                                 .toString() ==
+                                      //                                             model
+                                      //                                                 .userID) ??
+                                      //                                     false
+                                      //                                 ? Colors.red
+                                      //                                 : ColorUtils.grey3,
+                                      //                             fontFamily: FontUtils
+                                      //                                 .urbanistMedium,
+                                      //                             fontSize: 13,
+                                      //                           ),
+                                      //                         ],
+                                      //                       ),
+                                      //                     ),
+                                      //                   ),
+                                      //                 ),
+                                      //                 Container(
+                                      //                   width: 1,
+                                      //                   height: 20,
+                                      //                   color: ColorUtils.grey
+                                      //                       .withOpacity(0.2),
+                                      //                 ),
+                                      //                 Expanded(
+                                      //                   child: InkWell(
+                                      //                     onTap: () {
+                                      //                       // Handle comment action
+                                      //                     },
+                                      //                     borderRadius:
+                                      //                         BorderRadius.circular(8),
+                                      //                     child: Container(
+                                      //                       padding: EdgeInsets.symmetric(
+                                      //                           vertical: 8),
+                                      //                       child: Row(
+                                      //                         mainAxisAlignment:
+                                      //                             MainAxisAlignment
+                                      //                                 .center,
+                                      //                         children: [
+                                      //                           Icon(
+                                      //                             Icons
+                                      //                                 .chat_bubble_outline,
+                                      //                             color: ColorUtils.grey3,
+                                      //                             size: 18,
+                                      //                           ),
+                                      //                           SizedBox(width: 6),
+                                      //                           TextWidget(
+                                      //                             textValue: 'Comment',
+                                      //                             textColor:
+                                      //                                 ColorUtils.grey3,
+                                      //                             fontFamily: FontUtils
+                                      //                                 .urbanistMedium,
+                                      //                             fontSize: 13,
+                                      //                           ),
+                                      //                         ],
+                                      //                       ),
+                                      //                     ),
+                                      //                   ),
+                                      //                 ),
+                                      //               ],
+                                      //             ),
+                                      //           ),
+                                      //           SizedBox(height: 16),
                                     ],
                                   ),
                                 ),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20.0, 8, 8, 5),
+                              child: Row(
+                                children: [
+                                  TextWidget(
+                                    textValue: "Comments",
+                                    textColor: ColorUtils.darkblue,
+                                    fontFamily: FontUtils.urbanistBold,
+                                    textAlign: TextAlign.start,
+                                    fontSize:
+                                        18, // Match CommunityScreen section headers
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
                       SliverPadding(
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         sliver: SliverList(
                           delegate: SliverChildBuilderDelegate(
-                                (context, index) {
-                              return Container(
-                                margin: EdgeInsets.only(bottom: 16),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.05),
-                                      blurRadius: 15,
-                                      offset: Offset(0, 5),
-                                    ),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(25),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.1),
-                                              blurRadius: 8,
-                                              offset: Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(25),
-                                          child: CachedNetworkImage(
-                                            imageUrl: '${splashProvider.baseUrls!.customerImageUrl}/${model.allGroupPostIndividualData?.comments?[index].users?.image ?? ""}',
-                                            placeholder: (context, url) => Container(
-                                              width: 44,
-                                              height: 44,
-                                              decoration: BoxDecoration(
-                                                color: ColorUtils.grey.withOpacity(0.3),
-                                                borderRadius: BorderRadius.circular(25),
-                                              ),
-                                              child: Center(
-                                                child: CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  color: Theme.of(context).primaryColor,
-                                                ),
-                                              ),
-                                            ),
-                                            errorWidget: (context, url, error) => Container(
-                                              width: 44,
-                                              height: 44,
-                                              decoration: BoxDecoration(
-                                                color: ColorUtils.grey.withOpacity(0.3),
-                                                borderRadius: BorderRadius.circular(25),
-                                              ),
-                                              child: Icon(Icons.person, color: ColorUtils.grey),
-                                            ),
-                                            fit: BoxFit.cover,
-                                            width: 44,
-                                            height: 44,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 12),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            TextWidget(
-                                              textValue: "${model.allGroupPostIndividualData?.comments?[index].users?.firstName ?? ""} ${model.allGroupPostIndividualData?.comments?[index].users?.lastName ?? ""}",
-                                              textColor: ColorUtils.black,
-                                              fontFamily: FontUtils.urbanistSemiBold,
-                                              fontSize: 14,
-                                            ),
-                                            SizedBox(height: 4),
-                                            TextWidget(
-                                              textValue: model.allGroupPostIndividualData?.comments?[index].comment ?? "",
-                                              textColor: ColorUtils.grey3,
-                                              fontFamily: FontUtils.urbanistRegular,
-                                              fontSize: 14,
-                                            ),
-                                          ],
-                                        ),
+                            (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        type: PageTransitionType.rightToLeft,
+                                        child: UserDetailScreen(
+                                            userID: model
+                                                .allGroupPostIndividualData
+                                                ?.comments?[index]
+                                                .users
+                                                ?.id
+                                                .toString())), //Fixed by Safi 9 Jan 2026
+                                  );
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(bottom: 16),
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.05),
+                                        blurRadius: 15,
+                                        offset: Offset(0, 5),
                                       ),
                                     ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.1),
+                                                blurRadius: 8,
+                                                offset: Offset(0, 2),
+                                              ),
+                                            ],
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            child: CachedNetworkImage(
+                                              imageUrl:
+                                                  '${splashProvider.baseUrls!.customerImageUrl}/${model.allGroupPostIndividualData?.comments?[index].users?.image ?? ""}',
+                                              placeholder: (context, url) =>
+                                                  Container(
+                                                width: 44,
+                                                height: 44,
+                                                decoration: BoxDecoration(
+                                                  color: ColorUtils.grey
+                                                      .withOpacity(0.3),
+                                                  borderRadius:
+                                                      BorderRadius.circular(25),
+                                                ),
+                                                child: Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                  ),
+                                                ),
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Container(
+                                                width: 44,
+                                                height: 44,
+                                                decoration: BoxDecoration(
+                                                  color: ColorUtils.grey
+                                                      .withOpacity(0.3),
+                                                  borderRadius:
+                                                      BorderRadius.circular(25),
+                                                ),
+                                                child: Icon(Icons.person,
+                                                    color: ColorUtils.grey),
+                                              ),
+                                              fit: BoxFit.cover,
+                                              width: 44,
+                                              height: 44,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            padding: EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextWidget(
+                                                  textValue:
+                                                      "${model.allGroupPostIndividualData?.comments?[index].users?.firstName ?? ""} ${model.allGroupPostIndividualData?.comments?[index].users?.lastName ?? ""}",
+                                                  textColor: ColorUtils.black,
+                                                  fontFamily:
+                                                      FontUtils.urbanistBold,
+                                                  fontSize: 14,
+                                                ),
+                                                SizedBox(height: 4),
+                                                TextWidget(
+                                                  textValue: model
+                                                          .allGroupPostIndividualData
+                                                          ?.comments?[index]
+                                                          .comment ??
+                                                      "",
+                                                  textColor: ColorUtils.grey3,
+                                                  fontFamily:
+                                                      FontUtils.urbanistRegular,
+                                                  fontSize: 14,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );
                             },
-                            childCount: model.allGroupPostIndividualData?.comments?.length ?? 0,
+                            childCount: model.allGroupPostIndividualData
+                                    ?.comments?.length ??
+                                0,
                           ),
                         ),
                       ),
                       SliverToBoxAdapter(
-                        child: SizedBox(height: 20), // Reduced space since we're using Column now
+                        child: SizedBox(
+                            height:
+                                20), // Reduced space since we're using Column now
                       ),
                     ],
                   ),
@@ -576,7 +827,8 @@ class _GroupFeedDetailScreenState extends State<GroupFeedDetailScreen> {
                       ),
                     ],
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: Row(
                     children: [
                       Expanded(
@@ -601,7 +853,9 @@ class _GroupFeedDetailScreenState extends State<GroupFeedDetailScreen> {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).primaryColor.withOpacity(0.3),
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.3),
                               blurRadius: 15,
                               offset: Offset(0, 8),
                             ),

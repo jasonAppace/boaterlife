@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hexacom_user/features/Community/Widgets/extensions.dart';
+import 'package:hexacom_user/utill/color_resources.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../App/locator.dart';
@@ -34,61 +35,86 @@ class _CreateGroupPostState extends State<CreateGroupPost> {
           top: false,
           bottom: false,
           child: Scaffold(
+            backgroundColor:
+                ColorResources.getHomeScreenBackgroundColor(context),
             body: PageHorizontalMargin(
-              horizontal: 15,
+              horizontal: 0,
               widget: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TopMargin(),
-                    AppBarWithBackTitle(
-                      title: 'Create New Post',
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.white,
+                      child: const Column(
+                        children: [
+                          TopMargin(),
+                          AppBarWithBackTitle(
+                            title: 'Create New Post',
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(
-                      height: 30,
+                      height: 25,
                     ),
-                    CustomTextField(
-                      hintText: 'Enter Title Here',
-                      labelText: 'Title',
-                      controller: model.createGroupPostTitle,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextField(
-                      hintText: 'Enter your description...',
-                      labelText: 'Description',
-                      controller: model.createGroupPostDesc,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: image_picker_2(
-                            onImagePicked: (File? image) {
-                              selectedImage = image; // Store the picked image
+                    PageHorizontalMargin(
+                      horizontal: 20,
+                      widget: Column(
+                        children: [
+                          CustomTextField(
+                            hintText: 'Enter Title Here',
+                            labelText: 'Title',
+                            controller: model.createGroupPostTitle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          CustomTextField(
+                            hintText: 'Enter your description...',
+                            labelText: 'Description',
+                            controller: model.createGroupPostDesc,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: image_picker_2(
+                                  onImagePicked: (File? image) {
+                                    selectedImage =
+                                        image; // Store the picked image
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          CustomButton(
+                            textValue: 'Create Post',
+                            onButtonPressed: () {
+                              model.loadingWidget == true
+                                  ? () {}
+                                  : model.doCreateGroupPost(
+                                      context,
+                                      model.userToken ?? "",
+                                      model.createGroupPostTitle.text,
+                                      model.createGroupPostDesc.text,
+                                      widget.groupID ?? 0,
+                                      selectedImage);
                             },
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    CustomButton(
-                      textValue: 'Create Post',
-                      onButtonPressed: () {
-
-                        model.loadingWidget == true
-                            ? () {}
-                            : model.doCreateGroupPost(
-                                context, model.userToken ?? "", model.createGroupPostTitle.text, model.createGroupPostDesc.text, widget.groupID ?? 0, selectedImage);
-                      },
-                    ),
-                    SizedBox(
-                      height: 30,
+                          SizedBox(
+                            height: 30,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

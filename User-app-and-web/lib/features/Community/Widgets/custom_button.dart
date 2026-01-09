@@ -40,8 +40,10 @@ class CustomButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: loading
-              ? Theme.of(context).primaryColor.withOpacity(0.6) // Dimmed when loading
-              : Theme.of(context).primaryColor,
+              ? Theme.of(context)
+                  .primaryColor
+                  .withOpacity(0.6) // Dimmed when loading
+              : ColorUtils.lightBlueColor,
         ),
         child: MaterialButton(
           padding: EdgeInsets.zero,
@@ -49,37 +51,37 @@ class CustomButton extends StatelessWidget {
           onPressed: loading ? null : onButtonPressed, // Disable when loading
           child: loading
               ? Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    TextColor ?? ColorUtils.white,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          TextColor ?? ColorUtils.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      textValue ?? 'Loading...',
+                      style: TextStyle(
+                        fontFamily: FontUtils.urbanistSemiBold,
+                        fontSize: TextSzie ?? 16,
+                        color: (TextColor ?? ColorUtils.white).withOpacity(0.7),
+                      ),
+                    ),
+                  ],
+                )
+              : Text(
+                  textValue!,
+                  style: TextStyle(
+                    fontFamily: FontUtils.urbanistSemiBold,
+                    fontSize: TextSzie ?? 16,
+                    color: TextColor ?? ColorUtils.white,
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                textValue ?? 'Loading...',
-                style: TextStyle(
-                  fontFamily: FontUtils.urbanistSemiBold,
-                  fontSize: TextSzie ?? 16,
-                  color: (TextColor ?? ColorUtils.white).withOpacity(0.7),
-                ),
-              ),
-            ],
-          )
-              : Text(
-            textValue!,
-            style: TextStyle(
-              fontFamily: FontUtils.urbanistSemiBold,
-              fontSize: TextSzie ?? 16,
-              color: TextColor ?? ColorUtils.white,
-            ),
-          ),
         ),
       ),
     );

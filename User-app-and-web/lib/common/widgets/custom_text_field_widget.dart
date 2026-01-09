@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:hexacom_user/common/widgets/custom_asset_image_widget.dart';
 import 'package:hexacom_user/features/auth/widgets/code_picker_widget.dart';
 import 'package:hexacom_user/helper/responsive_helper.dart';
+import 'package:hexacom_user/localization/language_constrants.dart';
+import 'package:hexacom_user/utill/color_resources.dart';
 import 'package:hexacom_user/utill/dimensions.dart';
 import 'package:hexacom_user/utill/styles.dart';
 
@@ -35,7 +37,7 @@ class CustomTextFieldWidget extends StatefulWidget {
   final bool isElevation;
   final bool isPadding;
   final Function? onChanged;
-  final String? Function(String? )? onValidate;
+  final String? Function(String?)? onValidate;
   final Color? imageColor;
   final String? title;
   final bool isRequired;
@@ -50,9 +52,12 @@ class CustomTextFieldWidget extends StatefulWidget {
   final double? hintFontSize;
   final EdgeInsetsGeometry? contentPadding;
   final int? maxLength;
-  final String? selectedCountryCode; // Added for flag display (country code like 'US')
+  final String?
+      selectedCountryCode; // Added for flag display (country code like 'US')
 
-  const CustomTextFieldWidget({super.key,  this.hintText = 'Write something...',
+  const CustomTextFieldWidget({
+    super.key,
+    this.hintText = 'Write something...',
     this.controller,
     this.focusNode,
     this.nextFocus,
@@ -77,15 +82,23 @@ class CustomTextFieldWidget extends StatefulWidget {
     this.isElevation = true,
     this.onChanged,
     this.prefixAssetImageColor,
-    this.isPadding=true, this.suffixAssetUrl, this.prefixAssetUrl,
+    this.isPadding = true,
+    this.suffixAssetUrl,
+    this.prefixAssetUrl,
     this.onValidate,
-    this.imageColor, this.title, this.isRequired = false,
+    this.imageColor,
+    this.title,
+    this.isRequired = false,
     this.countryDialCode,
     this.onCountryChanged,
     this.hintFontSize,
-    this.toolTipKey, this.toolTipMessage, this.isToolTipSuffix = false,
+    this.toolTipKey,
+    this.toolTipMessage,
+    this.isToolTipSuffix = false,
     this.isSuffixIconLoading = false,
-    this.borderColor, this.contentPadding, this.maxLength,
+    this.borderColor,
+    this.contentPadding,
+    this.maxLength,
     this.selectedCountryCode,
   });
 
@@ -117,153 +130,248 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     final Size size = MediaQuery.of(context).size;
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-
-      if(widget.title?.isNotEmpty ?? false)...[
-        RichText(text: TextSpan(children: [
-
-          TextSpan(
-            text: widget.title,
-            style: rubikMedium.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
-          ),
-
-          if(widget.isRequired)
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (widget.title?.isNotEmpty ?? false) ...[
+          RichText(
+              text: TextSpan(children: [
             TextSpan(
-              text: '*',
-              style: rubikMedium.copyWith(color: Theme.of(context).colorScheme.error),
+              text: widget.title,
+              style: rubikMedium.copyWith(
+                  color: Theme.of(context).textTheme.bodyLarge?.color),
             ),
-
-
-        ])),
-        const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-      ],
-
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(ResponsiveHelper.isDesktop(context)? 20 : 12),
-        ),
-        child: TextFormField(
-          maxLength: widget.maxLength,
-          maxLengthEnforcement: MaxLengthEnforcement.enforced,
-          maxLines: widget.maxLines,
-          controller: widget.controller,
-          focusNode: widget.focusNode,
-          style: Theme.of(context).textTheme.displayMedium!.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color, fontSize: Dimensions.fontSizeLarge),
-          textInputAction: widget.inputAction,
-          keyboardType: widget.inputType,
-          cursorColor: Theme.of(context).primaryColor,
-          textCapitalization: widget.capitalization,
-          enabled: widget.isEnabled,
-          autofocus: false,
-          //onChanged: widget.isSearch ? widget.languageProvider.searchLanguage : null,
-          obscureText: widget.isPassword ? _obscureText : false,
-          inputFormatters: widget.inputType == TextInputType.phone ? <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp('[0-9+]'))] : null,
-          decoration: InputDecoration(
-            counterText: '',
-            contentPadding: widget.contentPadding ?? EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault, horizontal: widget.isPadding ? 22 : 0),
-            enabledBorder: !widget.isShowBorder ? InputBorder.none : OutlineInputBorder(
-              borderRadius: BorderRadius.circular(Dimensions.radiusSizeDefault),
-              borderSide: BorderSide(width: 1 , color: widget.borderColor ?? Theme.of(context).hintColor.withOpacity(0.2)),
-            ),
-            focusedBorder: !widget.isShowBorder ? InputBorder.none : OutlineInputBorder(
-              borderRadius: BorderRadius.circular(Dimensions.radiusSizeDefault),
-              borderSide: BorderSide(width: 1 ,color: widget.borderColor ?? Theme.of(context).primaryColor.withOpacity(0.5)),
-            ),
-            border: !widget.isShowBorder ? InputBorder.none : OutlineInputBorder(
-              borderRadius: BorderRadius.circular(Dimensions.radiusSizeDefault),
-
-              borderSide: BorderSide( width: 1 , color: widget.borderColor ?? Theme.of(context).hintColor.withOpacity(0.2)),
-            ),
-            isDense: true,
-            hintText: widget.hintText,
-            fillColor: widget.fillColor ?? Theme.of(context).cardColor,
-            hintStyle: rubikRegular.copyWith(fontSize: widget.hintFontSize ?? Dimensions.fontSizeDefault, color: Theme.of(context).hintColor.withOpacity(0.6)),
-            filled: true,
-            prefixIcon: widget.isShowPrefixIcon
-                ? IconButton(
-              padding: const EdgeInsets.all(0),
-              icon: widget.prefixAssetUrl != null ? Image.asset(
-                widget.prefixAssetUrl!,
-                color: widget.prefixAssetImageColor ?? Theme.of(context).primaryColor,
-                scale: 2.5,
-              ) : Icon(
-                widget.prefixIconUrl,
-                color: widget.prefixAssetImageColor ?? Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.6),
+            if (widget.isRequired)
+              TextSpan(
+                text: '*',
+                style: rubikMedium.copyWith(
+                    color: Theme.of(context).colorScheme.error),
               ),
-              onPressed: () {},
-            )
-                : widget.countryDialCode != null ? Padding( padding:  EdgeInsets.only(left: widget.isShowBorder == true ?  10 : 0),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  CodePickerWidget(
-                    onChanged: widget.onCountryChanged,
-                    initialSelection: widget.selectedCountryCode ?? 'US', // Use country code (e.g., 'US') instead of dial code
-                    favorite: [widget.selectedCountryCode ?? 'US'],
-                    showDropDownButton: true,
-                    padding: EdgeInsets.zero,
-                    showFlagMain: true,
-                    showFlagDialog: true,
-                    dialogSize: Size(Dimensions.webScreenWidth/2, size.height*0.6),
-                    dialogBackgroundColor: Theme.of(context).cardColor,
-                    //barrierColor: Get.isDarkMode?Colors.black.withOpacity(0.4):null,
-                    textStyle: rubikRegular.copyWith(
-                        fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyLarge!.color),
-                  ),
-                ])): null,
-            prefixIconConstraints: const BoxConstraints(minWidth: 23, maxHeight: 20),
-            suffixIconConstraints: const BoxConstraints(
-              minWidth: 25, // Adjust these values to fit the design
-              minHeight: 25,
-              maxWidth: 35,
-              maxHeight: 35,
-            ),
-            suffixIcon: widget.isShowSuffixIcon
-                ? widget.isPassword
-                ? IconButton(
-                icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility, color: Theme.of(context).primaryColor.withOpacity(0.3)),
-                onPressed: _toggle)
-                : widget.isIcon
-                ? IconButton(
-              onPressed: widget.onSuffixTap as void Function()?,
-              icon: ResponsiveHelper.isDesktop(context)? Image.asset(
-                widget.suffixAssetUrl!,
-                width: 18,
-                height: 18,
-                color: widget.imageColor ?? Theme.of(context).primaryColor,
-              ) : Icon(widget.suffixIconUrl, color: Theme.of(context).primaryColor.withOpacity(0.6)),
-            )
-                : widget.isToolTipSuffix ?
-            Tooltip(
-              key: widget.toolTipKey,
-              preferBelow: false,
-              margin: const EdgeInsets.only(top: Dimensions.paddingSizeSmall),
-              triggerMode: TooltipTriggerMode.manual,
-              message : widget.toolTipMessage ?? '',
-              child: IconButton(
-                onPressed: widget.onSuffixTap as void Function()?,
-                icon: CustomAssetImageWidget(
-                  widget.suffixAssetUrl!,
-                  width: 18,
-                  height: 18,
-                )),
-            ) : widget.isSuffixIconLoading ?
-            Container(
-              height: 15, width: 15,
-              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-              child: const CircularProgressIndicator(),
-            ): null : null,
+          ])),
+          const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+        ],
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(
+                ResponsiveHelper.isDesktop(context) ? 20 : 50),
           ),
-          onTap: widget.onTap as void Function()?,
-          onChanged: widget.onChanged as void Function(String)?,
-          onFieldSubmitted: (text) => widget.nextFocus != null ? FocusScope.of(context).requestFocus(widget.nextFocus)
-              : widget.onSubmit != null ? widget.onSubmit!(text) : null,
-          validator: widget.onValidate,
-
+          child: TextFormField(
+            maxLength: widget.maxLength,
+            maxLengthEnforcement: MaxLengthEnforcement.enforced,
+            maxLines: widget.maxLines,
+            controller: widget.controller,
+            focusNode: widget.focusNode,
+            style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                color: Theme.of(context).textTheme.bodyLarge!.color,
+                fontSize: Dimensions.fontSizeLarge),
+            textInputAction: widget.inputAction,
+            keyboardType: widget.inputType,
+            cursorColor: Theme.of(context).primaryColor,
+            textCapitalization: widget.capitalization,
+            enabled: widget.isEnabled,
+            autofocus: false,
+            //onChanged: widget.isSearch ? widget.languageProvider.searchLanguage : null,
+            obscureText: widget.isPassword ? _obscureText : false,
+            inputFormatters: widget.inputType == TextInputType.phone
+                ? <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp('[0-9+]'))
+                  ]
+                : null,
+            decoration: InputDecoration(
+              counterText: '',
+              contentPadding: widget.contentPadding ??
+                  EdgeInsets.symmetric(
+                      vertical: widget.hintText ==
+                              getTranslated('search_for_products', context)
+                          ? 12
+                          : Dimensions.paddingSizeLarge,
+                      horizontal: widget.isPadding ? 22 : 0),
+              enabledBorder: !widget.isShowBorder
+                  ? InputBorder.none
+                  : OutlineInputBorder(
+                      borderRadius: widget.hintText ==
+                                  getTranslated('type', context) ||
+                              widget.hintText ==
+                                  getTranslated(
+                                      'enter_phone_number', context) ||
+                              widget.hintText ==
+                                  getTranslated('order_id', context)
+                          ? BorderRadius.circular(Dimensions.radiusSizeLarge)
+                          : BorderRadius.circular(Dimensions.radiusSizeFifty),
+                      borderSide: BorderSide(
+                        width: 2,
+                        color: Theme.of(context).hintColor.withOpacity(0.2),
+                      ),
+                    ),
+              focusedBorder: !widget.isShowBorder
+                  ? InputBorder.none
+                  : OutlineInputBorder(
+                      borderRadius: widget.hintText ==
+                              getTranslated('type', context)
+                          ? BorderRadius.circular(Dimensions.radiusSizeLarge)
+                          : BorderRadius.circular(Dimensions.radiusSizeFifty),
+                      borderSide: BorderSide(
+                        width: 2,
+                        color: widget.borderColor ??
+                            ColorResources.getOnBoardingShadeColor(context),
+                      ),
+                    ),
+              border: !widget.isShowBorder
+                  ? InputBorder.none
+                  : OutlineInputBorder(
+                      borderRadius: widget.hintText ==
+                              getTranslated('type', context)
+                          ? BorderRadius.circular(Dimensions.radiusSizeLarge)
+                          : BorderRadius.circular(Dimensions.radiusSizeFifty),
+                      borderSide: BorderSide(
+                          width: 2,
+                          color: widget.borderColor ??
+                              Theme.of(context).hintColor.withOpacity(0.2)),
+                    ),
+              isDense: true,
+              hintText: widget.hintText,
+              fillColor: widget.hintText ==
+                          getTranslated('search_for_products', context) ||
+                      widget.hintText == getTranslated('type', context) ||
+                      widget.hintText == getTranslated('order_id', context) ||
+                      widget.hintText ==
+                          getTranslated('enter_phone_number', context)
+                  ? Theme.of(context).cardColor
+                  : widget.fillColor != null && isFocusActive
+                      ? widget.fillColor
+                      : Theme.of(context).shadowColor,
+              hintStyle: rubikRegular.copyWith(
+                  fontSize: widget.hintFontSize ?? Dimensions.fontSizeDefault,
+                  color: Theme.of(context).hintColor.withOpacity(0.6)),
+              filled: true,
+              prefixIcon: widget.isShowPrefixIcon
+                  ? IconButton(
+                      padding: const EdgeInsets.all(0),
+                      icon: widget.prefixAssetUrl != null
+                          ? Image.asset(
+                              widget.prefixAssetUrl!,
+                              color: isFocusActive
+                                  ? ColorResources.getOnBoardingShadeColor(
+                                      context)
+                                  : Theme.of(context).hintColor,
+                              scale: 2.5,
+                            )
+                          : Icon(
+                              widget.prefixIconUrl,
+                              color: isFocusActive
+                                  ? ColorResources.getOnBoardingShadeColor(
+                                      context)
+                                  : Theme.of(context).hintColor,
+                            ),
+                      onPressed: () {},
+                    )
+                  : widget.countryDialCode != null
+                      ? Padding(
+                          padding: EdgeInsets.only(
+                              left: widget.isShowBorder == true ? 10 : 0),
+                          child: Row(mainAxisSize: MainAxisSize.min, children: [
+                            CodePickerWidget(
+                              onChanged: widget.onCountryChanged,
+                              initialSelection: widget.selectedCountryCode ??
+                                  'US', // Use country code (e.g., 'US') instead of dial code
+                              favorite: [widget.selectedCountryCode ?? 'US'],
+                              showDropDownButton: true,
+                              padding: EdgeInsets.zero,
+                              showFlagMain: true,
+                              showFlagDialog: true,
+                              dialogSize: Size(Dimensions.webScreenWidth / 2,
+                                  size.height * 0.6),
+                              dialogBackgroundColor:
+                                  Theme.of(context).cardColor,
+                              //barrierColor: Get.isDarkMode?Colors.black.withOpacity(0.4):null,
+                              textStyle: rubikRegular.copyWith(
+                                  fontSize: Dimensions.fontSizeSmall,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color),
+                            ),
+                          ]))
+                      : null,
+              prefixIconConstraints:
+                  const BoxConstraints(minWidth: 23, maxHeight: 20),
+              suffixIconConstraints: const BoxConstraints(
+                minWidth: 25, // Adjust these values to fit the design
+                minHeight: 25,
+                maxWidth: 55,
+                maxHeight: 35,
+              ),
+              suffixIcon: widget.isShowSuffixIcon
+                  ? widget.isPassword
+                      ? IconButton(
+                          icon: Icon(
+                              _obscureText
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.color
+                                  ?.withOpacity(0.6)),
+                          onPressed: _toggle)
+                      : widget.isIcon
+                          ? IconButton(
+                              onPressed: widget.onSuffixTap as void Function()?,
+                              icon: ResponsiveHelper.isDesktop(context)
+                                  ? Image.asset(
+                                      widget.suffixAssetUrl!,
+                                      width: 18,
+                                      height: 18,
+                                      color: widget.imageColor ??
+                                          Theme.of(context).primaryColor,
+                                    )
+                                  : Icon(widget.suffixIconUrl,
+                                      color: Theme.of(context)
+                                          .primaryColor
+                                          .withOpacity(0.6)),
+                            )
+                          : widget.isToolTipSuffix
+                              ? Tooltip(
+                                  key: widget.toolTipKey,
+                                  preferBelow: false,
+                                  margin: const EdgeInsets.only(
+                                      top: Dimensions.paddingSizeSmall),
+                                  triggerMode: TooltipTriggerMode.manual,
+                                  message: widget.toolTipMessage ?? '',
+                                  child: IconButton(
+                                      onPressed: widget.onSuffixTap as void
+                                          Function()?,
+                                      icon: CustomAssetImageWidget(
+                                        widget.suffixAssetUrl!,
+                                        width: 18,
+                                        height: 18,
+                                      )),
+                                )
+                              : widget.isSuffixIconLoading
+                                  ? Container(
+                                      height: 15,
+                                      width: 15,
+                                      padding: const EdgeInsets.all(
+                                          Dimensions.paddingSizeSmall),
+                                      child: const CircularProgressIndicator(),
+                                    )
+                                  : null
+                  : null,
+            ),
+            onTap: widget.onTap as void Function()?,
+            onChanged: widget.onChanged as void Function(String)?,
+            onFieldSubmitted: (text) => widget.nextFocus != null
+                ? FocusScope.of(context).requestFocus(widget.nextFocus)
+                : widget.onSubmit != null
+                    ? widget.onSubmit!(text)
+                    : null,
+            validator: widget.onValidate,
+          ),
         ),
-      ),
-    ],
+      ],
     );
   }
 

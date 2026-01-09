@@ -23,7 +23,8 @@ import 'package:provider/provider.dart';
 class SearchResultScreen extends StatefulWidget {
   final String searchString;
   final SearchShortBy? shortBy;
-  const SearchResultScreen({Key? key, required this.searchString, this.shortBy}) : super(key: key);
+  const SearchResultScreen({Key? key, required this.searchString, this.shortBy})
+      : super(key: key);
 
   @override
   State<SearchResultScreen> createState() => _SearchResultScreenState();
@@ -37,15 +38,15 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
   void initState() {
     super.initState();
 
-    final SearchProvider searchProvider = Provider.of<SearchProvider>(context, listen: false);
+    final SearchProvider searchProvider =
+        Provider.of<SearchProvider>(context, listen: false);
 
     searchProvider.resetSearchFilterData(isUpdate: false);
 
     bool isFirst = true;
 
-
     searchProvider.setSelectShortBy(null, isUpdate: false);
-    if(widget.shortBy != null) {
+    if (widget.shortBy != null) {
       searchProvider.setSelectShortBy(widget.shortBy, isUpdate: false);
     }
 
@@ -54,212 +55,368 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
       isFirst = false;
     }
 
-    searchProvider.searchProduct(offset: 1, query: widget.searchString, shortBy: widget.shortBy);
+    searchProvider.searchProduct(
+        offset: 1, query: widget.searchString, shortBy: widget.shortBy);
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Provider.of<ThemeProvider>(context, listen: false).darkTheme;
+    final bool isDark =
+        Provider.of<ThemeProvider>(context, listen: false).darkTheme;
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: ResponsiveHelper.isDesktop(context) ? const CustomAppBarWidget(onlyDesktop: true) : null,
+      appBar: ResponsiveHelper.isDesktop(context)
+          ? const CustomAppBarWidget(onlyDesktop: true)
+          : null,
       body: SafeArea(
-        child: Consumer<SearchProvider>(
-          builder: (context, searchProvider, child) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if(!ResponsiveHelper.isDesktop(context)) Center(child: Container(
-                width: Dimensions.webScreenWidth,
-                padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeDefault),
-                decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    boxShadow: [BoxShadow(
-                      color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.05),
-                      offset: const Offset(0, 2),
-                      blurRadius: 30,
-                    )]
-                ),
-                child: Row(
-                  children: [
-                    ResponsiveHelper.isDesktop(context) ? const SizedBox(): Expanded(
+        child: Container(
+          color: ColorResources.getHomeScreenBackgroundColor(context),
+          child: Consumer<SearchProvider>(
+            builder: (context, searchProvider, child) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (!ResponsiveHelper.isDesktop(context))
+                  Center(
                       child: Container(
-                        height: 45,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Theme.of(context).hintColor.withOpacity(0.2), width: 1),
-                          borderRadius: BorderRadius.circular(40),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(40),
-                          child: CustomTextFieldWidget(
-                            fillColor: Theme.of(context).primaryColor.withOpacity(0.04),
-                            hintText: getTranslated('search_items_here', context),
-                            controller: _searchController,
-                            isShowPrefixIcon: true,
-                            prefixAssetUrl: Images.search,
-                            inputAction: TextInputAction.search,
-                            prefixAssetImageColor: Theme.of(context).primaryColor,
-                            isIcon: true,
-                            onSubmit: ()=> searchProvider.searchProduct(offset: 1, query: _searchController.text),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    ResponsiveHelper.isDesktop(context) ?
-                    const SizedBox():IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: Icon(Icons.close, color: Theme.of(context).disabledColor, size: 25),
-                    ),
-                  ],
-                ),
-              )),
-              const SizedBox(height: 10),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
-                child: Center(
-                  child: SizedBox(
                     width: Dimensions.webScreenWidth,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Dimensions.paddingSizeSmall,
-                        vertical: Dimensions.paddingSizeDefault,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).secondaryHeaderColor.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(Dimensions.radiusSizeDefault),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '${searchProvider.searchProductModel?.products?.length ?? '0'} ${getTranslated('product_found', context)}',
-                              style: rubikRegular.copyWith(color: ColorResources.getGreyBunkerColor(context)),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                                      child: SizedBox(width: 550, child: FilterWidget(
-                                          query: _searchController.text,
-                                        )),
-                                    );
-
-                                  });
-                            },
-                            child: Stack(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeSmall),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).cardColor,
-                                    borderRadius: BorderRadius.circular(Dimensions.radiusSizeDefault),
-                                    border: Border.all(color: isDark ? Colors.white : Theme.of(context).primaryColor),
-                                  ),
-                                  child: Icon(Icons.filter_list, color: Theme.of(context).primaryColor, size: 20),
-                                ),
-
-                              if(searchProvider.selectedSearchShotBy != null)  Positioned(
-                                  top: 8, right: 7,
-                                  child: Container(
-                                    height: 10, width: 10,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.error,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-
-                                ),
-                              ],
-                            )
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Dimensions.paddingSizeLarge,
+                        vertical: Dimensions.paddingSizeDefault),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).cardColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .color!
+                                .withOpacity(0.05),
+                            offset: const Offset(0, 2),
+                            blurRadius: 30,
                           )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 13),
-
-              Expanded(
-                child: searchProvider.searchProductModel != null && searchProvider.searchProductModel!.products!.isEmpty ? SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
-                  child: Column(
-                    children: [
-                      ConstrainedBox(
-                        constraints: BoxConstraints(minHeight: !ResponsiveHelper.isDesktop(context) && height < 600 ? height : height - 400),
-                        child: NoDataScreen(title: getTranslated('no_product_found', context)),
-                      ),
-
-                      const FooterWebWidget(footerType: FooterType.nonSliver),
-
-                    ],
-                  ),
-                ) : SingleChildScrollView(
-                      controller: scrollController,
-                      physics: const BouncingScrollPhysics(),
-                      child: Column(
-                        children: [
-                          Center(
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(minHeight: !ResponsiveHelper.isDesktop(context) && height < 600 ? height : height - 400),
-                              child: SizedBox(
-                                width: Dimensions.webScreenWidth,
-                                child: PaginatedListView(
-                                  scrollController: scrollController,
-                                  totalSize: searchProvider.searchProductModel?.totalSize,
-                                  offset: searchProvider.searchProductModel?.offset,
-                                  onPaginate: (int? offset)=> searchProvider.searchProduct(
-                                    offset: offset!, query: _searchController.text, isUpdate: true,
-                                    shortBy: widget.shortBy,
+                        ]),
+                    child: Row(
+                      children: [
+                        ResponsiveHelper.isDesktop(context)
+                            ? const SizedBox()
+                            : Expanded(
+                                child: Container(
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Theme.of(context)
+                                            .hintColor
+                                            .withOpacity(0.2),
+                                        width: 1),
+                                    borderRadius: BorderRadius.circular(40),
                                   ),
-                                  itemView: ResponsiveHelper.isDesktop(context) || searchProvider.searchProductModel == null ? GridView.builder(
-                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisSpacing: ResponsiveHelper.isDesktop(context) ? 13 : 5,
-                                      mainAxisSpacing: ResponsiveHelper.isDesktop(context) ? 13 : 5,
-                                      childAspectRatio: ResponsiveHelper.isDesktop(context) ? (1/1.4) : 0.7,
-                                      crossAxisCount: ResponsiveHelper.isDesktop(context) ? 5  : 2 ,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(40),
+                                    child: CustomTextFieldWidget(
+                                      fillColor: Theme.of(context)
+                                          .primaryColor
+                                          .withOpacity(0.04),
+                                      hintText: getTranslated(
+                                          'search_items_here', context),
+                                      controller: _searchController,
+                                      isShowPrefixIcon: true,
+                                      prefixAssetUrl: Images.search,
+                                      inputAction: TextInputAction.search,
+                                      prefixAssetImageColor:
+                                          Theme.of(context).primaryColor,
+                                      isIcon: true,
+                                      onSubmit: () =>
+                                          searchProvider.searchProduct(
+                                              offset: 1,
+                                              query: _searchController.text),
                                     ),
-                                    itemCount: searchProvider.searchProductModel == null ? 10 : searchProvider.searchProductModel!.products!.length,
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
-                                    itemBuilder: (context, index) {
-                                      return searchProvider.searchProductModel == null
-                                          ? const ProductShimmerWidget(isEnabled: true, isWeb: true)
-                                          : ProductCardWidget(product: searchProvider.searchProductModel!.products![index]);
-                                    },
-                                  ) : StaggeredGrid.count(
-                                      crossAxisCount: ResponsiveHelper.isDesktop(context) ? 5 : 2,
-                                      mainAxisSpacing: 4, crossAxisSpacing: 4,
-                                      children: searchProvider.searchProductModel!.products!.map((product) => StaggeredGridTile.fit(
-                                        crossAxisCellCount: 1,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: ProductCardWidget(product: product),
-                                        ),
-                                      )).toList()),
+                                  ),
                                 ),
                               ),
+                        const SizedBox(width: 5),
+                        ResponsiveHelper.isDesktop(context)
+                            ? const SizedBox()
+                            : IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                icon: Icon(Icons.close,
+                                    color: Theme.of(context).disabledColor,
+                                    size: 25),
+                              ),
+                      ],
+                    ),
+                  )),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Dimensions.paddingSizeLarge),
+                  child: Center(
+                    child: SizedBox(
+                      width: Dimensions.webScreenWidth,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Dimensions.paddingSizeSmall,
+                          vertical: Dimensions.paddingSizeLarge,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(
+                              Dimensions.radiusSizeDefault),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${searchProvider.searchProductModel?.products?.length ?? '0'} ${getTranslated('product_found', context)}',
+                                style: rubikBold.copyWith(
+                                    color: ColorResources.getGreyBunkerColor(
+                                        context)),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: Dimensions.paddingSizeDefault),
-
-                          const FooterWebWidget(footerType: FooterType.nonSliver),
-
-                        ],
+                            InkWell(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Dialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0)),
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: ColorResources
+                                                      .getHomeScreenBackgroundColor(
+                                                          context),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15)),
+                                              width: 550,
+                                              child: FilterWidget(
+                                                query: _searchController.text,
+                                              )),
+                                        );
+                                      });
+                                },
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                      alignment: Alignment.center,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal:
+                                              Dimensions.paddingSizeExtraSmall,
+                                          vertical:
+                                              Dimensions.paddingSizeExtraSmall),
+                                      decoration: BoxDecoration(
+                                        color: ColorResources
+                                            .getOnBoardingShadeColor(context),
+                                        borderRadius: BorderRadius.circular(
+                                            Dimensions.radiusSizeFifty),
+                                        border: Border.all(
+                                            color: isDark
+                                                ? Colors.white
+                                                : Colors.transparent),
+                                      ),
+                                      child: Icon(Icons.filter_list,
+                                          color: Theme.of(context).cardColor,
+                                          size: 28),
+                                    ),
+                                    if (searchProvider.selectedSearchShotBy !=
+                                        null)
+                                      Positioned(
+                                        top: 8,
+                                        right: 7,
+                                        child: Container(
+                                          height: 10,
+                                          width: 10,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .error,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ))
+                          ],
+                        ),
                       ),
                     ),
-              )
-            ],
+                  ),
+                ),
+                const SizedBox(height: 13),
+                Expanded(
+                  child: searchProvider.searchProductModel != null &&
+                          searchProvider.searchProductModel!.products!.isEmpty
+                      ? SingleChildScrollView(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: Dimensions.paddingSizeSmall),
+                          child: Column(
+                            children: [
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                    minHeight:
+                                        !ResponsiveHelper.isDesktop(context) &&
+                                                height < 600
+                                            ? height
+                                            : height - 400),
+                                child: NoDataScreen(
+                                    title: getTranslated(
+                                        'no_product_found', context)),
+                              ),
+                              const FooterWebWidget(
+                                  footerType: FooterType.nonSliver),
+                            ],
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.fromLTRB(9.0, 0, 9.0, 0),
+                          child: SingleChildScrollView(
+                            controller: scrollController,
+                            physics: const BouncingScrollPhysics(),
+                            child: Column(
+                              children: [
+                                Center(
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                        minHeight: !ResponsiveHelper.isDesktop(
+                                                    context) &&
+                                                height < 600
+                                            ? height
+                                            : height - 400),
+                                    child: SizedBox(
+                                      width: Dimensions.webScreenWidth,
+                                      child: PaginatedListView(
+                                        scrollController: scrollController,
+                                        totalSize: searchProvider
+                                            .searchProductModel?.totalSize,
+                                        offset: searchProvider
+                                            .searchProductModel?.offset,
+                                        onPaginate: (int? offset) =>
+                                            searchProvider.searchProduct(
+                                          offset: offset!,
+                                          query: _searchController.text,
+                                          isUpdate: true,
+                                          shortBy: widget.shortBy,
+                                        ),
+                                        itemView: ResponsiveHelper.isDesktop(
+                                                    context) ||
+                                                searchProvider
+                                                        .searchProductModel ==
+                                                    null
+                                            ? GridView.builder(
+                                                gridDelegate:
+                                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisSpacing:
+                                                      ResponsiveHelper
+                                                              .isDesktop(
+                                                                  context)
+                                                          ? 13
+                                                          : 5,
+                                                  mainAxisSpacing:
+                                                      ResponsiveHelper
+                                                              .isDesktop(
+                                                                  context)
+                                                          ? 13
+                                                          : 5,
+                                                  childAspectRatio:
+                                                      ResponsiveHelper
+                                                              .isDesktop(
+                                                                  context)
+                                                          ? (1 / 1.4)
+                                                          : 0.7,
+                                                  crossAxisCount:
+                                                      ResponsiveHelper
+                                                              .isDesktop(
+                                                                  context)
+                                                          ? 5
+                                                          : 2,
+                                                ),
+                                                itemCount: searchProvider
+                                                            .searchProductModel ==
+                                                        null
+                                                    ? 10
+                                                    : searchProvider
+                                                        .searchProductModel!
+                                                        .products!
+                                                        .length,
+                                                shrinkWrap: true,
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: Dimensions
+                                                            .paddingSizeSmall),
+                                                itemBuilder: (context, index) {
+                                                  return searchProvider
+                                                              .searchProductModel ==
+                                                          null
+                                                      ? const ProductShimmerWidget(
+                                                          isEnabled: true,
+                                                          isWeb: true)
+                                                      : ProductCardWidget(
+                                                          product: searchProvider
+                                                              .searchProductModel!
+                                                              .products![index]);
+                                                },
+                                              )
+                                            : StaggeredGrid.count(
+                                                crossAxisCount:
+                                                    ResponsiveHelper.isDesktop(
+                                                            context)
+                                                        ? 5
+                                                        : 2,
+                                                mainAxisSpacing: 4,
+                                                crossAxisSpacing: 4,
+                                                children: searchProvider
+                                                    .searchProductModel!
+                                                    .products!
+                                                    .map((product) =>
+                                                        StaggeredGridTile.fit(
+                                                          crossAxisCellCount: 1,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                                border: Border.all(
+                                                                    color: ColorResources
+                                                                        .colorGrey,
+                                                                    width: 1),
+                                                              ),
+                                                              child: ProductCardWidget(
+                                                                  product:
+                                                                      product),
+                                                            ),
+                                                          ),
+                                                        ))
+                                                    .toList()),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                    height: Dimensions.paddingSizeDefault),
+                                const FooterWebWidget(
+                                    footerType: FooterType.nonSliver),
+                              ],
+                            ),
+                          ),
+                        ),
+                )
+              ],
+            ),
           ),
         ),
       ),

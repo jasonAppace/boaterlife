@@ -24,7 +24,8 @@ class AppBarWithBackTitle extends StatelessWidget {
     this.suffixIcon2,
     this.onSuffixButtonPressed2,
     this.showBackButton = true,
-    Key? key, this.color,
+    Key? key,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -33,18 +34,21 @@ class AppBarWithBackTitle extends StatelessWidget {
       horizontal: 15,
       widget: Row(
         children: [
-          showBackButton ?
-          GestureDetector(
-            child: SvgPicture.asset(
-              Images.backArrow,
-              width: 24,
-              height: 24,
-              color: color ?? ColorUtils.black,
-            ),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ) : SizedBox(width: 24,),
+          showBackButton
+              ? GestureDetector(
+                  child: SvgPicture.asset(
+                    Images.backArrow,
+                    width: 24,
+                    height: 24,
+                    color: color ?? ColorUtils.black,
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                )
+              : SizedBox(
+                  width: 24,
+                ),
           SizedBox(
             width: 2.w,
           ),

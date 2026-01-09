@@ -25,22 +25,31 @@ class Images {
   static const String noDataImage = 'assets/image/no_data_image.png';
   static const String noOrderImage = 'assets/image/no_order_image.png';
   static const String shoppingCart = 'assets/image/shopping_cart.png';
+  static const String addressBackgroundImage =
+      'assets/image/address_background_image.png';
   // static const String support = 'assets/image/support.png';
-  static const String deliveryBoyMarker = 'assets/image/delivery_boy_marker.png';
+  static const String deliveryBoyMarker =
+      'assets/image/delivery_boy_marker.png';
   static const String destinationMarker = 'assets/image/destination_marker.png';
   static const String restaurantMarker = 'assets/image/restaurant_marker.png';
-  static const String unselectedRestaurantMarker = 'assets/image/unselected_restaurant_marker.png';
+  static const String unselectedRestaurantMarker =
+      'assets/image/unselected_restaurant_marker.png';
   static const String wallet = 'assets/image/wallet.png';
   static const String guestLogin = 'assets/image/guest_login.png';
   static const String placeholderLight = 'assets/image/placeholder.jpg';
   static const String placeholderDark = 'assets/image/dark_placeholder.png';
-  static const String placeHolderOneToOne = 'assets/image/place_holder_one_one.png';
+  static const String placeHolderOneToOne =
+      'assets/image/place_holder_one_one.png';
   static String placeholder(BuildContext context) {
-    return Provider.of<ThemeProvider>(context).darkTheme ? placeholderDark : placeholderLight;
+    return Provider.of<ThemeProvider>(context).darkTheme
+        ? placeholderDark
+        : placeholderLight;
   }
+
   static const String logo = 'assets/image/logo.png';
   static const String login = 'assets/icon/login.png';
-  static const String imageUpload= 'assets/image/image_upload.svg';
+  static const String login_background = 'assets/image/login_background.png';
+  static const String imageUpload = 'assets/image/image_upload.svg';
   static const String imgUpload = 'assets/image/image_upload.svg';
   // static const String helpSupport = 'assets/icon/help_support.png';
   // static const String privacyPolicy = 'assets/icon/privacy_policy.png';
@@ -61,7 +70,8 @@ class Images {
   static const String facebookSocial = 'assets/image/facebook_social.png';
   static const String flashSale = 'assets/image/flash_sale.png';
   static const String offerProductBg = 'assets/image/offer_product_bg.png';
-  static const String deliveryAddressIcon = 'assets/image/delivery_address_icon.png';
+  static const String deliveryAddressIcon =
+      'assets/image/delivery_address_icon.png';
   static const String wishListNoData = 'assets/image/wishlist_nodata.png';
   static const String percent = 'assets/image/percent.png';
   static const String amount = 'assets/image/amount.png';
@@ -83,9 +93,11 @@ class Images {
   static const String map = 'assets/icon/map.png';
   static const String notification = 'assets/icon/notification.png';
   static const String closeLock = 'assets/icon/close_lock.png';
-  static const String emailWithBackground = 'assets/icon/email_with_background.png';
+  static const String emailWithBackground =
+      'assets/icon/email_with_background.png';
   static const String openLock = 'assets/icon/open_lock.png';
-  static const String doneWithFullBackground = 'assets/icon/done_with_full_background.png';
+  static const String doneWithFullBackground =
+      'assets/icon/done_with_full_background.png';
   static const String filterIcon = 'assets/icon/filter_icon.png';
   static const String location = 'assets/icon/location.png';
   // static const String couponIcon = 'assets/icon/coupon_icon.png';
@@ -103,9 +115,9 @@ class Images {
   static const String italy = 'assets/image/italy.png';
   static const String japan = 'assets/image/japan.png';
   static const String korea = 'assets/image/korean.png';
-  static const String onBoardingOne = 'assets/image/Onboarding1.jpg';
-  static const String onBoardingThree = 'assets/image/Onboarding3.jpg';
-  static const String onBoardingTwo = 'assets/image/Onboarding2.jpg';
+  static const String onBoardingOne = 'assets/image/Onboarding1.png';
+  static const String onBoardingThree = 'assets/image/Onboarding3.png';
+  static const String onBoardingTwo = 'assets/image/Onboarding2.png';
   static const String ph_noPost = 'assets/image/ph_noPost.png';
   static const String unitedKingdom = 'assets/image/united_kindom.png';
   static const String done = 'assets/icon/done.png';
@@ -119,7 +131,8 @@ class Images {
   static const String linkedin = 'assets/image/linkedin.png';
   static const String instagram = 'assets/image/instagram.png';
   static const String pinterest = 'assets/image/pinterest.png';
-  static const String locationBannerImage = 'assets/image/location_banner_image.png';
+  static const String locationBannerImage =
+      'assets/image/location_banner_image.png';
   static const String cashOnDelivery = 'assets/image/cash_on_delivery.png';
   static const String orderDelivered = 'assets/image/order_delivered.png';
   static const String orderPlace = 'assets/image/order_place.png';
@@ -128,40 +141,41 @@ class Images {
   static const String preparingItems = 'assets/image/preparing_items.png';
   static const String orderAccepted = 'assets/image/order_accepted.png';
   static const String order = 'assets/image/order.png';
-  static const String emailVerificationBackgroundIcon = 'assets/image/email_verification_background.png';
-  static const String phoneVerificationBackgroundIcon = 'assets/image/phone_verification_background.png';
+  static const String emailVerificationBackgroundIcon =
+      'assets/image/email_verification_background.png';
+  static const String phoneVerificationBackgroundIcon =
+      'assets/image/phone_verification_background.png';
   static const String referralIcon = 'assets/image/referral_icon.png';
   static const String userIcon = 'assets/image/user.png';
   static const String notVerifiedProfileIcon = 'assets/image/not_verified.png';
   static const String verifiedProfileIcon = 'assets/image/verified.png';
   static const String noMapBackground = 'assets/image/no_map_background.png';
-  static const String forgotPasswordBackground = 'assets/image/forgot_password_background.png';
-  static const String forgotVerificationBackground = 'assets/image/forgot_verification_background.png';
-  static const String changePasswordBackground = 'assets/image/change_password_background.png';
-  static const String emailPhoneIcon = 'assets/image/email_phone_icon.png';
+  static const String forgotPasswordBackground =
+      'assets/image/forgot_password_background.png';
+  static const String forgotVerificationBackground =
+      'assets/image/forgot_verification_background.png';
+  static const String changePasswordBackground =
+      'assets/image/change_password_background.png';
+  static const String emailPhoneIcon = 'assets/image/email.png';
 
   static const String mapIcon = 'assets/image/map_icon.png';
   static const String workPlaceIcon = 'assets/image/workplace_icon.png';
-
 
   static const String email = 'assets/image/email.png';
   static const String password = 'assets/image/password.png';
   static const String appleLogo = 'assets/image/apple_logo.png';
 
-
-
-
   static String getSocialImage(String name) => 'assets/image/$name.png';
 
   /// Get logo based on country code
   static String getLogoByCountryCode(String? countryCode) {
-    if(countryCode == null || countryCode.isEmpty) {
+    if (countryCode == null || countryCode.isEmpty) {
       return logo;
     }
-    
+
     final upperCode = countryCode.toUpperCase().trim();
-    
-    switch(upperCode) {
+
+    switch (upperCode) {
       case 'CN':
         return china;
       case 'DE':
@@ -199,14 +213,18 @@ class Images {
   static const String privacyPolicy = 'assets/svg/privacy_policy.svg';
   static const String termsAndCondition = 'assets/svg/terms_and_condition.svg';
   static const String aboutUs = 'assets/svg/about_us.svg';
+  static const String notificationSvg = 'assets/svg/notification.svg';
+  static const String couponSvg = 'assets/svg/coupon.svg';
   static const String address = 'assets/svg/address.svg';
   static const String cancellationPolicy = 'assets/svg/cancellation_policy.svg';
   static const String refundPolicy = 'assets/svg/refund_policy.svg';
   static const String profileMenuIcon = 'assets/svg/profile_menu_icon.svg';
   static const String couponMenuIcon = 'assets/svg/coupon_menu_icon.svg';
   static const String userDeleteIcon = 'assets/svg/user_delete_icon.svg';
-  static const String locationDeleteIcon = 'assets/svg/location_delete_icon.svg';
-  static const String wishListRemoveIcon = 'assets/svg/wish_list_remove_icon.svg';
+  static const String locationDeleteIcon =
+      'assets/svg/location_delete_icon.svg';
+  static const String wishListRemoveIcon =
+      'assets/svg/wish_list_remove_icon.svg';
   static const String lockIcon = 'assets/svg/lock.svg';
   static const String cartCouponIcon = 'assets/svg/cart_coupon_icon.svg';
   static const String orderFailed = 'assets/svg/order_failed.svg';
@@ -219,6 +237,4 @@ class Images {
   static String messageSend = baseAssetPATH + "message_send.svg";
   static String addIc = baseAssetPATH + "add-ic.svg";
   static String phNewsfeed = baseAssetPATH + "ph_newsfeed.png";
-
-
 }

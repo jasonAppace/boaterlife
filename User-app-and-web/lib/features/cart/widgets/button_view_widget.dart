@@ -17,7 +17,8 @@ class ButtonViewWidget extends StatelessWidget {
   final double discount;
 
   const ButtonViewWidget({
-    Key? key, required this.itemPrice,
+    Key? key,
+    required this.itemPrice,
     required this.total,
     required this.deliveryCharge,
     required this.discount,
@@ -25,31 +26,35 @@ class ButtonViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final CheckoutProvider checkoutProvider = Provider.of<CheckoutProvider>(context, listen: false);
-    final CouponProvider couponProvider = Provider.of<CouponProvider>(context, listen: false);
+    final CheckoutProvider checkoutProvider =
+        Provider.of<CheckoutProvider>(context, listen: false);
+    final CouponProvider couponProvider =
+        Provider.of<CouponProvider>(context, listen: false);
 
     return Container(
       width: Dimensions.webScreenWidth,
       padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
       child: CustomButtonWidget(
-          btnTxt: getTranslated('proceed_to_checkout', context), onTap: () {
-        if(itemPrice < Provider.of<SplashProvider>(context, listen: false).configModel!.minimumOrderValue!) {
-          showCustomSnackBar('Minimum order amount is ${PriceConverterHelper.convertPrice(Provider.of<SplashProvider>(context, listen: false).configModel!.minimumOrderValue)}, you have ${PriceConverterHelper.convertPrice(itemPrice)} in your cart, please add more item.', context);
-        } else {
-          RouteHelper.getCheckoutRoute(
-            context,
-            amount: total,
-            deliveryCharge: deliveryCharge,
-            type: checkoutProvider.orderType,
-            discount: discount,
-            code: couponProvider.coupon?.code,
-            fromCart: true,
-            action: RouteAction.push
-          );
-
-        }
-      }),
+          btnTxt: getTranslated('proceed_to_checkout', context),
+          onTap: () {
+            if (itemPrice <
+                Provider.of<SplashProvider>(context, listen: false)
+                    .configModel!
+                    .minimumOrderValue!) {
+              showCustomSnackBar(
+                  'Minimum order amount is ${PriceConverterHelper.convertPrice(Provider.of<SplashProvider>(context, listen: false).configModel!.minimumOrderValue)}, you have ${PriceConverterHelper.convertPrice(itemPrice)} in your cart, please add more item.',
+                  context);
+            } else {
+              RouteHelper.getCheckoutRoute(context,
+                  amount: total,
+                  deliveryCharge: deliveryCharge,
+                  type: checkoutProvider.orderType,
+                  discount: discount,
+                  code: couponProvider.coupon?.code,
+                  fromCart: true,
+                  action: RouteAction.push);
+            }
+          }),
     );
   }
 }

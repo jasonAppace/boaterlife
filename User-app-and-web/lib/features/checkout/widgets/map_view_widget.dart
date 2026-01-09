@@ -11,6 +11,7 @@ import 'package:hexacom_user/helper/checkout_helper.dart';
 import 'package:hexacom_user/helper/responsive_helper.dart';
 import 'package:hexacom_user/localization/language_constrants.dart';
 import 'package:hexacom_user/main.dart';
+import 'package:hexacom_user/utill/color_resources.dart';
 import 'package:hexacom_user/utill/dimensions.dart';
 import 'package:hexacom_user/utill/images.dart';
 import 'package:hexacom_user/utill/styles.dart';
@@ -24,14 +25,18 @@ class MapViewWidget extends StatefulWidget {
   final GlobalKey? dropDownKey;
   final double? discount;
   final double? amount;
-  const MapViewWidget({super.key, required this.isSelfPickUp, this.dropDownKey, this.discount, this.amount});
+  const MapViewWidget(
+      {super.key,
+      required this.isSelfPickUp,
+      this.dropDownKey,
+      this.discount,
+      this.amount});
 
   @override
   State<MapViewWidget> createState() => _MapViewWidgetState();
 }
 
 class _MapViewWidgetState extends State<MapViewWidget> {
-
   late GoogleMapController _mapController;
   List<Branches>? _branches = [];
   bool _loading = true;
@@ -41,168 +46,211 @@ class _MapViewWidgetState extends State<MapViewWidget> {
   void initState() {
     super.initState();
 
-    _branches = Provider.of<SplashProvider>(context, listen: false).configModel!.branches;
-
+    _branches = Provider.of<SplashProvider>(context, listen: false)
+        .configModel!
+        .branches;
   }
 
   @override
   Widget build(BuildContext context) {
-
     final ConfigModel configModel = context.read<SplashProvider>().configModel!;
     final OrderProvider orderProvider = context.read<OrderProvider>();
     final bool isLoggedIn = context.read<AuthProvider>().isLoggedIn();
     double deliveryCharge = 0.0;
 
-    return Consumer<CheckoutProvider>(
-        builder: (context, checkoutProvider, _) {
-          return Column(
-            children: [
-              //_branches!.length > 1 ?
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Dimensions.paddingSizeDefault,
-                  ).copyWith(top: ResponsiveHelper.isDesktop(context) ? Dimensions.paddingSizeSmall : 0.0),
-                  child: Text(getTranslated('select_branch', context), style: rubikMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
-                ),
+    return Consumer<CheckoutProvider>(builder: (context, checkoutProvider, _) {
+      return Column(
+        children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            if (_branches!.length > 1) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeDefault,
+                ).copyWith(
+                    top: ResponsiveHelper.isDesktop(context)
+                        ? Dimensions.paddingSizeSmall
+                        : 0.0),
+                child: Text(getTranslated('select_branch', context),
+                    style:
+                        rubikBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
+              ),
+              SizedBox(
+                height: 55,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.fromLTRB(
+                      Dimensions.paddingSizeDefault,
+                      Dimensions.paddingSizeSmall,
+                      0,
+                      0),
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: _branches!.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                          right: Dimensions.paddingSizeSmall),
+                      child: InkWell(
+                        onTap: () async {
+                          checkoutProvider.setBranchIndex(index);
+                          orderProvider.setAreaID(isReload: true);
+                          orderProvider.setDeliveryCharge(null);
+                          await CheckOutHelper.selectDeliveryAddressAuto(
+                              orderType: widget.isSelfPickUp
+                                  ? 'self_pickup'
+                                  : 'delivery',
+                              isLoggedIn: (isLoggedIn ||
+                                  CheckOutHelper.isGuestCheckout(context)));
 
-                SizedBox(
-                  height: 50,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: _branches!.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
-                        child: InkWell(
-                          onTap: () async {
-                            checkoutProvider.setBranchIndex(index);
-                            orderProvider.setAreaID(isReload: true);
-                            orderProvider.setDeliveryCharge(null);
-                            await CheckOutHelper.selectDeliveryAddressAuto(orderType: widget.isSelfPickUp ? 'self_pickup' : 'delivery', isLoggedIn: (isLoggedIn || CheckOutHelper.isGuestCheckout(context)));
-
-                            deliveryCharge = CheckOutHelper.getDeliveryCharge(
-                              context: context,
-                              freeDeliveryType: checkoutProvider.getCheckOutData?.freeDeliveryType,
-                              orderAmount: widget.amount ?? 0.0,
-                              distance: checkoutProvider.distance,
-                              discount: widget.discount ?? 0.0,
-                              configModel: configModel,
-                              isSelfPickUp: widget.isSelfPickUp,
-                            );
-                            orderProvider.setDeliveryCharge(deliveryCharge);
-                            _setMarkers(index);
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: Dimensions.paddingSizeExtraSmall,
-                              horizontal: Dimensions.paddingSizeDefault,
-                            ),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: index == checkoutProvider.branchIndex ? Theme.of(context).primaryColor : Theme.of(context).shadowColor,
-                              borderRadius: BorderRadius.circular(32),
-                            ),
-                            child: Text(_branches![index].name!, maxLines: 1, overflow: TextOverflow.ellipsis, style: rubikMedium.copyWith(
-                              color: index == checkoutProvider.branchIndex ? Colors.white : Theme.of(context).textTheme.bodyLarge!.color,
-                            )),
+                          deliveryCharge = CheckOutHelper.getDeliveryCharge(
+                            context: context,
+                            freeDeliveryType: checkoutProvider
+                                .getCheckOutData?.freeDeliveryType,
+                            orderAmount: widget.amount ?? 0.0,
+                            distance: checkoutProvider.distance,
+                            discount: widget.discount ?? 0.0,
+                            configModel: configModel,
+                            isSelfPickUp: widget.isSelfPickUp,
+                          );
+                          orderProvider.setDeliveryCharge(deliveryCharge);
+                          _setMarkers(index);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: Dimensions.paddingSizeExtraSmall,
+                            horizontal: Dimensions.paddingSizeDefault,
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-
-                if(configModel.googleMapStatus ?? false)...[
-                  Container(
-                    height: 200,
-                    margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(Dimensions.radiusSizeDefault),
-                        color: Theme.of(context).cardColor,
-                        border: Border.all(width: 1, color: Theme.of(context).primaryColor.withOpacity(0.5))
-                    ),
-                    child: Stack(children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimensions.radiusSizeDefault),
-                        child: GoogleMap(
-                          minMaxZoomPreference: const MinMaxZoomPreference(0, 16),
-                          mapType: MapType.normal,
-                          initialCameraPosition: CameraPosition(target: LatLng(
-                            double.parse(_branches![0].latitude!),
-                            double.parse(_branches![0].longitude!),
-                          ), zoom: 16),
-                          zoomControlsEnabled: true,
-                          markers: _markers,
-                          onMapCreated: (GoogleMapController controller) async {
-                            await Geolocator.requestPermission();
-                            _mapController = controller;
-                            _loading = false;
-                            _setMarkers(0);
-                          },
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: index == checkoutProvider.branchIndex
+                                ? ColorResources.getOnBoardingShadeColor(
+                                    context)
+                                : Theme.of(context).shadowColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(_branches![index].name!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: rubikMedium.copyWith(
+                                color: index == checkoutProvider.branchIndex
+                                    ? Colors.white
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color,
+                              )),
                         ),
                       ),
-
-                      _loading ? Center(child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-                      )) : const SizedBox(),
-                    ]),
-                  ),
-                  const SizedBox(height: Dimensions.paddingSizeDefault)
-                ],
-
-                if(ResponsiveHelper.isDesktop(context) && CheckOutHelper.getDeliveryChargeType(context) == DeliveryChargeType.area.name && !widget.isSelfPickUp)...[
-                  ZipCodeViewWidget(
-                    dropDownKey: widget.dropDownKey!,
-                    discount: widget.discount ?? 0.0,
-                    amount: widget.amount ?? 0.0,
-                    isSelfPickUp: widget.isSelfPickUp,
-                  ),
-                ],
-
-                if(ResponsiveHelper.isDesktop(context) && !widget.isSelfPickUp)
-                  DeliveryAddressWidget(selfPickup: widget.isSelfPickUp),
-
-              ])
-
-
-
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: Dimensions.paddingSizeDefault),
             ],
-          );
-        }
-    );
+            if (configModel.googleMapStatus ?? false) ...[
+              Container(
+                height: 200,
+                margin: const EdgeInsets.symmetric(
+                    horizontal: Dimensions.paddingSizeSmall),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.circular(Dimensions.radiusSizeDefault),
+                    color: Theme.of(context).cardColor,
+                    border: Border.all(
+                        width: 1,
+                        color:
+                            Theme.of(context).primaryColor.withOpacity(0.5))),
+                child: Stack(children: [
+                  ClipRRect(
+                    borderRadius:
+                        BorderRadius.circular(Dimensions.radiusSizeDefault),
+                    child: GoogleMap(
+                      minMaxZoomPreference: const MinMaxZoomPreference(0, 16),
+                      mapType: MapType.normal,
+                      initialCameraPosition: CameraPosition(
+                          target: LatLng(
+                            double.parse(_branches![0].latitude!),
+                            double.parse(_branches![0].longitude!),
+                          ),
+                          zoom: 16),
+                      zoomControlsEnabled: true,
+                      markers: _markers,
+                      onMapCreated: (GoogleMapController controller) async {
+                        await Geolocator.requestPermission();
+                        _mapController = controller;
+                        _loading = false;
+                        _setMarkers(0);
+                      },
+                    ),
+                  ),
+                  _loading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).primaryColor),
+                        ))
+                      : const SizedBox(),
+                ]),
+              ),
+              const SizedBox(height: Dimensions.paddingSizeDefault)
+            ],
+            if (ResponsiveHelper.isDesktop(context) &&
+                CheckOutHelper.getDeliveryChargeType(context) ==
+                    DeliveryChargeType.area.name &&
+                !widget.isSelfPickUp) ...[
+              ZipCodeViewWidget(
+                dropDownKey: widget.dropDownKey!,
+                discount: widget.discount ?? 0.0,
+                amount: widget.amount ?? 0.0,
+                isSelfPickUp: widget.isSelfPickUp,
+              ),
+            ],
+            if (ResponsiveHelper.isDesktop(context) && !widget.isSelfPickUp)
+              DeliveryAddressWidget(selfPickup: widget.isSelfPickUp),
+          ])
+        ],
+      );
+    });
   }
 
   void _setMarkers(int selectedIndex) async {
     late BitmapDescriptor bitmapDescriptor;
     late BitmapDescriptor bitmapDescriptorUnSelect;
-    await BitmapDescriptor.fromAssetImage(const ImageConfiguration(size: Size(30, 50)), Images.restaurantMarker).then((marker) {
+    await BitmapDescriptor.fromAssetImage(
+            const ImageConfiguration(size: Size(30, 50)),
+            Images.restaurantMarker)
+        .then((marker) {
       bitmapDescriptor = marker;
     });
-    await BitmapDescriptor.fromAssetImage(const ImageConfiguration(size: Size(20, 20)), Images.unselectedRestaurantMarker).then((marker) {
+    await BitmapDescriptor.fromAssetImage(
+            const ImageConfiguration(size: Size(20, 20)),
+            Images.unselectedRestaurantMarker)
+        .then((marker) {
       bitmapDescriptorUnSelect = marker;
     });
 
     // Marker
     _markers = HashSet<Marker>();
-    for(int index=0; index<_branches!.length; index++) {
+    for (int index = 0; index < _branches!.length; index++) {
       _markers.add(Marker(
         markerId: MarkerId('branch_$index'),
-        position: LatLng(double.parse(_branches![index].latitude!), double.parse(_branches![index].longitude!)),
-        infoWindow: InfoWindow(title: _branches![index].name, snippet: _branches![index].address),
-        icon: selectedIndex == index ? bitmapDescriptor : bitmapDescriptorUnSelect,
+        position: LatLng(double.parse(_branches![index].latitude!),
+            double.parse(_branches![index].longitude!)),
+        infoWindow: InfoWindow(
+            title: _branches![index].name, snippet: _branches![index].address),
+        icon: selectedIndex == index
+            ? bitmapDescriptor
+            : bitmapDescriptorUnSelect,
       ));
     }
 
-    _mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(
-      double.parse(_branches![selectedIndex].latitude!),
-      double.parse(_branches![selectedIndex].longitude!),
-    ), zoom: ResponsiveHelper.isMobile(Get.context!) ? 12 : 16)));
+    _mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(
+          double.parse(_branches![selectedIndex].latitude!),
+          double.parse(_branches![selectedIndex].longitude!),
+        ),
+        zoom: ResponsiveHelper.isMobile(Get.context!) ? 12 : 16)));
 
     setState(() {});
   }
-
 }

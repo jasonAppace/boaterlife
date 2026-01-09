@@ -8,46 +8,51 @@ import 'package:provider/provider.dart';
 
 import '../../../helper/responsive_helper.dart';
 
-
 class ProductTitleWidget extends StatelessWidget {
   final Product? productModel;
-  const ProductTitleWidget({Key? key, required this.productModel}) : super(key: key);
+  const ProductTitleWidget({Key? key, required this.productModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
-    return Consumer<ProductProvider>(
-        builder: (context, product, child){
-          return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              productModel!.name ?? '',
-              style: rubikMedium.copyWith(
-                fontSize: ResponsiveHelper.isDesktop(context) ? Dimensions.fontSizeOverLarge : Dimensions.fontSizeExtraLarge,
-              ),
-              maxLines: 2, overflow: TextOverflow.ellipsis,
+    return Consumer<ProductProvider>(builder: (context, product, child) {
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          productModel!.name ?? '',
+          style: rubikSemiBold.copyWith(
+            fontSize: ResponsiveHelper.isDesktop(context)
+                ? Dimensions.fontSizeOverLarge
+                : Dimensions.fontSizeExtraLarge,
+          ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        SizedBox(
+            height: ResponsiveHelper.isDesktop(context)
+                ? Dimensions.paddingSizeLarge
+                : Dimensions.paddingSizeSmall),
+        if (productModel!.rating != null && productModel!.rating!.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 0, vertical: Dimensions.paddingSizeExtraSmall),
+            decoration: BoxDecoration(
+              // color: ColorResources.getRatingColor(context).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(50),
             ),
-            SizedBox(height: ResponsiveHelper.isDesktop(context) ? Dimensions.paddingSizeLarge : Dimensions.paddingSizeSmall),
-
-            if(productModel!.rating != null && productModel!.rating!.isNotEmpty) Container(
-                padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeExtraSmall),
-                decoration: BoxDecoration(
-                  color: ColorResources.getRatingColor(context).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-
-                  Icon(Icons.star, color: ColorResources.getRatingColor(context), size: 20),
-                  const SizedBox(width: Dimensions.paddingSizeSmall),
-
-                  Text(
-                    double.parse(productModel!.rating![0].average!).toStringAsFixed(1),
-                    style: rubikRegular.copyWith(color: Theme.of(context).hintColor, fontSize: Dimensions.fontSizeLarge),
-                  ),
-
-                ]),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Icon(Icons.star,
+                  color: ColorResources.getRatingColor(context), size: 16),
+              const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+              Text(
+                double.parse(productModel!.rating![0].average!)
+                    .toStringAsFixed(1),
+                style: rubikMedium.copyWith(
+                    color: ColorResources.getOnBoardingShadeColor(context),
+                    fontSize: Dimensions.fontSizeDefault),
               ),
-
-          ]);
+            ]),
+          ),
+      ]);
     });
   }
 }

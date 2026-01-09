@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexacom_user/features/Community/Widgets/extensions.dart';
+import 'package:hexacom_user/utill/color_resources.dart';
 import 'package:stacked/stacked.dart';
 import '../../../App/locator.dart';
 import '../../../utill/appbar_with_backTitle.dart';
@@ -37,7 +38,8 @@ class _CreateGroupState extends State<CreateGroup> {
           top: false,
           bottom: false,
           child: Scaffold(
-            backgroundColor: Color(0xFFF9FCFE), // Solid color matching CommunityScreen
+            backgroundColor: ColorResources.getHomeScreenBackgroundColor(
+                context), // Solid color matching CommunityScreen
             body: PageHorizontalMargin(
               horizontal: 16, // Match CommunityScreen padding
               widget: SingleChildScrollView(
@@ -110,31 +112,35 @@ class _CreateGroupState extends State<CreateGroup> {
                                 setState(() {
                                   selectedImage = image;
                                 });
-                                print("Image Path check thisss: ${selectedImage?.path}");
+                                print(
+                                    "Image Path check thisss: ${selectedImage?.path}");
                               },
                             ),
                           ),
                           SizedBox(height: 16),
                           TextWidget(
-                            textValue: '*Note: You agree to the Terms & Conditions and Privacy Policy.',
+                            textValue:
+                                '*Note: You agree to the Terms & Conditions and Privacy Policy.',
                             textColor: ColorUtils.grey3,
                             fontFamily: FontUtils.urbanistRegular,
                             fontSize: 13,
                           ),
                           SizedBox(height: 20),
                           StyledButton(
-                            textValue: model.loadingWidget ? 'Creating...' : 'Create Group',
+                            textValue: model.loadingWidget
+                                ? 'Creating...'
+                                : 'Create Group',
                             onPressed: model.loadingWidget
                                 ? null
                                 : () {
-                              model.doCreateGroup(
-                                context,
-                                model.userToken ?? "",
-                                model.createGroupTitle.text,
-                                model.createGroupDesc.text ?? "",
-                                selectedImage,
-                              );
-                            },
+                                    model.doCreateGroup(
+                                      context,
+                                      model.userToken ?? "",
+                                      model.createGroupTitle.text,
+                                      model.createGroupDesc.text ?? "",
+                                      selectedImage,
+                                    );
+                                  },
                           ),
                           SizedBox(height: 20),
                         ],
@@ -225,7 +231,7 @@ class StyledButton extends StatelessWidget {
         ],
       ),
       child: Material(
-        color: Theme.of(context).primaryColor,
+        color: ColorUtils.lightBlueColor,
         borderRadius: BorderRadius.circular(14),
         child: InkWell(
           onTap: onPressed,

@@ -19,7 +19,7 @@ import 'package:http/http.dart' as http;
 
 // State model for API response
 class StateModel {
-  final int id;
+  final String id;
   final String name;
   final String iso2;
 
@@ -63,7 +63,8 @@ class AddressDetailsWidget extends StatefulWidget {
     super.key,
     required this.contactPersonNameController,
     required this.contactPersonNumberController,
-    required this.addressNode, required this.nameNode,
+    required this.addressNode,
+    required this.nameNode,
     required this.numberNode,
     required this.isUpdateEnable,
     required this.fromCheckout,
@@ -102,7 +103,8 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
 
     try {
       // Replace with your actual API endpoint
-      final response = await http.get(Uri.parse('${AppConstants.baseUrl}${AppConstants.getStates}'));
+      final response = await http
+          .get(Uri.parse('${AppConstants.baseUrl}${AppConstants.getStates}'));
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
@@ -110,7 +112,8 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
           final List<dynamic> statesData = jsonData['data'];
           setState(() {
             // Get all states without filtering - let API decide what to send
-            states = statesData.map((state) => StateModel.fromJson(state)).toList();
+            states =
+                statesData.map((state) => StateModel.fromJson(state)).toList();
             // Sort states alphabetically
             //states.sort((a, b) => a.name.compareTo(b.name));
           });
@@ -206,11 +209,13 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
                   itemExtent: 32.0,
                   scrollController: FixedExtentScrollController(
                     initialItem: selectedState != null
-                        ? states.indexWhere((state) => state.id == selectedState!.id)
+                        ? states.indexWhere(
+                            (state) => state.id == selectedState!.id)
                         : 0,
                   ),
                   onSelectedItemChanged: (int selectedItem) {
-                    print('Selected item: $selectedItem, State: ${states[selectedItem].name}');
+                    print(
+                        'Selected item: $selectedItem, State: ${states[selectedItem].name}');
                     setState(() {
                       selectedState = states[selectedItem];
                       widget.stateController.text = selectedState!.iso2;
@@ -240,54 +245,62 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
 
     return Padding(
       padding: ResponsiveHelper.isDesktop(context)
-          ? const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeLarge)
+          ? const EdgeInsets.symmetric(
+              horizontal: Dimensions.paddingSizeLarge,
+              vertical: Dimensions.paddingSizeLarge)
           : EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24.0),
+            padding: const EdgeInsets.symmetric(vertical: 22.0),
             child: Text(
               getTranslated('delivery_address', context),
-              style: rubikRegular.copyWith(
-                  color: ColorResources.getGreyBunkerColor(context),
-                  fontSize: Dimensions.fontSizeLarge
-              ),
+              style: rubikBold.copyWith(
+                  color: ColorResources.getOnBoardingShadeColor(context),
+                  fontSize: 18),
             ),
           ),
 
           // Address Field
-          Text(
-            getTranslated('address_line_01', context),
-            style: rubikMedium.copyWith(color: Theme.of(context).hintColor),
-          ),
-          const SizedBox(height: Dimensions.paddingSizeSmall),
+          // Text(
+          //   getTranslated('address_line_01', context),
+          //   style: rubikMedium.copyWith(color: Theme.of(context).hintColor),
+          // ),
+          // const SizedBox(height: Dimensions.paddingSizeSmall),
           Selector<LocationProvider, String?>(
             selector: (context, locationProvider) => locationProvider.address,
             builder: (context, address, child) {
-              print("-------------(Address)--------------${locationProvider.address}");
-              widget.locationTextController.text = locationProvider.address ?? '';
+              print(
+                  "-------------(Address)--------------${locationProvider.address}");
+              widget.locationTextController.text =
+                  locationProvider.address ?? '';
               return CustomTextFieldWidget(
-                onChanged: (String? value) => locationProvider.setAddress = value,
+                onChanged: (String? value) =>
+                    locationProvider.setAddress = value,
                 hintText: getTranslated('address_line_02', context),
                 isShowBorder: true,
                 inputType: TextInputType.streetAddress,
                 inputAction: TextInputAction.next,
+                prefixIconUrl: Icons.location_pin,
+                isShowPrefixIcon: true,
                 focusNode: widget.addressNode,
-                nextFocus: widget.nameNode,
+                nextFocus: widget.stateNode,
                 controller: widget.locationTextController,
+                fillColor: Colors.white,
               );
             },
           ),
-          const SizedBox(height: Dimensions.paddingSizeLarge),
+          // const SizedBox(height: Dimensions.paddingSizeLarge),
 
           // Street Number
-          Text(
-            "Street Name",
-           // '${getTranslated('street', context)} ${getTranslated('number', context)}',
-            style: rubikRegular.copyWith(color: Theme.of(context).hintColor.withOpacity(0.6)),
-          ),
-          const SizedBox(height: Dimensions.paddingSizeSmall),
+          // Text(
+          //   "Street Name",
+          //   // '${getTranslated('street', context)} ${getTranslated('number', context)}',
+          //   style: rubikRegular.copyWith(
+          //       color: Theme.of(context).hintColor.withOpacity(0.6)),
+          // ),
+          const SizedBox(height: Dimensions.paddingSizeDefault),
           CustomTextFieldWidget(
             hintText: getTranslated('ex_10_th', context),
             isShowBorder: true,
@@ -297,16 +310,27 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
             nextFocus: widget.houseNode,
             controller: widget.streetNumberController,
             maxLength: 50,
+            fillColor: Colors.white,
           ),
           const SizedBox(height: Dimensions.paddingSizeLarge),
 
           // House/Floor Number
-          Text(
-            "Apt / Unit / Suite",
-            //'${getTranslated('house', context)} / ${getTranslated('floor', context)} ${getTranslated('number', context)}',
-            style: rubikRegular.copyWith(color: Theme.of(context).hintColor.withOpacity(0.6)),
+          // Text(
+          //   "Apt / Unit / Suite",
+          //   //'${getTranslated('house', context)} / ${getTranslated('floor', context)} ${getTranslated('number', context)}',
+          //   style: rubikRegular.copyWith(
+          //       color: Theme.of(context).hintColor.withOpacity(0.6)),
+          // ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 22.0),
+            child: Text(
+              getTranslated('house / floor', context),
+              style: rubikBold.copyWith(
+                  color: ColorResources.getOnBoardingShadeColor(context),
+                  fontSize: 18),
+            ),
           ),
-          const SizedBox(height: Dimensions.paddingSizeSmall),
+          // const SizedBox(height: Dimensions.paddingSizeExtraSmall),
           Row(
             children: [
               Expanded(
@@ -319,6 +343,7 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
                   nextFocus: widget.florNode,
                   controller: widget.houseNumberController,
                   maxLength: 50,
+                  fillColor: Colors.white,
                 ),
               ),
               const SizedBox(width: Dimensions.paddingSizeLarge),
@@ -332,6 +357,7 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
                   nextFocus: widget.nameNode,
                   controller: widget.florNumberController,
                   maxLength: 10,
+                  fillColor: Colors.white,
                 ),
               ),
             ],
@@ -339,26 +365,30 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
           const SizedBox(height: Dimensions.paddingSizeLarge),
 
           // State Picker
-          Text(
-            'State',
-            style: rubikRegular.copyWith(color: Theme.of(context).hintColor.withOpacity(0.6)),
-          ),
-          const SizedBox(height: Dimensions.paddingSizeSmall),
+          // Text(
+          //   'State',
+          //   style: rubikRegular.copyWith(
+          //       color: Theme.of(context).hintColor.withOpacity(0.6)),
+          // ),
+          // const SizedBox(height: Dimensions.paddingSizeSmall),
 
-          // Replace the GestureDetector widget with this:
+          // // Replace the GestureDetector widget with this:
           InkWell(
             onTap: () {
               print('State picker tapped. States available: ${states.length}');
               if (isLoadingStates) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Loading states, please wait...')),
+                  const SnackBar(
+                      content: Text('Loading states, please wait...')),
                 );
                 return;
               }
 
               if (states.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('No states available. Please try again later.')),
+                  const SnackBar(
+                      content:
+                          Text('No states available. Please try again later.')),
                 );
                 fetchStates(); // Retry loading
                 return;
@@ -370,9 +400,9 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
               height: 50,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Theme.of(context).hintColor.withOpacity(0.3),
+                  color: Theme.of(context).hintColor,
                 ),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(30),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -396,16 +426,16 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
                     const SizedBox(width: 8),
                     isLoadingStates
                         ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ),
-                    )
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          )
                         : Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Theme.of(context).hintColor,
-                    ),
+                            Icons.keyboard_arrow_down,
+                            color: Theme.of(context).hintColor,
+                          ),
                   ],
                 ),
               ),
@@ -413,10 +443,11 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
           ),
           const SizedBox(height: Dimensions.paddingSizeLarge),
 
-          Text(
-            'City',
-            style: rubikRegular.copyWith(color: Theme.of(context).hintColor.withOpacity(0.6)),
-          ),
+          // Text(
+          //   'City',
+          //   style: rubikRegular.copyWith(
+          //       color: Theme.of(context).hintColor.withOpacity(0.6)),
+          // ),
           const SizedBox(height: Dimensions.paddingSizeSmall),
           CustomTextFieldWidget(
             hintText: 'Enter City',
@@ -425,13 +456,15 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
             inputAction: TextInputAction.next,
             controller: widget.cityController,
             maxLength: 50,
+            fillColor: Colors.white,
           ),
           const SizedBox(height: Dimensions.paddingSizeLarge),
 
-          Text(
-            'Zip Code',
-            style: rubikRegular.copyWith(color: Theme.of(context).hintColor.withOpacity(0.6)),
-          ),
+          // Text(
+          //   'Zip Code',
+          //   style: rubikRegular.copyWith(
+          //       color: Theme.of(context).hintColor.withOpacity(0.6)),
+          // ),
           const SizedBox(height: Dimensions.paddingSizeSmall),
           CustomTextFieldWidget(
             hintText: 'Enter Zip Code',
@@ -440,32 +473,45 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
             inputAction: TextInputAction.next,
             controller: widget.zipController,
             maxLength: 50,
+            fillColor: Colors.white,
           ),
           const SizedBox(height: Dimensions.paddingSizeLarge),
 
           // Contact Person Name
-          Text(
-            getTranslated('contact_person_name', context),
-            style: rubikMedium.copyWith(color: Theme.of(context).hintColor),
+          // Text(
+          //   getTranslated('contact_person_name', context),
+          //   style: rubikMedium.copyWith(color: Theme.of(context).hintColor),
+          // ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 22.0),
+            child: Text(
+              getTranslated('contact_person_info', context),
+              style: rubikBold.copyWith(
+                  color: ColorResources.getOnBoardingShadeColor(context),
+                  fontSize: 18),
+            ),
           ),
-          const SizedBox(height: Dimensions.paddingSizeSmall),
+          // const SizedBox(height: Dimensions.paddingSizeSmall),
           CustomTextFieldWidget(
             hintText: getTranslated('enter_contact_person_name', context),
             isShowBorder: true,
+            prefixIconUrl: Icons.person,
+            isShowPrefixIcon: true,
             inputType: TextInputType.name,
             controller: widget.contactPersonNameController,
             focusNode: widget.nameNode,
             nextFocus: widget.numberNode,
             inputAction: TextInputAction.next,
             capitalization: TextCapitalization.words,
+            fillColor: Colors.white,
           ),
-          const SizedBox(height: Dimensions.paddingSizeLarge),
+          const SizedBox(height: Dimensions.paddingSizeSmall),
 
           // Contact Person Number
-          Text(
-            getTranslated('contact_person_number', context),
-            style: rubikMedium.copyWith(color: Theme.of(context).hintColor),
-          ),
+          // Text(
+          //   getTranslated('contact_person_number', context),
+          //   style: rubikMedium.copyWith(color: Theme.of(context).hintColor),
+          // ),
           const SizedBox(height: Dimensions.paddingSizeSmall),
           CustomTextFieldWidget(
             hintText: getTranslated('enter_contact_person_number', context),
@@ -474,22 +520,27 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
             inputAction: TextInputAction.done,
             focusNode: widget.numberNode,
             controller: widget.contactPersonNumberController,
-             countryDialCode: addressProvider.countryCode,
-             selectedCountryCode: addressProvider.selectedCountryCode ?? 'US',
+            countryDialCode: addressProvider.countryCode,
+            selectedCountryCode: addressProvider.selectedCountryCode ?? 'US',
             onCountryChanged: (CountryCode value) {
-              addressProvider.setCountryCode(value.dialCode ?? '', isUpdate: true);
+              addressProvider.setCountryCode(value.dialCode ?? '',
+                  isUpdate: true);
             },
-            onChanged: (String text) => AuthHelper.identifyEmailOrNumber(text, context),
+            onChanged: (String text) =>
+                AuthHelper.identifyEmailOrNumber(text, context),
+            fillColor: Colors.white,
           ),
           const SizedBox(height: Dimensions.paddingSizeLarge),
 
           if (ResponsiveHelper.isDesktop(context))
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeLarge),
               child: AddressButtonWidget(
                 isUpdateEnable: widget.isUpdateEnable,
                 fromCheckout: widget.fromCheckout,
-                contactPersonNumberController: widget.contactPersonNumberController,
+                contactPersonNumberController:
+                    widget.contactPersonNumberController,
                 contactPersonNameController: widget.contactPersonNameController,
                 address: widget.address,
                 location: widget.locationTextController.text,

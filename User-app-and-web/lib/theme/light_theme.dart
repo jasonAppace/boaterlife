@@ -12,7 +12,8 @@ ThemeData light = ThemeData(
   canvasColor: const Color(0xFFFCFCFC),
   shadowColor: Colors.grey[300],
   textTheme: const TextTheme(bodyMedium: TextStyle(color: Color(0xFF002349))),
-  popupMenuTheme: const PopupMenuThemeData(color: Colors.white, surfaceTintColor: Colors.white),
+  popupMenuTheme: const PopupMenuThemeData(
+      color: Colors.white, surfaceTintColor: Colors.white),
   dialogTheme: const DialogThemeData(surfaceTintColor: Colors.white),
   colorScheme: ColorScheme(
     background: const Color(0xFFFCFCFC),
@@ -25,7 +26,7 @@ ThemeData light = ThemeData(
     onError: Colors.redAccent,
     onBackground: const Color(0xFFC3CAD9),
     surface: Colors.white,
-    onSurface:  const Color(0xFF002349),
+    onSurface: const Color(0xFF002349),
     shadow: Colors.grey[300],
   ),
 );

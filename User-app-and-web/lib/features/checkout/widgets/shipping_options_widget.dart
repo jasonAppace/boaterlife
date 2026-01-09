@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../common/models/cart_model.dart';
 import '../../../common/models/order_model.dart';
 
-
 // --------------------- SHIPPING MODELS ---------------------
 class ShippingResponse {
   final List<Carrier> carriers;
@@ -21,9 +20,8 @@ class ShippingResponse {
 
   factory ShippingResponse.fromJson(Map<String, dynamic> json) {
     return ShippingResponse(
-      carriers: (json['carriers'] as List)
-          .map((e) => Carrier.fromJson(e))
-          .toList(),
+      carriers:
+          (json['carriers'] as List).map((e) => Carrier.fromJson(e)).toList(),
       shipmentId: json['shipment_id'],
     );
   }
@@ -192,7 +190,8 @@ class _ShippingOptionsWidgetState extends State<ShippingOptionsWidget> {
         });
       } else {
         setState(() {
-          _errorMessage = 'Failed to load shipping options (${response.statusCode})';
+          _errorMessage =
+              'Failed to load shipping options (${response.statusCode})';
           _isLoading = false;
         });
       }
@@ -208,17 +207,18 @@ class _ShippingOptionsWidgetState extends State<ShippingOptionsWidget> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: widget.cardColor ?? Colors.white,
         borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.grey.withOpacity(0.2),
+        //     spreadRadius: 1,
+        //     blurRadius: 3,
+        //     offset: const Offset(0, 1),
+        //   ),
+        // ],
       ),
       child: _buildContent(),
     );
@@ -339,7 +339,8 @@ class _ShippingOptionsWidgetState extends State<ShippingOptionsWidget> {
                         widget.onOptionSelected?.call(value, _shipmentId!);
                       }
                     },
-                    activeColor: widget.selectedRadioColor ?? Theme.of(context).primaryColor,
+                    activeColor: widget.selectedRadioColor ??
+                        Theme.of(context).primaryColor,
                   ),
                   const SizedBox(width: 8),
                   Expanded(

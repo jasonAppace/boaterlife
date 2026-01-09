@@ -14,9 +14,9 @@ class OnBoardingRepo {
   Future<ApiResponseModel> getOnBoardingList(BuildContext context) async {
     try {
       List<OnBoardingModel> onBoardingList = [
-        OnBoardingModel(Images.onBoardingOne, getTranslated('select_product', context), getTranslated('on_boarding_text_1', context)),
-        OnBoardingModel(Images.onBoardingTwo, getTranslated('complete_payment', context), getTranslated('on_boarding_text_2', context)),
-        OnBoardingModel(Images.onBoardingThree, getTranslated('get_the_order', context), getTranslated('on_boarding_text_3', context)),
+        OnBoardingModel(Images.onBoardingOne, getTranslated('gear_up', context), getTranslated('on_boarding_text_1', context)),
+        OnBoardingModel(Images.onBoardingTwo, getTranslated('your_ultimate', context), getTranslated('on_boarding_text_2', context)),
+        OnBoardingModel(Images.onBoardingThree, getTranslated('explore_waves', context), getTranslated('on_boarding_text_3', context)),
       ];
 
       Response response = Response(requestOptions: RequestOptions(path: ''), data: onBoardingList, statusCode: 200);

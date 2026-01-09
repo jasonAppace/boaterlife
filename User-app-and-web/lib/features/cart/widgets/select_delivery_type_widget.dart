@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hexacom_user/helper/price_converter_helper.dart';
 import 'package:hexacom_user/localization/language_constrants.dart';
 import 'package:hexacom_user/features/splash/providers/splash_provider.dart';
+import 'package:hexacom_user/utill/color_resources.dart';
 import 'package:hexacom_user/utill/dimensions.dart';
 import 'package:hexacom_user/utill/styles.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,12 @@ class SelectDeliveryTypeWidget extends StatelessWidget {
   final String value;
   final String? title;
   final bool kmWiseFee;
-  const SelectDeliveryTypeWidget({Key? key, required this.value, required this.title, required this.kmWiseFee}) : super(key: key);
+  const SelectDeliveryTypeWidget(
+      {Key? key,
+      required this.value,
+      required this.title,
+      required this.kmWiseFee})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +28,25 @@ class SelectDeliveryTypeWidget extends StatelessWidget {
           onTap: () => checkoutProvider.setOrderType(value),
           child: Row(
             children: [
-              Radio(
-                value: value,
-                groupValue: checkoutProvider.orderType,
-                activeColor: Theme.of(context).primaryColor,
-                onChanged: (String? value) => checkoutProvider.setOrderType(value),
+              Transform.scale(
+                scale: 1.2,
+                child: Radio(
+                  value: value,
+                  groupValue: checkoutProvider.orderType,
+                  activeColor: ColorResources.getOnBoardingShadeColor(context),
+                  onChanged: (String? value) =>
+                      checkoutProvider.setOrderType(value),
+                ),
               ),
-              const SizedBox(width: Dimensions.paddingSizeSmall),
-
               Text(title!, style: rubikRegular),
               const SizedBox(width: 5),
-
-              kmWiseFee ? const SizedBox() : CustomDirectionalityWidget(
-                child: Text('(${value == 'delivery' ? PriceConverterHelper.convertPrice(Provider.of<SplashProvider>(context, listen: false)
-                    .configModel!.deliveryCharge) : getTranslated('free', context)})', style: rubikMedium),
-              ),
-
+              kmWiseFee
+                  ? const SizedBox()
+                  : CustomDirectionalityWidget(
+                      child: Text(
+                          '(${value == 'delivery' ? PriceConverterHelper.convertPrice(Provider.of<SplashProvider>(context, listen: false).configModel!.deliveryCharge) : getTranslated('free', context)})',
+                          style: rubikMedium),
+                    ),
             ],
           ),
         );

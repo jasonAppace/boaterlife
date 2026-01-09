@@ -13,6 +13,7 @@ import 'package:hexacom_user/features/coupon/providers/coupon_provider.dart';
 import 'package:hexacom_user/features/splash/providers/splash_provider.dart';
 import 'package:hexacom_user/helper/responsive_helper.dart';
 import 'package:hexacom_user/localization/language_constrants.dart';
+import 'package:hexacom_user/utill/color_resources.dart';
 import 'package:hexacom_user/utill/dimensions.dart';
 import 'package:hexacom_user/utill/images.dart';
 import 'package:provider/provider.dart';
@@ -24,112 +25,154 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<CouponProvider>(context, listen: false).removeCouponData(false);
-    Provider.of<CheckoutProvider>(context, listen: false).setOrderType('delivery', notify: false);
+    Provider.of<CheckoutProvider>(context, listen: false)
+        .setOrderType('delivery', notify: false);
     final TextEditingController couponController = TextEditingController();
     final height = MediaQuery.of(context).size.height;
-    bool isSelfPickupActive = Provider.of<SplashProvider>(context, listen: false).configModel!.selfPickup == 1;
-    bool kmWiseCharge = Provider.of<SplashProvider>(context, listen: false).configModel!.deliveryManagement!.status ?? false;
+    bool isSelfPickupActive =
+        Provider.of<SplashProvider>(context, listen: false)
+                .configModel!
+                .selfPickup ==
+            1;
+    bool kmWiseCharge = Provider.of<SplashProvider>(context, listen: false)
+            .configModel!
+            .deliveryManagement!
+            .status ??
+        false;
 
     return Scaffold(
-      appBar: CustomAppBarWidget(title: getTranslated('my_cart', context), isBackButtonExist: fromDetails),
+      appBar: CustomAppBarWidget(
+          title: getTranslated('my_cart', context),
+          isBackButtonExist: fromDetails),
       body: Consumer<CartProvider>(
         builder: (context, cart, child) {
           double? deliveryCharge = 0;
-          (Provider.of<CheckoutProvider>(context).orderType == 'delivery' && !kmWiseCharge)
-              ? deliveryCharge = Provider.of<SplashProvider>(context, listen: false).configModel!.deliveryCharge : deliveryCharge = 0;
+          (Provider.of<CheckoutProvider>(context).orderType == 'delivery' &&
+                  !kmWiseCharge)
+              ? deliveryCharge =
+                  Provider.of<SplashProvider>(context, listen: false)
+                      .configModel!
+                      .deliveryCharge
+              : deliveryCharge = 0;
           double itemPrice = 0;
           double discount = 0;
           double tax = 0;
           for (var cartModel in cart.cartList) {
             itemPrice = itemPrice + (cartModel!.price! * cartModel.quantity!);
-            discount = discount + (cartModel.discountAmount! * cartModel.quantity!);
+            discount =
+                discount + (cartModel.discountAmount! * cartModel.quantity!);
             tax = tax + (cartModel.taxAmount! * cartModel.quantity!);
           }
           double subTotal = itemPrice + tax;
-          double total = subTotal - discount - Provider.of<CouponProvider>(context).discount! + deliveryCharge!;
+          double total = subTotal -
+              discount -
+              Provider.of<CouponProvider>(context).discount! +
+              deliveryCharge!;
 
-          return cart.cartList.isNotEmpty ? Column(children: [
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    Center(
-                      child: Container(
-                        padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                        constraints: BoxConstraints(minHeight: !ResponsiveHelper.isDesktop(context) && height < 600 ? height : height - 400),
-                        width: Dimensions.webScreenWidth,
+          return cart.cartList.isNotEmpty
+              ? Container(
+                  color: ColorResources.getHomeScreenBackgroundColor(context),
+                  padding: EdgeInsets.fromLTRB(18, 15, 18, 15),
+                  child: Column(children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
                         child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                          children: [
+                            Center(
+                              child: Container(
+                                padding: const EdgeInsets.all(
+                                    Dimensions.paddingSizeSmall),
+                                constraints: BoxConstraints(
+                                    minHeight:
+                                        !ResponsiveHelper.isDesktop(context) &&
+                                                height < 600
+                                            ? height
+                                            : height - 400),
+                                width: Dimensions.webScreenWidth,
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomWebTitleWidget(
+                                          title:
+                                              getTranslated('cart', context)),
 
-                              CustomWebTitleWidget(title: getTranslated('cart', context)),
+                                      if (!ResponsiveHelper.isDesktop(context))
+                                        const CartProductListWidget(),
+                                      // Product
 
-                              if(!ResponsiveHelper.isDesktop(context)) const CartProductListWidget(),
-                              // Product
+                                      if (!ResponsiveHelper.isDesktop(context))
+                                        CartDetailsWidget(
+                                          isSelfPickupActive:
+                                              isSelfPickupActive,
+                                          kmWiseCharge: kmWiseCharge,
+                                          itemPrice: itemPrice,
+                                          tax: tax,
+                                          discount: discount,
+                                          deliveryCharge: deliveryCharge,
+                                          total: total,
+                                          couponController: couponController,
+                                        ),
 
-                              if(!ResponsiveHelper.isDesktop(context)) CartDetailsWidget(
-                                isSelfPickupActive: isSelfPickupActive,
-                                kmWiseCharge: kmWiseCharge,
-                                itemPrice: itemPrice,
-                                tax: tax,
-                                discount: discount,
-                                deliveryCharge: deliveryCharge,
-                                total: total, couponController: couponController,
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          if (ResponsiveHelper.isDesktop(
+                                              context))
+                                            const Expanded(
+                                                flex: 6,
+                                                child: CartProductListWidget()),
+                                          const SizedBox(
+                                              width:
+                                                  Dimensions.paddingSizeLarge),
+                                          if (ResponsiveHelper.isDesktop(
+                                              context))
+                                            Expanded(
+                                                flex: 4,
+                                                child: CartDetailsWidget(
+                                                  isSelfPickupActive:
+                                                      isSelfPickupActive,
+                                                  kmWiseCharge: kmWiseCharge,
+                                                  itemPrice: itemPrice,
+                                                  tax: tax,
+                                                  discount: discount,
+                                                  deliveryCharge:
+                                                      deliveryCharge,
+                                                  total: total,
+                                                  couponController:
+                                                      couponController,
+                                                )),
+                                        ],
+                                      ),
+                                      // Order type
+                                    ]),
                               ),
-
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if(ResponsiveHelper.isDesktop(context)) const Expanded(flex: 6, child: CartProductListWidget()),
-                                  const SizedBox(width: Dimensions.paddingSizeLarge),
-
-                                  if(ResponsiveHelper.isDesktop(context)) Expanded(flex: 4, child: CartDetailsWidget(
-                                    isSelfPickupActive: isSelfPickupActive,
-                                    kmWiseCharge: kmWiseCharge,
-                                    itemPrice: itemPrice,
-                                    tax: tax,
-                                    discount: discount,
-                                    deliveryCharge: deliveryCharge,
-                                    total: total, couponController: couponController,
-                                  )),
-                                ],
-                              ),
-                              // Order type
-
-
-                            ]),
+                            ),
+                            const FooterWebWidget(
+                                footerType: FooterType.nonSliver),
+                          ],
+                        ),
                       ),
                     ),
-
-                    const FooterWebWidget(footerType: FooterType.nonSliver),
-
-                  ],
-                ),
-              ),
-            ),
-
-            if(!ResponsiveHelper.isDesktop(context)) ButtonViewWidget(
-              itemPrice: itemPrice,total: total,
-              deliveryCharge: deliveryCharge, discount: discount,
-            ),
-
-          ]) : NoDataScreen(
-            image: Images.wishListNoData ,
-            title: getTranslated('empty_cart', context),
-            subTitle: getTranslated('look_like_have_not_added', context),
-            showFooter: true,
-          );
+                    if (!ResponsiveHelper.isDesktop(context))
+                      ButtonViewWidget(
+                        itemPrice: itemPrice,
+                        total: total,
+                        deliveryCharge: deliveryCharge,
+                        discount: discount,
+                      ),
+                  ]),
+                )
+              : NoDataScreen(
+                  image: Images.wishListNoData,
+                  title: getTranslated('empty_cart', context),
+                  subTitle: getTranslated('look_like_have_not_added', context),
+                  showFooter: true,
+                );
         },
       ),
     );
   }
-
-
-
-
 }
-
-
-
-
