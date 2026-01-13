@@ -2,8 +2,9 @@ import 'package:hexacom_user/common/models/cart_model.dart';
 import 'package:hexacom_user/common/models/product_model.dart';
 import 'package:hexacom_user/helper/price_converter_helper.dart';
 
-class CartHelper{
-  static CartModel? getCartModel(Product product, {List<int>? variationIndexList, int? quantity}){
+class CartHelper {
+  static CartModel? getCartModel(Product product,
+      {List<int>? variationIndexList, int? quantity}) {
     CartModel? cartModel;
     List<Variation> variation = [];
 
@@ -13,15 +14,16 @@ class CartHelper{
     double? price = product.price;
     stock = product.totalStock;
 
-    for(int index = 0; index < (product.choiceOptions?.length ?? 0); index++) {
-      if(product.choiceOptions?[index].options?.isNotEmpty ?? false) {
-
-        if((product.choiceOptions?[index].options?.length ?? 0) > index) {
-          if(variationIndexList != null) {
-            variationList.add(product.choiceOptions?[index].options?[variationIndexList[index]].replaceAll(' ', ''));
-
-          }else{
-            variationList.add(product.choiceOptions?[index].options?[index].replaceAll(' ', ''));
+    for (int index = 0; index < (product.choiceOptions?.length ?? 0); index++) {
+      if (product.choiceOptions?[index].options?.isNotEmpty ?? false) {
+        if ((product.choiceOptions?[index].options?.length ?? 0) > index) {
+          if (variationIndexList != null) {
+            variationList.add(product
+                .choiceOptions?[index].options?[variationIndexList[index]]
+                .replaceAll(' ', ''));
+          } else {
+            variationList.add(product.choiceOptions?[index].options?[index]
+                .replaceAll(' ', ''));
           }
         }
       }
@@ -30,16 +32,16 @@ class CartHelper{
     String variationType = '';
     bool isFirst = true;
     for (var variation in variationList) {
-      if(isFirst) {
+      if (isFirst) {
         variationType = '$variationType$variation';
         isFirst = false;
-      }else {
+      } else {
         variationType = '$variationType-$variation';
       }
     }
 
-    for(Variation variationValue in product.variations!) {
-      if(variationValue.type == variationType) {
+    for (Variation variationValue in product.variations!) {
+      if (variationValue.type == variationType) {
         price = variationValue.price;
         variation.add(variationValue);
         stock = variationValue.stock;
@@ -47,14 +49,21 @@ class CartHelper{
       }
     }
 
-
-
-
-    cartModel = CartModel(product.id,
-      price, PriceConverterHelper.convertWithDiscount(price, product.discount, product.discountType), variation,
-      (price! - PriceConverterHelper.convertWithDiscount(price, product.discount, product.discountType)!),
-      quantity ?? 1, price - PriceConverterHelper.convertWithDiscount(price, product.tax, product.taxType)!,
-      stock, product,
+    cartModel = CartModel(
+      product.id,
+      price,
+      PriceConverterHelper.convertWithDiscount(
+          price, product.discount, product.discountType),
+      variation,
+      (price! -
+          PriceConverterHelper.convertWithDiscount(
+              price, product.discount, product.discountType)!),
+      quantity ?? 1,
+      price -
+          PriceConverterHelper.convertWithDiscount(
+              price, product.tax, product.taxType)!,
+      stock,
+      product,
     );
 
     return cartModel;
@@ -62,12 +71,9 @@ class CartHelper{
 
   static int getCartItemCount(List<CartModel?> cartList) {
     int item = 0;
-    for(CartModel? cart in cartList) {
+    for (CartModel? cart in cartList) {
       item = item + (cart?.quantity ?? 0);
     }
     return item;
   }
-
-
-
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexacom_user/features/Community/Widgets/page_horizontal_margin.dart';
+import 'package:hexacom_user/utill/color_resources.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
@@ -121,7 +122,7 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen>
     try {
       // Use the Open-Meteo API with the correct parameters
       final response = await http.get(Uri.parse(
-          'https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_gusts_10m&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m&daily=temperature_2m_max,temperature_2m_min&timezone=auto&temperature_unit=fahrenheit'));
+          'https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_gusts_10m&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m&daily=temperature_2m_max,temperature_2m_min&timezone=auto&temperature_unit=fahrenheit&wind_speed_unit=mph'));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         print('API Response: $data'); // Debug output
@@ -163,7 +164,7 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorResources.getHomeScreenBackgroundColor(context),
       body: Column(
         children: [
           CustomAppBarWidget(title: 'Weather Forecast'),
@@ -338,7 +339,7 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen>
                                     children: [
                                       const Icon(Icons.air),
                                       Text(
-                                        '${weatherData!['current']['wind_speed_10m']?.round() ?? '0'} km/h',
+                                        '${weatherData!['current']['wind_speed_10m']?.round() ?? '0'} ${weatherData!['current_units']['wind_speed_10m']}',
                                         style: const TextStyle(fontSize: 16),
                                       ),
                                     ],
@@ -535,7 +536,7 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen>
                                         style: const TextStyle(fontSize: 16)),
                                     const SizedBox(height: 4),
                                     Text(
-                                      '${weatherData!['current']['wind_speed_10m']?.round() ?? '0'} km/h',
+                                      '${weatherData!['current']['wind_speed_10m']?.round() ?? '0'} ${weatherData!['current_units']['wind_speed_10m']}',
                                       style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,

@@ -94,6 +94,9 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
   void initState() {
     super.initState();
     fetchStates();
+    print(
+        "----------------(STATE)--------------${widget.stateController.text}");
+    print("----------------(ZIP)--------------${widget.zipController.text}");
   }
 
   Future<void> fetchStates() async {
@@ -116,6 +119,12 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
                 statesData.map((state) => StateModel.fromJson(state)).toList();
             // Sort states alphabetically
             //states.sort((a, b) => a.name.compareTo(b.name));
+            if (widget.stateController.text.isNotEmpty) {
+              setState(() {
+                selectedState = states.firstWhere(
+                    (state) => state.iso2 == widget.stateController.text);
+              });
+            }
           });
         }
       }

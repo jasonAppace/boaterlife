@@ -306,6 +306,11 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
       _streetNumberController.text = widget.address!.streetNumber ?? '';
       _houseNumberController.text = widget.address!.houseNumber ?? '';
       _florNumberController.text = widget.address!.floorNumber ?? '';
+      _stateController.text = widget.address!.stateIso ?? '';
+      _cityController.text = widget.address!.city ?? '';
+      _zipController.text = widget.address!.zipCode ?? '';
+      print("----------------(STATE)--------------${widget.address!.stateIso}");
+      print("----------------(ZIP)--------------${widget.address!.zipCode}");
 
       if (widget.address!.addressType == 'Home') {
         addressProvider.updateAddressIndex(0, false);
@@ -330,6 +335,9 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
       _streetNumberController.text = widget.address?.streetNumber ?? '';
       _houseNumberController.text = widget.address?.houseNumber ?? '';
       _florNumberController.text = widget.address?.floorNumber ?? '';
+      _stateController.text = widget.address?.stateIso ?? '';
+      _cityController.text = widget.address?.city ?? '';
+      _zipController.text = widget.address?.zipCode ?? '';
 
       print(
           '--------------------(ELSE)---------------${userModel?.phone}---------');
