@@ -7,7 +7,7 @@ class AppConstants {
   static const double appVersion = 1.2;
   static const AppMode appMode = AppMode.release;
   static const String fontFamily = 'Exo';
-  static const String baseUrl = 'https://boaterslife.com/dashboard';
+  static const String baseUrl = 'https://api.boaterslife.com/dashboard';
   // static const String baseUrl =
   //     'https://pro-fixer.demoappprojects.com/boatersLife';
   //static const String baseUrl = 'https://79ee-110-93-228-168.ngrok-free.app';
