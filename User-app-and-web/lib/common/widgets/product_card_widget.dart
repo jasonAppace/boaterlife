@@ -139,7 +139,7 @@ class _ProductDescriptionView extends StatelessWidget {
           const SizedBox(height: Dimensions.paddingSizeExtraSmall),
           Text(
             product.name ?? '',
-            maxLines: 2,
+            maxLines: 1,
             textAlign:
                 direction == Axis.vertical ? TextAlign.center : TextAlign.start,
             overflow: TextOverflow.ellipsis,

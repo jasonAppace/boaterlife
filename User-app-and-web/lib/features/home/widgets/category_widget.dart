@@ -32,7 +32,7 @@ class CategoryWidget extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             child: Text(
                                 getTranslated('all_categories', context),
-                                style: rubikMedium.copyWith(
+                                style: rubikBold.copyWith(
                                     fontSize: Dimensions.fontSizeOverLarge)),
                           ),
                         )

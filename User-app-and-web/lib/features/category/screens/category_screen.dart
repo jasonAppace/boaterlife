@@ -1,4 +1,5 @@
 import 'package:hexacom_user/common/enums/footer_type_enum.dart';
+import 'package:hexacom_user/common/widgets/custom_button_widget.dart';
 import 'package:hexacom_user/common/widgets/home_app_bar_widget.dart';
 import 'package:hexacom_user/helper/responsive_helper.dart';
 import 'package:hexacom_user/localization/language_constrants.dart';
@@ -83,15 +84,16 @@ class _CategoryScreenState extends State<CategoryScreen>
                         floating: false,
                         leading: ResponsiveHelper.isDesktop(context)
                             ? const SizedBox()
-                            : SizedBox(
-                                width: ResponsiveHelper.isDesktop(context)
-                                    ? Dimensions.webScreenWidth
-                                    : MediaQuery.of(context).size.width,
-                                child: IconButton(
-                                    icon: const Icon(Icons.chevron_left,
-                                        color: Colors.white),
-                                    onPressed: () => Navigator.pop(context)),
-                              ),
+                            : const SizedBox(),
+                        // SizedBox(
+                        //     width: ResponsiveHelper.isDesktop(context)
+                        //         ? Dimensions.webScreenWidth
+                        //         : MediaQuery.of(context).size.width,
+                        //     child: IconButton(
+                        //         icon: const Icon(Icons.chevron_left,
+                        //             color: Colors.white),
+                        //         onPressed: () => Navigator.pop(context)),
+                        //   ),
                         flexibleSpace: Container(
                           color: Theme.of(context).canvasColor,
                           margin: ResponsiveHelper.isDesktop(context)
@@ -131,20 +133,63 @@ class _CategoryScreenState extends State<CategoryScreen>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical:
-                                          Dimensions.paddingSizeExtraSmall,
-                                      horizontal:
-                                          ResponsiveHelper.isDesktop(context)
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical:
+                                              Dimensions.paddingSizeExtraSmall,
+                                          horizontal: ResponsiveHelper
+                                                  .isDesktop(context)
                                               ? 0
                                               : Dimensions.paddingSizeDefault),
-                                  child: Text(
-                                      category.selectedCategoryModel?.name ??
-                                          '',
-                                      style: rubikMedium.copyWith(
-                                        fontSize: Dimensions.fontSizeOverLarge,
-                                      )),
+                                      child: Text(
+                                          category.selectedCategoryModel
+                                                  ?.name ??
+                                              '',
+                                          style: rubikMedium.copyWith(
+                                            fontSize:
+                                                Dimensions.fontSizeOverLarge,
+                                          )),
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: Dimensions
+                                                .paddingSizeExtraSmall,
+                                            horizontal:
+                                                ResponsiveHelper.isDesktop(
+                                                        context)
+                                                    ? 0
+                                                    : Dimensions
+                                                        .paddingSizeDefault),
+                                        child: TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          style: TextButton.styleFrom(
+                                            // backgroundColor:
+                                            //     Theme.of(context).primaryColor,
+                                            side: BorderSide(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                width: 2),
+                                            padding: EdgeInsets.all(10),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                          child: Text("Back to Categories",
+                                              style: rubikSemiBold.copyWith(
+                                                  color: ColorResources
+                                                      .getOnBoardingShadeColor(
+                                                          context),
+                                                  fontSize: Dimensions
+                                                      .fontSizeDefault)),
+                                        )),
+                                  ],
                                 ),
                                 if (category.subCategoryList != null)
                                   TabBar(
