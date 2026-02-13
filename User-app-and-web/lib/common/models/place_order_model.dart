@@ -17,8 +17,10 @@ class PlaceOrderModel {
   String? _shippment_id;
   String? _rate_id;
   String? _carrier_id;
+  num? _deliveryCharge;
 
-  PlaceOrderModel copyWith({String? paymentMethod, String? transactionReference}) {
+  PlaceOrderModel copyWith(
+      {String? paymentMethod, String? transactionReference}) {
     _paymentMethod = paymentMethod;
     _transactionReference = transactionReference;
     return this;
@@ -26,22 +28,22 @@ class PlaceOrderModel {
 
   PlaceOrderModel(
       {required List<Cart> cart,
-        required double? couponDiscountAmount,
-        required String couponDiscountTitle,
-        required String? couponCode,
-        required double orderAmount,
-        required int? deliveryAddressId,
-        required String? orderType,
-        required String? paymentMethod,
-        required int? branchId,
-        required String orderNote,
-        required double distance,
-        required String shippment_id,
-        required String rate_id,
-        required String carrier_id,
-        String? transactionReference,
-        int? selectedDeliveryArea
-      }) {
+      required double? couponDiscountAmount,
+      required String couponDiscountTitle,
+      required String? couponCode,
+      required double orderAmount,
+      required int? deliveryAddressId,
+      required String? orderType,
+      required String? paymentMethod,
+      required int? branchId,
+      required String orderNote,
+      required double distance,
+      required String shippment_id,
+      required String rate_id,
+      required String carrier_id,
+      required num deliveryCharge,
+      String? transactionReference,
+      int? selectedDeliveryArea}) {
     _cart = cart;
     _couponDiscountAmount = couponDiscountAmount;
     _couponDiscountTitle = couponDiscountTitle;
@@ -58,6 +60,7 @@ class PlaceOrderModel {
     _shippment_id = shippment_id;
     _rate_id = rate_id;
     _carrier_id = carrier_id;
+    _deliveryCharge = deliveryCharge;
   }
 
   List<Cart>? get cart => _cart;
@@ -73,7 +76,7 @@ class PlaceOrderModel {
   double? get distance => _distance;
   String? get transactionReference => _transactionReference;
   int? get selectedDeliveryArea => _selectedDeliveryArea;
-
+  num? get deliveryCharge => _deliveryCharge;
 
   PlaceOrderModel.fromJson(Map<String, dynamic> json) {
     if (json['cart'] != null) {
@@ -96,6 +99,7 @@ class PlaceOrderModel {
     _shippment_id = json['shippment_id'];
     _rate_id = json['rate_id'];
     _carrier_id = json['carrier_id'];
+    _deliveryCharge = json['delivery_charge'];
   }
 
   Map<String, dynamic> toJson() {
@@ -116,9 +120,10 @@ class PlaceOrderModel {
     data['shippment_id'] = _shippment_id;
     data['rate_id'] = _rate_id;
     data['carrier_id'] = _carrier_id;
+    data['delivery_charge'] = _deliveryCharge;
 
     data['selected_delivery_area'] = selectedDeliveryArea;
-    if(_transactionReference != null) {
+    if (_transactionReference != null) {
       data['transaction_reference'] = _transactionReference;
     }
     return data;
@@ -136,12 +141,12 @@ class Cart {
 
   Cart(
       String productId,
-        String price,
-        String variant,
-        List<Variation>? variation,
-        double? discountAmount,
-        int? quantity,
-        double? taxAmount) {
+      String price,
+      String variant,
+      List<Variation>? variation,
+      double? discountAmount,
+      int? quantity,
+      double? taxAmount) {
     _productId = productId;
     _price = price;
     _variant = variant;

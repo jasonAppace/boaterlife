@@ -728,7 +728,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                                                           FontWeight
                                                                               .w600,
                                                                     ),
-                                                                    maxLines: 2,
+                                                                    maxLines: 1,
                                                                     overflow:
                                                                         TextOverflow
                                                                             .ellipsis,

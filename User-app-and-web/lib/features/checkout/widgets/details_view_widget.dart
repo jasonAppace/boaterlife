@@ -276,6 +276,7 @@ class _DetailsViewWidgetState extends State<DetailsViewWidget> {
                   shippment_id: widget.carrierShipmentID,
                   rate_id: _currentCarrier?.rateId ?? '',
                   carrier_id: _currentCarrier?.carrierAccount ?? '',
+                  delivery_charge: _currentCarrier?.amount ?? 0.0,
                 )
             ]),
           ),

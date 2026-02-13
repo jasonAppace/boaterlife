@@ -448,6 +448,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               shippment_id: _carrierShipmentID ?? "",
                               rate_id: carrier?.rateId ?? "",
                               carrier_id: carrier?.carrierAccount ?? "",
+                              delivery_charge: carrier?.amount ?? 0.0,
                             );
                           },
                         ),

@@ -38,6 +38,7 @@ class PlaceOrderButtonView extends StatelessWidget {
   final String shippment_id;
   final String rate_id;
   final String carrier_id;
+  final num delivery_charge;
 
   const PlaceOrderButtonView(
       {super.key,
@@ -51,7 +52,8 @@ class PlaceOrderButtonView extends StatelessWidget {
       this.dropdownKey,
       required this.shippment_id,
       required this.rate_id,
-      required this.carrier_id});
+      required this.carrier_id,
+      required this.delivery_charge});
 
   void _openDropdown() {
     final dropdownContext = dropdownKey?.currentContext;
@@ -157,31 +159,32 @@ class PlaceOrderButtonView extends StatelessWidget {
                     ));
                   }
                   PlaceOrderModel placeOrderBody = PlaceOrderModel(
-                    cart: carts,
-                    couponDiscountAmount:
-                        Provider.of<CouponProvider>(context, listen: false)
-                            .discount,
-                    couponDiscountTitle: '',
-                    deliveryAddressId: !selfPickup
-                        ? locationProvider
-                            .addressList![checkoutProvider.orderAddressIndex].id
-                        : 0,
-                    orderAmount: amount! + (deliveryCharge ?? 0),
-                    orderNote: orderNote ?? '',
-                    orderType: orderType,
-                    paymentMethod:
-                        checkoutProvider.selectedPaymentMethod!.getWay!,
-                    couponCode:
-                        Provider.of<CouponProvider>(context, listen: false)
-                            .coupon
-                            ?.code,
-                    branchId: branches[checkoutProvider.branchIndex].id,
-                    distance: selfPickup ? 0 : checkoutProvider.distance,
-                    selectedDeliveryArea: orderProvider.selectedAreaID,
-                    shippment_id: shippment_id,
-                    rate_id: rate_id,
-                    carrier_id: carrier_id,
-                  );
+                      cart: carts,
+                      couponDiscountAmount:
+                          Provider.of<CouponProvider>(context, listen: false)
+                              .discount,
+                      couponDiscountTitle: '',
+                      deliveryAddressId: !selfPickup
+                          ? locationProvider
+                              .addressList![checkoutProvider.orderAddressIndex]
+                              .id
+                          : 0,
+                      orderAmount: amount! + (deliveryCharge ?? 0),
+                      orderNote: orderNote ?? '',
+                      orderType: orderType,
+                      paymentMethod:
+                          checkoutProvider.selectedPaymentMethod!.getWay!,
+                      couponCode:
+                          Provider.of<CouponProvider>(context, listen: false)
+                              .coupon
+                              ?.code,
+                      branchId: branches[checkoutProvider.branchIndex].id,
+                      distance: selfPickup ? 0 : checkoutProvider.distance,
+                      selectedDeliveryArea: orderProvider.selectedAreaID,
+                      shippment_id: shippment_id,
+                      rate_id: rate_id,
+                      carrier_id: carrier_id,
+                      deliveryCharge: delivery_charge);
                   if (placeOrderBody.paymentMethod == 'cash_on_delivery') {
                     print(
                         '------------(PLACE ORDER MODEL)-------------${placeOrderBody.toJson().toString()}');
