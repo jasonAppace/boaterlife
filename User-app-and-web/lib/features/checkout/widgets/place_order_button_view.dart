@@ -184,7 +184,7 @@ class PlaceOrderButtonView extends StatelessWidget {
                       shippment_id: shippment_id,
                       rate_id: rate_id,
                       carrier_id: carrier_id,
-                      deliveryCharge: delivery_charge);
+                      deliveryCharge: selfPickup ? 0 : delivery_charge);
                   if (placeOrderBody.paymentMethod == 'cash_on_delivery') {
                     print(
                         '------------(PLACE ORDER MODEL)-------------${placeOrderBody.toJson().toString()}');

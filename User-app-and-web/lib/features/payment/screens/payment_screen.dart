@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:go_router/go_router.dart';
@@ -32,7 +31,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   double value = 0.0;
   final bool _isLoading = true;
   late MyInAppBrowser browser;
-  bool canPop = false;
+  bool _isRedirected = false;
 
   @override
   void initState() {
@@ -43,14 +42,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   void _initData() async {
     //browser = MyInAppBrowser(context, orderId: widget.orderId);
-    browser = MyInAppBrowser(context, _initData, orderId: widget.orderId);
-
+    browser = MyInAppBrowser(context, _initData, orderId: widget.orderId,
+        onRedirect: () {
+      setState(() {
+        _isRedirected = true;
+      });
+    });
 
     final settings = InAppBrowserClassSettings(
       browserSettings: InAppBrowserSettings(hideUrlBar: false),
-      webViewSettings: InAppWebViewSettings(javaScriptEnabled: true, isInspectable: kDebugMode),
+      webViewSettings: InAppWebViewSettings(
+          javaScriptEnabled: true, isInspectable: kDebugMode),
     );
-
 
     await browser.openUrlRequest(
       urlRequest: URLRequest(url: WebUri.uri(Uri.parse(selectedUrl))),
@@ -62,39 +65,44 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result){
+      onPopInvokedWithResult: (didPop, result) {
+        if (_isRedirected) return;
         ResponsiveHelper.showDialogOrBottomSheet(
-            context, CustomAlertDialogWidget(
-          title: getTranslated('do_you_want_to_cancel_payment', context),
-          leftButtonText: getTranslated('cancel', context),
-          rightButtonText: getTranslated('proceed', context),
-          icon: Icons.warning_amber,
-          onPressLeft: () {
-            // setState(() {
-            //   canPop = true;
-            // });
-            Navigator.pop(context);
-            context.pop();
-            Future.delayed(const Duration(milliseconds: 500)).then((_){
-              if(context.mounted) {
+            context,
+            CustomAlertDialogWidget(
+              title: getTranslated('do_you_want_to_cancel_payment', context),
+              leftButtonText: getTranslated('cancel', context),
+              rightButtonText: getTranslated('proceed', context),
+              icon: Icons.warning_amber,
+              onPressLeft: () {
+                // setState(() {
+                //   canPop = true;
+                // });
+                Navigator.pop(context);
                 context.pop();
-              }
-            });
-          },
-          onPressRight: (){
-            context.pop();
-            _initData();
-            // _initData();
-          },
-        ));
+                Future.delayed(const Duration(milliseconds: 500)).then((_) {
+                  if (context.mounted) {
+                    context.pop();
+                  }
+                });
+              },
+              onPressRight: () {
+                context.pop();
+                _initData();
+                // _initData();
+              },
+            ));
       },
       child: Scaffold(
         body: Center(
           child: Stack(
             children: [
-              _isLoading ? Center(
-                child: CustomLoaderWidget(color: Theme.of(context).primaryColor),
-              ) : const SizedBox.shrink(),
+              _isLoading
+                  ? Center(
+                      child: CustomLoaderWidget(
+                          color: Theme.of(context).primaryColor),
+                    )
+                  : const SizedBox.shrink(),
             ],
           ),
         ),
@@ -103,23 +111,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Future<bool?> _exitApp(BuildContext context) async {
-    return showDialog(context: context,
-        builder: (context) => OrderCancelDialogWidget(orderID: widget.orderId, fromCheckout: true,));
+    return showDialog(
+        context: context,
+        builder: (context) => OrderCancelDialogWidget(
+              orderID: widget.orderId,
+              fromCheckout: true,
+            ));
   }
 }
-
 
 class MyInAppBrowser extends InAppBrowser {
   final int? orderId;
   final bool? fromCheckout;
   final BuildContext context;
   final Function callBack;
-  MyInAppBrowser(this.context, this.callBack,{
-    required this.orderId,
-    super.windowId,
-    super.initialUserScripts,
-    this.fromCheckout
-  });
+  final Function? onRedirect;
+  MyInAppBrowser(this.context, this.callBack,
+      {required this.orderId,
+      super.windowId,
+      super.initialUserScripts,
+      this.fromCheckout,
+      this.onRedirect});
 
   bool _canRedirect = true;
 
@@ -131,7 +143,9 @@ class MyInAppBrowser extends InAppBrowser {
   }
 
   @override
-  Future onLoadStart(url, ) async {
+  Future onLoadStart(
+    url,
+  ) async {
     if (kDebugMode) {
       print("\n\nStarted: $url\n\n");
     }
@@ -167,27 +181,28 @@ class MyInAppBrowser extends InAppBrowser {
 
   @override
   void onExit() {
-
-    ResponsiveHelper.showDialogOrBottomSheet(
-        context, CustomAlertDialogWidget(
-      title: getTranslated('do_you_want_to_cancel_payment', context),
-      leftButtonText: getTranslated('cancel', context),
-      rightButtonText: getTranslated('proceed', context),
-      icon: Icons.warning_amber,
-      onPressLeft: () {
-        context.pop();
-        Future.delayed(const Duration(milliseconds: 300)).then((_){
-          if(context.mounted) {
-            context.pop();
-          }
-        });
-      },
-      onPressRight: (){
-        context.pop();
-        callBack();
-      },
-    ));
-
+    if (_canRedirect) {
+      ResponsiveHelper.showDialogOrBottomSheet(
+          context,
+          CustomAlertDialogWidget(
+            title: getTranslated('do_you_want_to_cancel_payment', context),
+            leftButtonText: getTranslated('cancel', context),
+            rightButtonText: getTranslated('proceed', context),
+            icon: Icons.warning_amber,
+            onPressLeft: () {
+              context.pop();
+              Future.delayed(const Duration(milliseconds: 300)).then((_) {
+                if (context.mounted) {
+                  context.pop();
+                }
+              });
+            },
+            onPressRight: () {
+              context.pop();
+              callBack();
+            },
+          ));
+    }
 
     // if(_canRedirect) {
     //   Navigator.pushReplacementNamed(context, '${RouteHelper.orderSuccessScreen}/$orderId/payment-fail');
@@ -199,7 +214,8 @@ class MyInAppBrowser extends InAppBrowser {
   }
 
   @override
-  Future<NavigationActionPolicy> shouldOverrideUrlLoading(navigationAction) async {
+  Future<NavigationActionPolicy> shouldOverrideUrlLoading(
+      navigationAction) async {
     if (kDebugMode) {
       print("\n\nOverride ${navigationAction.request.url}\n\n");
     }
@@ -223,70 +239,77 @@ class MyInAppBrowser extends InAppBrowser {
   }
 
   void _pageRedirect(String url) {
-    if(_canRedirect) {
-      bool checkedUrl = (url.contains('${AppConstants.baseUrl}${RouteHelper.orderSuccessScreen}'));
+    if (_canRedirect) {
+      bool checkedUrl = (url.contains(
+          '${AppConstants.baseUrl}${RouteHelper.orderSuccessScreen}'));
       bool isSuccess = url.contains('success') && checkedUrl;
       bool isFailed = url.contains('fail') && checkedUrl;
       bool isCancel = url.contains('cancel') && checkedUrl;
 
-
       if (kDebugMode) {
-        print('----------------payment status -----$isCancel -- $isSuccess -- $isFailed');
+        print(
+            '----------------payment status -----$isCancel -- $isSuccess -- $isFailed');
         print('------------------url --- $url');
       }
 
-      if(isSuccess || isFailed || isCancel) {
+      if (isSuccess || isFailed || isCancel) {
         _canRedirect = false;
+        onRedirect?.call();
         close();
       }
-      if(isSuccess){
-        String token = url.replaceRange(0, url.indexOf('token='), '').replaceAll('token=', '');
-        if(token.isNotEmpty) {
-          final orderProvider =  Provider.of<OrderProvider>(context, listen: false);
-          String placeOrderString =  utf8.decode(base64Url.decode(orderProvider.getPlaceOrderData()!.replaceAll(' ', '+')));
+      if (isSuccess) {
+        String token = url
+            .replaceRange(0, url.indexOf('token='), '')
+            .replaceAll('token=', '');
+        if (token.isNotEmpty) {
+          final orderProvider =
+              Provider.of<OrderProvider>(context, listen: false);
+          String placeOrderString = utf8.decode(base64Url
+              .decode(orderProvider.getPlaceOrderData()!.replaceAll(' ', '+')));
 
-          String decodeValue = utf8.decode(base64Url.decode(token.replaceAll(' ', '+')));
-          String paymentMethod = decodeValue.substring(0, decodeValue.indexOf('&&'));
-          String transactionReference = decodeValue.substring(decodeValue.indexOf('&&') + '&&'.length, decodeValue.length);
+          String decodeValue =
+              utf8.decode(base64Url.decode(token.replaceAll(' ', '+')));
+          String paymentMethod =
+              decodeValue.substring(0, decodeValue.indexOf('&&'));
+          String transactionReference = decodeValue.substring(
+              decodeValue.indexOf('&&') + '&&'.length, decodeValue.length);
 
-
-
-          PlaceOrderModel? placeOrderBody =  PlaceOrderModel.fromJson(jsonDecode(placeOrderString)).copyWith(
+          PlaceOrderModel? placeOrderBody =
+              PlaceOrderModel.fromJson(jsonDecode(placeOrderString)).copyWith(
             paymentMethod: paymentMethod.replaceAll('payment_method=', ''),
-            transactionReference:  transactionReference.replaceRange(0, transactionReference.indexOf('transaction_reference='), '').replaceAll('transaction_reference=', ''),
+            transactionReference: transactionReference
+                .replaceRange(0,
+                    transactionReference.indexOf('transaction_reference='), '')
+                .replaceAll('transaction_reference=', ''),
           );
 
-          Provider.of<OrderProvider>(context, listen: false).placeOrder(context, placeOrderBody, _callback);
-
-        }else{
-          RouteHelper.getOrderSuccessScreen(context, '$orderId', 'payment-fail', action: RouteAction.pushReplacement);
+          Provider.of<OrderProvider>(context, listen: false)
+              .placeOrder(context, placeOrderBody, _callback);
+        } else {
+          RouteHelper.getOrderSuccessScreen(context, '$orderId', 'payment-fail',
+              action: RouteAction.pushReplacement);
         }
-
-
-      }else if(isFailed) {
-        RouteHelper.getOrderSuccessScreen(context, '', 'payment-fail', action: RouteAction.pushReplacement);
-
-      }else if(isCancel) {
-        RouteHelper.getOrderSuccessScreen(context, '', 'payment-cancel', action: RouteAction.pushReplacement);
-
+      } else if (isFailed) {
+        RouteHelper.getOrderSuccessScreen(context, '', 'payment-fail',
+            action: RouteAction.pushReplacement);
+      } else if (isCancel) {
+        RouteHelper.getOrderSuccessScreen(context, '', 'payment-cancel',
+            action: RouteAction.pushReplacement);
       }
     }
-
   }
 
-  void _callback(BuildContext context, bool isSuccess, String message, String orderID) async {
-
+  void _callback(BuildContext context, bool isSuccess, String message,
+      String orderID) async {
     Provider.of<CartProvider>(context, listen: false).clearCartList();
 
-    if(isSuccess) {
+    if (isSuccess) {
       // Navigator.pushReplacementNamed(context, '${RouteHelper.orderSuccessScreen}/$orderID/success');
       print("--------------(ID)---------$orderID");
-      RouteHelper.getOrderSuccessScreen(context, orderID, 'success', action: RouteAction.pushReplacement);
-
-    }else {
+      RouteHelper.getOrderSuccessScreen(context, orderID, 'success',
+          action: RouteAction.pushReplacement);
+    } else {
       showCustomSnackBar(message, context);
-
     }
   }
-
 }
