@@ -158,6 +158,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     _carrierNotifier.value = selectedCarrier;
   }
 
+  int _lastAddressIndex = -1;
+
   @override
   Widget build(BuildContext context) {
     final AuthProvider authProvider =
@@ -186,6 +188,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       body: isRoute
           ? Consumer<CheckoutProvider>(
               builder: (context, checkoutProvider, child) {
+                if (_lastAddressIndex != checkoutProvider.orderAddressIndex) {
+                  _lastAddressIndex = checkoutProvider.orderAddressIndex;
+                  _carrierNotifier.value = null;
+                  _carrierShipmentID = null;
+                }
+
                 double deliveryCharge = CheckOutHelper.getDeliveryCharge(
                     orderAmount: widget.amount ?? 0.0,
                     distance: checkoutProvider.distance,

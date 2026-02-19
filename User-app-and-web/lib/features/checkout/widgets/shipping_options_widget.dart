@@ -123,8 +123,8 @@ class _ShippingOptionsWidgetState extends State<ShippingOptionsWidget> {
 
     final hasValidId = widget.customerAddressId > 0;
 
-    if (hasValidId && !_hasValidAddress) {
-      // Address ID is now valid, fetch shipping options
+    if (hasValidId) {
+      // Address ID is valid, fetch shipping options
       setState(() {
         _hasValidAddress = true;
       });

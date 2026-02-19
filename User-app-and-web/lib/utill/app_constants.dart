@@ -7,9 +7,9 @@ class AppConstants {
   static const double appVersion = 1.2;
   static const AppMode appMode = AppMode.release;
   static const String fontFamily = 'Exo';
-  // static const String baseUrl = 'https://api.boaterslife.com/dashboard';
-  static const String baseUrl =
-      'https://pro-fixer.demoappprojects.com/boatersLife';
+  static const String baseUrl = 'https://api.boaterslife.com/dashboard';
+  // static const String baseUrl =
+  //     'https://pro-fixer.demoappprojects.com/boatersLife';
   // static const String baseUrl = 'http://10.10.160.242:8081';
   static const String categoryUri = '/api/v1/categories';
   static const String bannerUri = '/api/v1/banners';

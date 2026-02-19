@@ -193,8 +193,36 @@ class AddressButtonWidget extends StatelessWidget {
           addressModel.id = address?.id;
           addressModel.userId = address?.userId;
           addressModel.method = 'put';
-          await addressProvider.updateAddress(context,
-              addressModel: addressModel, addressId: addressModel.id);
+          await addressProvider
+              .updateAddress(context,
+                  addressModel: addressModel, addressId: addressModel.id)
+              .then((value) async {
+            if (value.isSuccess) {
+              if (fromCheckout) {
+                await addressProvider.initAddressList();
+                checkoutProvider.setOrderAddressIndex(-1);
+                CheckOutHelper.selectDeliveryAddressAuto(
+                    orderType: checkoutProvider.orderType,
+                    isLoggedIn: true,
+                    lastAddress: null);
+              }
+
+              if (context.mounted) {
+                if (ResponsiveHelper.isDesktop(context) &&
+                    Navigator.canPop(context)) {
+                  GoRouter.of(context).pop();
+                } else if (!ResponsiveHelper.isDesktop(context)) {
+                  Navigator.pop(context);
+                } else {
+                  RouteHelper.getAddressRoute(context,
+                      action: RouteAction.pushNamedAndRemoveUntil);
+                }
+                showCustomSnackBar(value.message, context, isError: false);
+              }
+            } else {
+              if (context.mounted) showCustomSnackBar(value.message, context);
+            }
+          });
         } else {
           print(
               '---------------------(Address Model)------------${addressModel.toJson().toString()}');
