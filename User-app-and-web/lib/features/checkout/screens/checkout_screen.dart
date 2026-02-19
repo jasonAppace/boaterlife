@@ -4,9 +4,11 @@ import 'package:hexacom_user/common/models/cart_model.dart';
 import 'package:hexacom_user/common/models/check_out_model.dart';
 import 'package:hexacom_user/common/models/config_model.dart';
 import 'package:hexacom_user/common/widgets/custom_app_bar_widget.dart';
+import 'package:hexacom_user/common/widgets/custom_button_widget.dart';
 import 'package:hexacom_user/common/widgets/custom_web_title_widget.dart';
 import 'package:hexacom_user/common/widgets/footer_web_widget.dart';
 import 'package:hexacom_user/common/widgets/not_logged_in_screen.dart';
+import 'package:hexacom_user/features/Community/Widgets/custom_button.dart';
 import 'package:hexacom_user/features/address/providers/address_provider.dart';
 import 'package:hexacom_user/features/auth/providers/auth_provider.dart';
 import 'package:hexacom_user/features/cart/providers/cart_provider.dart';
@@ -436,20 +438,43 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ValueListenableBuilder<Carrier?>(
                           valueListenable: _carrierNotifier,
                           builder: (context, carrier, child) {
-                            return PlaceOrderButtonView(
-                              deliveryCharge: orderProvider.deliveryCharge,
-                              amount: widget.amount,
-                              cartList: _cartList,
-                              kmWiseCharge: kmWiseCharge,
-                              orderNote: _noteController.text,
-                              orderType: widget.orderType,
-                              scrollController: scrollController,
-                              dropdownKey: dropDownKey,
-                              shippment_id: _carrierShipmentID ?? "",
-                              rate_id: carrier?.rateId ?? "",
-                              carrier_id: carrier?.carrierAccount ?? "",
-                              delivery_charge: carrier?.amount ?? 0.0,
-                            );
+                            return selfPickup == false
+                                ? carrier?.rateId == null ||
+                                        carrier?.rateId == ""
+                                    ? CustomButtonWidget(
+                                        btnTxt: "Place Order",
+                                      )
+                                    : PlaceOrderButtonView(
+                                        deliveryCharge:
+                                            orderProvider.deliveryCharge,
+                                        amount: widget.amount,
+                                        cartList: _cartList,
+                                        kmWiseCharge: kmWiseCharge,
+                                        orderNote: _noteController.text,
+                                        orderType: widget.orderType,
+                                        scrollController: scrollController,
+                                        dropdownKey: dropDownKey,
+                                        shippment_id: _carrierShipmentID ?? "",
+                                        rate_id: carrier?.rateId ?? "",
+                                        carrier_id:
+                                            carrier?.carrierAccount ?? "",
+                                        delivery_charge: carrier?.amount ?? 0.0,
+                                      )
+                                : PlaceOrderButtonView(
+                                    deliveryCharge:
+                                        orderProvider.deliveryCharge,
+                                    amount: widget.amount,
+                                    cartList: _cartList,
+                                    kmWiseCharge: kmWiseCharge,
+                                    orderNote: _noteController.text,
+                                    orderType: widget.orderType,
+                                    scrollController: scrollController,
+                                    dropdownKey: dropDownKey,
+                                    shippment_id: _carrierShipmentID ?? "",
+                                    rate_id: carrier?.rateId ?? "",
+                                    carrier_id: carrier?.carrierAccount ?? "",
+                                    delivery_charge: carrier?.amount ?? 0.0,
+                                  );
                           },
                         ),
                       const SizedBox(height: Dimensions.paddingSizeLarge),

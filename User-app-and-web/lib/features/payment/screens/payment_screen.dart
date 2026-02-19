@@ -310,6 +310,7 @@ class MyInAppBrowser extends InAppBrowser {
           action: RouteAction.pushReplacement);
     } else {
       showCustomSnackBar(message, context);
+      context.pop();
     }
   }
 }

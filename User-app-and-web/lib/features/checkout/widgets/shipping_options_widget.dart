@@ -292,17 +292,18 @@ class _ShippingOptionsWidgetState extends State<ShippingOptionsWidget> {
       return const Column(
         children: [
           Icon(
-            Icons.local_shipping_outlined,
+            Icons.error,
             size: 48,
             color: Colors.grey,
           ),
           SizedBox(height: 8),
           Text(
-            'No shipping options available',
+            'Enter a valid delivery address to see the applicable delivery charges.',
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey,
             ),
+            textAlign: TextAlign.center,
           ),
         ],
       );
