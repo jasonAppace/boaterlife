@@ -127,6 +127,9 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
             }
           });
         }
+        print(selectedState != null
+            ? "Selected state: ${selectedState!.name}"
+            : "No state selected");
       }
     } catch (e) {
       print('Error fetching states: $e');

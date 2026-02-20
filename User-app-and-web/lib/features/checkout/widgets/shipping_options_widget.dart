@@ -139,6 +139,18 @@ class _ShippingOptionsWidgetState extends State<ShippingOptionsWidget> {
         _errorMessage = null;
         _isLoading = false;
       });
+      // Inform parent that there are no carriers (send an empty carrier)
+      final emptyCarrier = Carrier(
+        rateId: '',
+        amount: 0.0,
+        currency: '',
+        provider: '',
+        carrierAccount: '',
+        servicelevelName: '',
+        estimatedDays: 0,
+        durationTerms: '',
+      );
+      widget.onOptionSelected?.call(emptyCarrier, '');
     }
   }
 
@@ -185,6 +197,21 @@ class _ShippingOptionsWidgetState extends State<ShippingOptionsWidget> {
           if (data.carriers.isNotEmpty) {
             _selectedCarrier = data.carriers[0];
             widget.onOptionSelected?.call(_selectedCarrier!, _shipmentId!);
+          } else {
+            // No carriers returned - notify parent with an empty carrier so
+            // parent can treat this as "no shipping available" and disable place-order.
+            _selectedCarrier = null;
+            final emptyCarrier = Carrier(
+              rateId: '',
+              amount: 0.0,
+              currency: '',
+              provider: '',
+              carrierAccount: '',
+              servicelevelName: '',
+              estimatedDays: 0,
+              durationTerms: '',
+            );
+            widget.onOptionSelected?.call(emptyCarrier, _shipmentId ?? '');
           }
           _isLoading = false;
         });
