@@ -25,14 +25,51 @@ class ProductImageWidget extends StatelessWidget {
                 : MediaQuery.of(context).size.height * 0.42,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15),
-              child: CustomZoomWidget(
-                child: CustomImageWidget(
-                  image:
-                      '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${product.product!.image![Provider.of<CartProvider>(context, listen: false).productSelect]}',
-                  fit: ResponsiveHelper.isTab(context)
-                      ? BoxFit.fitHeight
-                      : BoxFit.cover,
-                  width: MediaQuery.of(context).size.width,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) {
+                    return Scaffold(
+                      backgroundColor: Colors.black,
+                      body: Stack(
+                        children: [
+                          InteractiveViewer(
+                            minScale: 1.0,
+                            maxScale: 5.0,
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: double.infinity,
+                              child: CustomImageWidget(
+                                image:
+                                    '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${product.product!.image![Provider.of<CartProvider>(context, listen: false).productSelect]}',
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            child: SafeArea(
+                              child: IconButton(
+                                icon: const Icon(Icons.arrow_back,
+                                    color: Colors.white),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }));
+                },
+                child: CustomZoomWidget(
+                  child: CustomImageWidget(
+                    image:
+                        '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${product.product!.image![Provider.of<CartProvider>(context, listen: false).productSelect]}',
+                    fit: ResponsiveHelper.isTab(context)
+                        ? BoxFit.fitHeight
+                        : BoxFit.cover,
+                    width: MediaQuery.of(context).size.width,
+                  ),
                 ),
               ),
             ),
