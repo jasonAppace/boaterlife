@@ -18,6 +18,7 @@ class PlaceOrderModel {
   String? _rate_id;
   String? _carrier_id;
   num? _deliveryCharge;
+  String? _source;
 
   PlaceOrderModel copyWith(
       {String? paymentMethod, String? transactionReference}) {
@@ -43,7 +44,8 @@ class PlaceOrderModel {
       required String carrier_id,
       required num deliveryCharge,
       String? transactionReference,
-      int? selectedDeliveryArea}) {
+      int? selectedDeliveryArea,
+      source = 'mobile'}) {
     _cart = cart;
     _couponDiscountAmount = couponDiscountAmount;
     _couponDiscountTitle = couponDiscountTitle;
@@ -61,6 +63,7 @@ class PlaceOrderModel {
     _rate_id = rate_id;
     _carrier_id = carrier_id;
     _deliveryCharge = deliveryCharge;
+    _source = source;
   }
 
   List<Cart>? get cart => _cart;
@@ -77,6 +80,7 @@ class PlaceOrderModel {
   String? get transactionReference => _transactionReference;
   int? get selectedDeliveryArea => _selectedDeliveryArea;
   num? get deliveryCharge => _deliveryCharge;
+  String? get source => _source;
 
   PlaceOrderModel.fromJson(Map<String, dynamic> json) {
     if (json['cart'] != null) {
@@ -100,6 +104,7 @@ class PlaceOrderModel {
     _rate_id = json['rate_id'];
     _carrier_id = json['carrier_id'];
     _deliveryCharge = json['delivery_charge'];
+    _source = json['source'];
   }
 
   Map<String, dynamic> toJson() {
@@ -121,6 +126,7 @@ class PlaceOrderModel {
     data['rate_id'] = _rate_id;
     data['carrier_id'] = _carrier_id;
     data['delivery_charge'] = _deliveryCharge;
+    data['source'] = _source;
 
     data['selected_delivery_area'] = selectedDeliveryArea;
     if (_transactionReference != null) {
