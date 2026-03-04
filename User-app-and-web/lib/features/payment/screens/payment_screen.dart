@@ -1,20 +1,18 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:go_router/go_router.dart';
-import 'package:hexacom_user/common/models/place_order_model.dart';
 import 'package:hexacom_user/common/widgets/custom_alert_dialog_widget.dart';
 import 'package:hexacom_user/features/checkout/widgets/order_cancel_dialog_widget.dart';
 import 'package:hexacom_user/features/cart/providers/cart_provider.dart';
-import 'package:hexacom_user/features/order/providers/order_provider.dart';
 import 'package:hexacom_user/helper/responsive_helper.dart';
 import 'package:hexacom_user/localization/language_constrants.dart';
 import 'package:hexacom_user/utill/app_constants.dart';
 import 'package:hexacom_user/utill/routes.dart';
 import 'package:hexacom_user/common/widgets/custom_loader_widget.dart';
-import 'package:hexacom_user/helper/custom_snackbar_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:hexacom_user/helper/custom_snackbar_helper.dart';
+import 'package:hexacom_user/main.dart';
 import 'package:provider/provider.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -67,31 +65,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (_isRedirected) return;
-        ResponsiveHelper.showDialogOrBottomSheet(
-            context,
-            CustomAlertDialogWidget(
-              title: getTranslated('do_you_want_to_cancel_payment', context),
-              leftButtonText: getTranslated('cancel', context),
-              rightButtonText: getTranslated('proceed', context),
-              icon: Icons.warning_amber,
-              onPressLeft: () {
-                // setState(() {
-                //   canPop = true;
-                // });
-                Navigator.pop(context);
-                context.pop();
-                Future.delayed(const Duration(milliseconds: 500)).then((_) {
-                  if (context.mounted) {
-                    context.pop();
-                  }
-                });
-              },
-              onPressRight: () {
-                context.pop();
-                _initData();
-                // _initData();
-              },
-            ));
+        // RouteHelper.getMainRoute(context,
+        //     action: RouteAction.pushNamedAndRemoveUntil);
+        // ResponsiveHelper.showDialogOrBottomSheet(
+        //     context,
+        //     CustomAlertDialogWidget(
+        //       title: getTranslated('do_you_want_to_cancel_payment', context),
+        //       leftButtonText: getTranslated('cancel', context),
+        //       rightButtonText: getTranslated('proceed', context),
+        //       icon: Icons.warning_amber,
+        //       onPressLeft: () {
+        //         context.pop();
+        //         RouteHelper.getMainRoute(context,
+        //             action: RouteAction.pushNamedAndRemoveUntil);
+        //       },
+        //       onPressRight: () {
+        //         context.pop();
+        //         _initData();
+        //         // _initData();
+        //       },
+        //     ));
       },
       child: Scaffold(
         body: Center(
@@ -182,26 +175,27 @@ class MyInAppBrowser extends InAppBrowser {
   @override
   void onExit() {
     if (_canRedirect) {
-      ResponsiveHelper.showDialogOrBottomSheet(
-          context,
-          CustomAlertDialogWidget(
-            title: getTranslated('do_you_want_to_cancel_payment', context),
-            leftButtonText: getTranslated('cancel', context),
-            rightButtonText: getTranslated('proceed', context),
-            icon: Icons.warning_amber,
-            onPressLeft: () {
-              context.pop();
-              Future.delayed(const Duration(milliseconds: 300)).then((_) {
-                if (context.mounted) {
-                  context.pop();
-                }
-              });
-            },
-            onPressRight: () {
-              context.pop();
-              callBack();
-            },
-          ));
+      showCustomSnackBar(
+          getTranslated('Order Payment is pending', context), context);
+      RouteHelper.getMainRoute(context,
+          action: RouteAction.pushNamedAndRemoveUntil);
+      // ResponsiveHelper.showDialogOrBottomSheet(
+      //     context,
+      //     CustomAlertDialogWidget(
+      //       title: getTranslated('do_you_want_to_cancel_payment', context),
+      //       leftButtonText: getTranslated('cancel', context),
+      //       rightButtonText: getTranslated('proceed', context),
+      //       icon: Icons.warning_amber,
+      //       onPressLeft: () {
+      //         context.pop();
+      //         RouteHelper.getMainRoute(context,
+      //             action: RouteAction.pushNamedAndRemoveUntil);
+      //       },
+      //       onPressRight: () {
+      //         context.pop();
+      //         callBack();
+      //       },
+      //     ));
     }
 
     // if(_canRedirect) {
@@ -258,35 +252,17 @@ class MyInAppBrowser extends InAppBrowser {
         close();
       }
       if (isSuccess) {
-        String token = url
-            .replaceRange(0, url.indexOf('token='), '')
-            .replaceAll('token=', '');
-        if (token.isNotEmpty) {
-          final orderProvider =
-              Provider.of<OrderProvider>(context, listen: false);
-          String placeOrderString = utf8.decode(base64Url
-              .decode(orderProvider.getPlaceOrderData()!.replaceAll(' ', '+')));
-
-          String decodeValue =
-              utf8.decode(base64Url.decode(token.replaceAll(' ', '+')));
-          String paymentMethod =
-              decodeValue.substring(0, decodeValue.indexOf('&&'));
-          String transactionReference = decodeValue.substring(
-              decodeValue.indexOf('&&') + '&&'.length, decodeValue.length);
-
-          PlaceOrderModel? placeOrderBody =
-              PlaceOrderModel.fromJson(jsonDecode(placeOrderString)).copyWith(
-            paymentMethod: paymentMethod.replaceAll('payment_method=', ''),
-            transactionReference: transactionReference
-                .replaceRange(0,
-                    transactionReference.indexOf('transaction_reference='), '')
-                .replaceAll('transaction_reference=', ''),
-          );
-
-          Provider.of<OrderProvider>(context, listen: false)
-              .placeOrder(context, placeOrderBody, _callback);
+        if (orderId != null && orderId != -1) {
+          Provider.of<CartProvider>(context, listen: false).clearCartList();
+          // showCustomSnackBar(
+          //     getTranslated('order_placed_successfully', Get.context!),
+          //     Get.context!,
+          //     isError: false);
+          RouteHelper.getOrderSuccessScreen(
+              context, orderId.toString(), 'success',
+              action: RouteAction.pushReplacement);
         } else {
-          RouteHelper.getOrderSuccessScreen(context, '$orderId', 'payment-fail',
+          RouteHelper.getOrderSuccessScreen(context, '', 'payment-fail',
               action: RouteAction.pushReplacement);
         }
       } else if (isFailed) {
@@ -296,21 +272,6 @@ class MyInAppBrowser extends InAppBrowser {
         RouteHelper.getOrderSuccessScreen(context, '', 'payment-cancel',
             action: RouteAction.pushReplacement);
       }
-    }
-  }
-
-  void _callback(BuildContext context, bool isSuccess, String message,
-      String orderID) async {
-    Provider.of<CartProvider>(context, listen: false).clearCartList();
-
-    if (isSuccess) {
-      // Navigator.pushReplacementNamed(context, '${RouteHelper.orderSuccessScreen}/$orderID/success');
-      print("--------------(ID)---------$orderID");
-      RouteHelper.getOrderSuccessScreen(context, orderID, 'success',
-          action: RouteAction.pushReplacement);
-    } else {
-      showCustomSnackBar(message, context);
-      context.pop();
     }
   }
 }

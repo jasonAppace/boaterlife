@@ -30,7 +30,8 @@ class _OrderScreenState extends State<OrderScreen>
         Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
     if (_isLoggedIn) {
       _tabController = TabController(length: 2, initialIndex: 0, vsync: this);
-      Provider.of<OrderProvider>(context, listen: false).getOrderList(context);
+      Provider.of<OrderProvider>(context, listen: false)
+          .getOrderList(context, isReload: true);
     }
   }
 

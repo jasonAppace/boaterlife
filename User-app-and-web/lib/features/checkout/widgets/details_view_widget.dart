@@ -266,7 +266,6 @@ class _DetailsViewWidgetState extends State<DetailsViewWidget> {
               if (ResponsiveHelper.isDesktop(context))
                 PlaceOrderButtonView(
                   amount: widget.amount,
-                  deliveryCharge: _deliveryFee,
                   orderType: widget.orderType,
                   kmWiseCharge: widget.kmWiseCharge,
                   cartList: widget.cartList,

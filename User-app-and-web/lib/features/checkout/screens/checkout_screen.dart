@@ -227,20 +227,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     CustomWebTitleWidget(
                                         title:
                                             getTranslated('checkout', context)),
-                                    if (!ResponsiveHelper.isDesktop(context))
-                                      MapViewWidget(isSelfPickUp: selfPickup),
-                                    if (!ResponsiveHelper.isDesktop(context) &&
-                                        CheckOutHelper.getDeliveryChargeType(
-                                                context) ==
-                                            DeliveryChargeType.area.name &&
-                                        !selfPickup) ...[
-                                      ZipCodeViewWidget(
-                                        dropDownKey: dropDownKey,
-                                        discount: widget.discount ?? 0.0,
-                                        amount: widget.amount ?? 0.0,
-                                        isSelfPickUp: selfPickup,
-                                      ),
-                                    ],
+                                    // if (!ResponsiveHelper.isDesktop(context))
+                                    //   MapViewWidget(isSelfPickUp: selfPickup),
+                                    // if (!ResponsiveHelper.isDesktop(context) &&
+                                    //     CheckOutHelper.getDeliveryChargeType(
+                                    //             context) ==
+                                    //         DeliveryChargeType.area.name &&
+                                    //     !selfPickup) ...[
+                                    //   ZipCodeViewWidget(
+                                    //     dropDownKey: dropDownKey,
+                                    //     discount: widget.discount ?? 0.0,
+                                    //     amount: widget.amount ?? 0.0,
+                                    //     isSelfPickUp: selfPickup,
+                                    //   ),
+                                    // ],
                                     if (!ResponsiveHelper.isDesktop(
                                         context)) ...[
                                       DeliveryAddressWidget(
@@ -453,8 +453,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                         btnTxt: "Place Order",
                                       )
                                     : PlaceOrderButtonView(
-                                        deliveryCharge:
-                                            orderProvider.deliveryCharge,
                                         amount: widget.amount,
                                         cartList: _cartList,
                                         kmWiseCharge: kmWiseCharge,
@@ -469,8 +467,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                         delivery_charge: carrier?.amount ?? 0.0,
                                       )
                                 : PlaceOrderButtonView(
-                                    deliveryCharge:
-                                        orderProvider.deliveryCharge,
                                     amount: widget.amount,
                                     cartList: _cartList,
                                     kmWiseCharge: kmWiseCharge,

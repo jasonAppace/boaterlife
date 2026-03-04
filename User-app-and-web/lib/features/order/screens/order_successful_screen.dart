@@ -14,17 +14,27 @@ import 'package:hexacom_user/utill/routes.dart';
 import 'package:hexacom_user/utill/styles.dart';
 import 'package:flutter/material.dart';
 
-class OrderSuccessfulScreen extends StatelessWidget {
+class OrderSuccessfulScreen extends StatefulWidget {
   final String? orderID;
   final int status;
   const OrderSuccessfulScreen(
       {super.key, required this.orderID, required this.status});
 
   @override
+  State<OrderSuccessfulScreen> createState() => _OrderSuccessfulScreenState();
+}
+
+class _OrderSuccessfulScreenState extends State<OrderSuccessfulScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print('----------(ORDER ID)--------$orderID');
+    print('----------(ORDER ID)--------${widget.orderID}');
     print(
-        '----------(ORDER ID with parse to INT)--------${int.parse(orderID!)}');
+        '----------(ORDER ID with parse to INT)--------${int.parse(widget.orderID!)}');
 
     final size = MediaQuery.of(context).size;
 
@@ -81,9 +91,9 @@ class OrderSuccessfulScreen extends StatelessWidget {
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
-                                    status == 0
+                                    widget.status == 0
                                         ? Icons.check_circle
-                                        : status == 1
+                                        : widget.status == 1
                                             ? Icons.sms_failed
                                             : Icons.cancel,
                                     color: Color(0xFF26A2DC),
@@ -94,9 +104,9 @@ class OrderSuccessfulScreen extends StatelessWidget {
                                     height: Dimensions.paddingSizeLarge),
                                 Text(
                                   getTranslated(
-                                      status == 0
+                                      widget.status == 0
                                           ? 'order_placed_successfully'
-                                          : status == 1
+                                          : widget.status == 1
                                               ? 'payment_failed'
                                               : 'payment_cancelled',
                                       context),
@@ -105,7 +115,7 @@ class OrderSuccessfulScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(
                                     height: Dimensions.paddingSizeSmall),
-                                if (status == 0)
+                                if (widget.status == 0)
                                   Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -116,7 +126,8 @@ class OrderSuccessfulScreen extends StatelessWidget {
                                         const SizedBox(
                                             width: Dimensions
                                                 .paddingSizeExtraSmall),
-                                        Text(orderID!, style: rubikSemiBold),
+                                        Text(widget.orderID!,
+                                            style: rubikSemiBold),
                                       ]),
                                 const SizedBox(height: 30),
                                 SizedBox(
@@ -129,15 +140,17 @@ class OrderSuccessfulScreen extends StatelessWidget {
                                     child: CustomButtonWidget(
                                         height: 60,
                                         btnTxt: getTranslated(
-                                            status == 0
+                                            widget.status == 0
                                                 ? 'track_order'
                                                 : 'back_home',
                                             context),
                                         onTap: () {
-                                          if (status == 0) {
+                                          if (widget.status == 0) {
                                             context.go(RouteHelper
-                                                .getOrderTrackingRoute(context,
-                                                    int.parse(orderID!), null,
+                                                .getOrderTrackingRoute(
+                                                    context,
+                                                    int.parse(widget.orderID!),
+                                                    null,
                                                     action: RouteAction
                                                         .pushReplacement));
                                           } else {

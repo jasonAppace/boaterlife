@@ -80,7 +80,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
         if (!Navigator.canPop(context)) {
           RouteHelper.getMainRoute(context, action: RouteAction.push);
         } else {
-          Navigator.pop(context);
+          // Navigator.pop(context);
         }
       },
       child: Scaffold(

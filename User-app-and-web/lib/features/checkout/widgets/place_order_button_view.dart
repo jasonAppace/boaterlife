@@ -28,7 +28,6 @@ import 'dart:convert' as convert;
 
 class PlaceOrderButtonView extends StatelessWidget {
   final double? amount;
-  final double? deliveryCharge;
   final String? orderType;
   final bool kmWiseCharge;
   final List<CartModel?> cartList;
@@ -43,7 +42,6 @@ class PlaceOrderButtonView extends StatelessWidget {
   const PlaceOrderButtonView(
       {super.key,
       required this.amount,
-      required this.deliveryCharge,
       required this.orderType,
       required this.kmWiseCharge,
       required this.cartList,
@@ -169,7 +167,7 @@ class PlaceOrderButtonView extends StatelessWidget {
                               .addressList![checkoutProvider.orderAddressIndex]
                               .id
                           : 0,
-                      orderAmount: amount! + (deliveryCharge ?? 0),
+                      orderAmount: amount! + (delivery_charge),
                       orderNote: orderNote ?? '',
                       orderType: orderType,
                       paymentMethod:
@@ -187,43 +185,50 @@ class PlaceOrderButtonView extends StatelessWidget {
                       deliveryCharge: selfPickup ? 0 : delivery_charge);
                   if (placeOrderBody.paymentMethod == 'cash_on_delivery') {
                     print(
-                        '------------(PLACE ORDER MODEL)-------------${placeOrderBody.toJson().toString()}');
+                        '------------(PLACE ORDER MODEL cash)-------------${placeOrderBody.toJson().toString()}');
 
                     orderProvider.placeOrder(
                         context, placeOrderBody, _callback);
                   } else {
-                    String? hostname = html.window.location.hostname;
-                    String protocol = html.window.location.protocol;
-                    String port = html.window.location.port;
-                    String isGuest = authProvider.isLoggedIn() ? "0" : "1";
-                    final String placeOrder = convert.base64Url.encode(convert
-                        .utf8
-                        .encode(convert.jsonEncode(placeOrderBody.toJson())));
+                    print(
+                        '------------(PLACE ORDER MODEL card)-------------${placeOrderBody.toJson().toString()}');
+                    orderProvider.placeOrder(context, placeOrderBody,
+                        (context, isSuccess, message, orderID) {
+                      if (isSuccess) {
+                        Provider.of<CartProvider>(Get.context!, listen: false)
+                            .clearCartList();
 
-                    String url =
-                        "customer_id=${profileProvider.userInfoModel?.id ?? ""}&&is_guest=$isGuest"
-                        "&&callback=${AppConstants.baseUrl}${RouteHelper.orderSuccessScreen}&&order_amount=${(placeOrderBody.orderAmount! + (deliveryCharge ?? 0)).toStringAsFixed(2)}";
+                        String? hostname = html.window.location.hostname;
+                        String protocol = html.window.location.protocol;
+                        String port = html.window.location.port;
+                        String isGuest = authProvider.isLoggedIn() ? "0" : "1";
 
-                    String webUrl =
-                        "customer_id=${profileProvider.userInfoModel?.id ?? ""}&&is_guest=$isGuest"
-                        "&&callback=$protocol//$hostname${kDebugMode ? ':$port' : ''}${RouteHelper.orderWebPayment}&&order_amount=${(amount! + (deliveryCharge ?? 0)).toStringAsFixed(2)}&&status=";
+                        String url =
+                            "customer_id=${profileProvider.userInfoModel?.id ?? ""}&&is_guest=$isGuest"
+                            "&&callback=${AppConstants.baseUrl}${RouteHelper.orderSuccessScreen}&&order_amount=${(placeOrderBody.orderAmount!).toStringAsFixed(2)}&&order_id=$orderID";
 
-                    String tokenUrl = convert.base64Encode(convert.utf8
-                        .encode(ResponsiveHelper.isWeb() ? webUrl : url));
-                    String selectedUrl =
-                        '${AppConstants.baseUrl}/payment-mobile?token=$tokenUrl&&payment_method=${checkoutProvider.selectedPaymentMethod?.getWay}&&payment_platform=${kIsWeb ? 'web' : 'app'}';
+                        String webUrl =
+                            "customer_id=${profileProvider.userInfoModel?.id ?? ""}&&is_guest=$isGuest"
+                            "&&callback=$protocol//$hostname${kDebugMode ? ':$port' : ''}${RouteHelper.orderWebPayment}&&order_amount=${(amount!).toStringAsFixed(2)}&&status=&&order_id=$orderID";
 
-                    orderProvider.clearPlaceOrderData().then((_) =>
-                        orderProvider
-                            .setPlaceOrderData(placeOrder)
-                            .then((value) {
-                          if (ResponsiveHelper.isWeb()) {
-                            html.window.open(selectedUrl, "_self");
-                          } else {
-                            RouteHelper.getPaymentRoute(context,
-                                url: selectedUrl, action: RouteAction.push);
-                          }
-                        }));
+                        String tokenUrl = convert.base64Encode(convert.utf8
+                            .encode(ResponsiveHelper.isWeb() ? webUrl : url));
+                        String selectedUrl =
+                            '${AppConstants.baseUrl}/payment-mobile?token=$tokenUrl&&payment_method=${checkoutProvider.selectedPaymentMethod?.getWay}&&payment_platform=${kIsWeb ? 'web' : 'app'}';
+                        print("selectedUrl: $selectedUrl");
+                        if (ResponsiveHelper.isWeb()) {
+                          html.window.open(selectedUrl, "_self");
+                        } else {
+                          RouteHelper.getPaymentRoute(context,
+                              url: selectedUrl,
+                              id: orderID,
+                              action: RouteAction.push);
+                        }
+                      } else {
+                        showCustomSnackBar(message, Get.context!,
+                            isError: true);
+                      }
+                    });
                   }
                 }
               });
@@ -242,9 +247,10 @@ class PlaceOrderButtonView extends StatelessWidget {
 
       if (checkoutProvider.selectedPaymentMethod?.getWay ==
           'cash_on_delivery') {
-        // if(ResponsiveHelper.isWeb()) {
-        //   Navigator.pop(Get.context!);
-        // }
+        showCustomSnackBar(
+            getTranslated('order_placed_successfully', Get.context!),
+            Get.context!,
+            isError: false);
         RouteHelper.getOrderSuccessScreen(context, orderID, "success",
             action: RouteAction.push);
       }
