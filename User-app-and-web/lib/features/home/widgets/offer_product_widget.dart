@@ -116,7 +116,7 @@ class _OfferProductWidgetState extends State<OfferProductWidget> {
                   height: 300,
                   alignment: Alignment.topCenter,
                   margin: const EdgeInsets.only(
-                      top: Dimensions.paddingSizeDefault, bottom: 80),
+                      top: Dimensions.paddingSizeExtraSmall, bottom: 70),
                   padding: const EdgeInsets.symmetric(
                       vertical: Dimensions.paddingSizeLarge,
                       horizontal: Dimensions.paddingSizeDefault),
@@ -124,10 +124,10 @@ class _OfferProductWidgetState extends State<OfferProductWidget> {
                     borderRadius:
                         BorderRadius.circular(Dimensions.paddingSizeDefault),
                     // color: Theme.of(context).primaryColor.withOpacity(0.2),
-                    image: const DecorationImage(
-                      image: AssetImage(Images.offerProductBg),
-                      fit: BoxFit.cover,
-                    ),
+                    // image: const DecorationImage(
+                    //   image: AssetImage(Images.offerProductBg),
+                    //   fit: BoxFit.cover,
+                    // ),
                   ),
                   child: TitleWidget(
                     title: getTranslated('offer_product', context),
@@ -139,7 +139,7 @@ class _OfferProductWidgetState extends State<OfferProductWidget> {
                 Positioned(
                   right: 0,
                   left: 0,
-                  top: 80,
+                  top: 60,
                   child: SizedBox(
                     height: 300,
                     child: Consumer<ProductProvider>(
@@ -156,14 +156,15 @@ class _OfferProductWidgetState extends State<OfferProductWidget> {
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (ctx, index) => Container(
                                 margin: const EdgeInsets.symmetric(
-                                    horizontal: Dimensions.paddingSizeSmall),
+                                    horizontal:
+                                        Dimensions.paddingSizeExtraSmall),
                                 width: MediaQuery.of(context).size.width * 0.5,
                                 height: 320,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      color: ColorResources.colorGrey,
-                                      width: 1),
+                                  // border: Border.all(
+                                  //     color: ColorResources.colorGrey,
+                                  //     width: 1),
                                 ),
                                 child: ProductCardWidget(
                                   product:

@@ -20,82 +20,120 @@ class NewArrivalWidget extends StatefulWidget {
 }
 
 class _NewArrivalWidgetState extends State<NewArrivalWidget> {
-
   final ScrollController scrollController = ScrollController();
-
 
   @override
   Widget build(BuildContext context) {
-    final bool isLtr = Provider.of<LocalizationProvider>(context, listen: false).isLtr;
-    return Consumer<ProductProvider>(builder: (context, productProvider, child) {
-
-      return productProvider.newArrivalProductsModel?.products != null && productProvider.newArrivalProductsModel!.products!.isNotEmpty ? CustomSliderListWidget(
-        controller: scrollController,
-        verticalPosition: 125,
-        horizontalPosition: 0,
-        isShowForwardButton: productProvider.newArrivalProductsModel != null && productProvider.newArrivalProductsModel!.products!.length > 3,
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Dimensions.paddingSizeDefault),
-            color: Theme.of(context).focusColor.withOpacity(0.15),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 0,  // Dimensions.paddingSizeDefault,
-              vertical: Dimensions.paddingSizeSmall,
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Dimensions.paddingSizeDefault,
-                ),
-                child: TitleWidget(title: getTranslated('new_arrival', context), onTap: (){
-                  RouteHelper.getSearchResultRoute(context, shortBy: SearchShortBy.newArrivals, action: RouteAction.push);
-                }),
-              ),
-              const SizedBox(height: Dimensions.paddingSizeDefault),
-
-              SizedBox(
-                height: 170,
-                child: ListView.builder(
-                  physics: const ClampingScrollPhysics(),
-                  controller: scrollController,
-                  itemCount: productProvider.newArrivalProductsModel != null
-                      ? productProvider.newArrivalProductsModel!.products!.length : 5,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (ctx, index) => productProvider.newArrivalProductsModel == null ? SizedBox(
-                    width: ResponsiveHelper.isDesktop(context) ? 380 : MediaQuery.of(context).size.width * 0.85,
-                    height: 170,
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
-                      child: ProductShimmerWidget(isEnabled: true),
-                    ),
-                  ) : Container(
-                    padding: EdgeInsets.only(
-                      left: isLtr && index == 0 ? Dimensions.paddingSizeSmall : 0,
-                      right: isLtr && index == 0 ? 0 : Dimensions.paddingSizeSmall,
-                    ),
-                    margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall).copyWith(
-                      left: isLtr ? Dimensions.paddingSizeExtraSmall : 0,
-                      right: isLtr ? 0 : Dimensions.paddingSizeExtraSmall,
-                    ),
-                    width: ResponsiveHelper.isDesktop(context) ? 360 : MediaQuery.of(context).size.width * 0.85,
-                    height: 170,
-                    child: ProductCardWidget(
-                      product: productProvider.newArrivalProductsModel!.products![index],
-                      direction: Axis.horizontal,
-                    ),
+    final bool isLtr =
+        Provider.of<LocalizationProvider>(context, listen: false).isLtr;
+    return Consumer<ProductProvider>(
+        builder: (context, productProvider, child) {
+      return productProvider.newArrivalProductsModel?.products != null &&
+              productProvider.newArrivalProductsModel!.products!.isNotEmpty
+          ? CustomSliderListWidget(
+              controller: scrollController,
+              verticalPosition: 125,
+              horizontalPosition: 0,
+              isShowForwardButton: productProvider.newArrivalProductsModel !=
+                      null &&
+                  productProvider.newArrivalProductsModel!.products!.length > 3,
+              child: Container(
+                margin: const EdgeInsets.symmetric(
+                    vertical: Dimensions.paddingSizeSmall),
+                // decoration: BoxDecoration(
+                //   borderRadius:
+                //       BorderRadius.circular(Dimensions.paddingSizeDefault),
+                //   color: Theme.of(context).focusColor.withOpacity(0.15),
+                // ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 0, // Dimensions.paddingSizeDefault,
+                    vertical: Dimensions.paddingSizeSmall,
                   ),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Dimensions.paddingSizeDefault,
+                          ),
+                          child: TitleWidget(
+                              title: getTranslated('new_arrival', context),
+                              onTap: () {
+                                RouteHelper.getSearchResultRoute(context,
+                                    shortBy: SearchShortBy.newArrivals,
+                                    action: RouteAction.push);
+                              }),
+                        ),
+                        const SizedBox(height: Dimensions.paddingSizeDefault),
+                        SizedBox(
+                          height: 170,
+                          child: ListView.builder(
+                            physics: const ClampingScrollPhysics(),
+                            controller: scrollController,
+                            itemCount:
+                                productProvider.newArrivalProductsModel != null
+                                    ? productProvider.newArrivalProductsModel!
+                                        .products!.length
+                                    : 5,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (ctx, index) => productProvider
+                                        .newArrivalProductsModel ==
+                                    null
+                                ? SizedBox(
+                                    width: ResponsiveHelper.isDesktop(context)
+                                        ? 380
+                                        : MediaQuery.of(context).size.width *
+                                            0.85,
+                                    height: 170,
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              Dimensions.paddingSizeSmall),
+                                      child:
+                                          ProductShimmerWidget(isEnabled: true),
+                                    ),
+                                  )
+                                : Container(
+                                    padding: EdgeInsets.only(
+                                      left: isLtr && index == 0
+                                          ? Dimensions.paddingSizeSmall
+                                          : 0,
+                                      right: isLtr && index == 0
+                                          ? 0
+                                          : Dimensions.paddingSizeSmall,
+                                    ),
+                                    margin: const EdgeInsets.symmetric(
+                                            horizontal: Dimensions
+                                                .paddingSizeExtraSmall)
+                                        .copyWith(
+                                      left: isLtr
+                                          ? Dimensions.paddingSizeExtraSmall
+                                          : 0,
+                                      right: isLtr
+                                          ? 0
+                                          : Dimensions.paddingSizeExtraSmall,
+                                    ),
+                                    width: ResponsiveHelper.isDesktop(context)
+                                        ? 360
+                                        : MediaQuery.of(context).size.width *
+                                            0.85,
+                                    height: 170,
+                                    child: ProductCardWidget(
+                                      product: productProvider
+                                          .newArrivalProductsModel!
+                                          .products![index],
+                                      direction: Axis.horizontal,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                        const SizedBox(height: Dimensions.paddingSizeSmall),
+                      ]),
                 ),
               ),
-
-              const SizedBox(height: Dimensions.paddingSizeSmall),
-            ]),
-          ),
-        ),
-      ) : const SizedBox();
+            )
+          : const SizedBox();
     });
   }
 }

@@ -70,25 +70,25 @@ class ProductListWidget extends StatelessWidget {
                               ResponsiveHelper.isDesktop(context) ? 5 : 2,
                           mainAxisSpacing: 2,
                           crossAxisSpacing: 2,
-                          children: productProvider
-                              .latestProductModel!.products!
-                              .map((product) => StaggeredGridTile.fit(
-                                    crossAxisCellCount: 1,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            border: Border.all(
-                                                color: ColorResources.colorGrey,
-                                                width: 1),
-                                          ),
-                                          child: ProductCardWidget(
-                                              product: product)),
-                                    ),
-                                  ))
-                              .toList())
+                          children:
+                              productProvider.latestProductModel!.products!
+                                  .map((product) => StaggeredGridTile.fit(
+                                        crossAxisCellCount: 1,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                // border: Border.all(
+                                                //     color: ColorResources.colorGrey,
+                                                //     width: 1),
+                                              ),
+                                              child: ProductCardWidget(
+                                                  product: product)),
+                                        ),
+                                      ))
+                                  .toList())
                   : const NoDataScreen()
               : GridView.builder(
                   shrinkWrap: true,

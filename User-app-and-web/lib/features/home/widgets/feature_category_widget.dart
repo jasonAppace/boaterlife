@@ -81,9 +81,9 @@ class _FeatureCategoryWidgetState extends State<FeatureCategoryWidget> {
                                 height: 320,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      color: ColorResources.colorGrey,
-                                      width: 1),
+                                  // border: Border.all(
+                                  //     color: ColorResources.colorGrey,
+                                  //     width: 1),
                                 ),
                                 child: ProductCardWidget(
                                   product:

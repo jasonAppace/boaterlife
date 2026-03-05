@@ -143,19 +143,23 @@ class _AddressScreenState extends State<AddressScreen> {
                                                 physics:
                                                     const NeverScrollableScrollPhysics(),
                                                 shrinkWrap: true,
+                                                padding:
+                                                    EdgeInsets.only(top: 20),
                                                 itemCount: locationProvider
                                                     .addressList!.length,
                                                 itemBuilder: (context, index) =>
                                                     Container(
                                                   margin:
-                                                      EdgeInsets.only(top: 20),
-                                                  padding: EdgeInsets.all(20),
-                                                  decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                    image: AssetImage(Images
-                                                        .addressBackgroundImage),
-                                                    fit: BoxFit.cover,
-                                                  )),
+                                                      EdgeInsets.only(top: 0),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 0),
+                                                  // decoration: BoxDecoration(
+                                                  //     image: DecorationImage(
+                                                  //   image: AssetImage(Images
+                                                  //       .addressBackgroundImage),
+                                                  //   fit: BoxFit.cover,
+                                                  // )),
                                                   child: AddressWidget(
                                                     addressModel:
                                                         locationProvider

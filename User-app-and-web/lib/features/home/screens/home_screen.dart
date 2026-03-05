@@ -363,8 +363,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           : const OfferProductWidget();
                                 },
                               ),
-                              const SizedBox(
-                                  height: Dimensions.paddingSizeDefault),
+                              // const SizedBox(
+                              //     height: Dimensions.paddingSizeDefault),
 
                               /// Campaign
                               if (!ResponsiveHelper.isDesktop(context))
@@ -408,7 +408,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           top: Dimensions.paddingSizeExtraLarge,
                                           bottom: Dimensions.paddingSizeLarge)
                                       : const EdgeInsets.fromLTRB(
-                                          20, 10, 20, 10),
+                                          20, 0, 20, 10),
                                   child: TitleWidget(
                                     title: getTranslated('all_items', context),
                                     leadingButton: ProductFilterPopupWidget(

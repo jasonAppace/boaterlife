@@ -43,58 +43,61 @@ class ProductCardWidget extends StatelessWidget {
             hoverColor: Colors.transparent,
             onTap: () =>
                 RouteHelper.getProductDetailsRoute(context, product.id),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius:
-                    BorderRadius.circular(Dimensions.paddingSizeDefault),
-                border: Border.all(color: Colors.transparent, width: 1),
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context).focusColor.withOpacity(0.05),
-                    blurRadius: 30,
-                    offset: const Offset(2, 10),
-                  )
-                ],
-              ),
-              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-              child: direction == Axis.vertical
-                  ? Column(mainAxisSize: MainAxisSize.min, children: [
-                      ProductImageView(
-                        product: product,
-                        isExistInCart: isExistInCart,
-                        cartModel: cartModel,
-                        cartIndex: cartIndex,
-                        direction: direction,
-                      ),
-                      _ProductDescriptionView(
-                        product: product,
-                        discountedPrice: discountedPrice,
-                        priceRange: priceRange,
-                        direction: direction,
-                      ),
-                    ])
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                          ProductImageView(
-                            product: product,
-                            isExistInCart: isExistInCart,
-                            cartModel: cartModel,
-                            cartIndex: cartIndex,
-                            direction: direction,
-                          ),
-                          const SizedBox(width: Dimensions.paddingSizeSmall),
-                          Flexible(
-                            child: _ProductDescriptionView(
+            child: Card(
+              elevation: 8,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  borderRadius:
+                      BorderRadius.circular(Dimensions.paddingSizeDefault),
+                  border: Border.all(color: Colors.transparent, width: 1),
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: Theme.of(context).focusColor.withOpacity(0.05),
+                  //     blurRadius: 0,
+                  //     offset: const Offset(2, 10),
+                  //   )
+                  // ],
+                ),
+                padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                child: direction == Axis.vertical
+                    ? Column(mainAxisSize: MainAxisSize.min, children: [
+                        ProductImageView(
+                          product: product,
+                          isExistInCart: isExistInCart,
+                          cartModel: cartModel,
+                          cartIndex: cartIndex,
+                          direction: direction,
+                        ),
+                        _ProductDescriptionView(
+                          product: product,
+                          discountedPrice: discountedPrice,
+                          priceRange: priceRange,
+                          direction: direction,
+                        ),
+                      ])
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                            ProductImageView(
                               product: product,
-                              discountedPrice: discountedPrice,
-                              priceRange: priceRange,
+                              isExistInCart: isExistInCart,
+                              cartModel: cartModel,
+                              cartIndex: cartIndex,
                               direction: direction,
                             ),
-                          ),
-                        ]),
+                            const SizedBox(width: Dimensions.paddingSizeSmall),
+                            Flexible(
+                              child: _ProductDescriptionView(
+                                product: product,
+                                discountedPrice: discountedPrice,
+                                priceRange: priceRange,
+                                direction: direction,
+                              ),
+                            ),
+                          ]),
+              ),
             ),
           ));
     });
@@ -295,7 +298,7 @@ class ProductImageView extends StatelessWidget {
               CustomImageWidget(
                 image:
                     '${splashProvider.baseUrls!.productImageUrl}/${product.image![0]}',
-                width: isVertical ? 160 : 150,
+                width: isVertical ? 180 : 150,
                 fit: BoxFit.fill,
                 height: 190,
               ),
