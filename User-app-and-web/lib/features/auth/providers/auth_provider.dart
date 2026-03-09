@@ -34,7 +34,6 @@ class AuthProvider with ChangeNotifier {
 
   AuthProvider({required this.authRepo});
 
-
   bool _isLoading = false;
   bool _isNumberLogin = false;
   bool _isForgotPasswordLoading = false;
@@ -47,8 +46,6 @@ class AuthProvider with ChangeNotifier {
   String _phone = '';
   bool _isActiveRememberMe = false;
 
-
-
   bool get isLoading => _isLoading;
   bool get isNumberLogin => _isNumberLogin;
   bool get isForgotPasswordLoading => _isForgotPasswordLoading;
@@ -59,13 +56,13 @@ class AuthProvider with ChangeNotifier {
   String get email => _email;
   String get phone => _phone;
   bool get isActiveRememberMe => _isActiveRememberMe;
-  bool isLoggedIn()=> authRepo!.isLoggedIn();
-
+  bool isLoggedIn() => authRepo!.isLoggedIn();
 
   updateEmail(String email) {
     _email = email;
     notifyListeners();
   }
+
   updatePhone(String phone) {
     _phone = phone;
     notifyListeners();
@@ -82,11 +79,10 @@ class AuthProvider with ChangeNotifier {
 
   UserLogData? getUserData() {
     UserLogData? userData;
-    try{
+    try {
       userData = UserLogData.fromJson(jsonDecode(authRepo!.getUserData()));
-    }catch(error) {
+    } catch (error) {
       debugPrint('error ====> $error');
-
     }
     return userData;
   }
@@ -105,57 +101,68 @@ class AuthProvider with ChangeNotifier {
     ApiResponseModel response = await authRepo!.deleteUser();
     _isLoading = false;
     if (response.response!.statusCode == 200) {
-      Provider.of<SplashProvider>(Get.context!, listen: false).removeSharedData();
-      showCustomSnackBar(getTranslated('your_account_remove_successfully', Get.context!), Get.context!);
-      RouteHelper.getLoginRoute(Get.context!, action: RouteAction.pushNamedAndRemoveUntil);
-    }else{
+      Provider.of<SplashProvider>(Get.context!, listen: false)
+          .removeSharedData();
+      showCustomSnackBar(
+          getTranslated('your_account_remove_successfully', Get.context!),
+          Get.context!);
+      RouteHelper.getLoginRoute(Get.context!,
+          action: RouteAction.pushNamedAndRemoveUntil);
+    } else {
       Navigator.of(Get.context!).pop();
       ApiCheckerHelper.checkApi(response);
     }
   }
 
-
-  Future<ResponseModel> login(BuildContext buildContext, String userInput, String? password, String type, {required String fromPage}) async {
-
-    final VerificationProvider verificationProvider = Provider.of<VerificationProvider>(Get.context!, listen: false);
-    final SplashProvider splashProvider = Provider.of<SplashProvider>(Get.context!, listen: false);
+  Future<ResponseModel> login(BuildContext buildContext, String userInput,
+      String? password, String type,
+      {required String fromPage}) async {
+    final VerificationProvider verificationProvider =
+        Provider.of<VerificationProvider>(Get.context!, listen: false);
+    final SplashProvider splashProvider =
+        Provider.of<SplashProvider>(Get.context!, listen: false);
 
     _isLoading = true;
     _loginErrorMessage = '';
     notifyListeners();
 
-    print('-------------(LOGIN)-----------$userInput, $password and $type');
+    debugPrint(
+        '-------------(LOGIN)-----------$userInput, $password and $type');
 
-    ApiResponseModel apiResponse = await authRepo!.login(userInput: userInput, password: password, type: type);
+    ApiResponseModel apiResponse = await authRepo!
+        .login(userInput: userInput, password: password, type: type);
     ResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       String? token;
       String? tempToken;
       Map map = apiResponse.response?.data;
 
-      print("------------------------ API RESPONSE : ${map.toString()}-----------------------------");
+      debugPrint(
+          "------------------------ API RESPONSE : ${map.toString()}-----------------------------");
 
-      if(map.containsKey('temporary_token')) {
+      if (map.containsKey('temporary_token')) {
         tempToken = map["temporary_token"];
-      }else if(map.containsKey('token')){
+      } else if (map.containsKey('token')) {
         token = map["token"];
-
       }
-      if(token != null){
+      if (token != null) {
         await updateAuthToken(token);
-        final ProfileProvider profileProvider = Provider.of<ProfileProvider>(Get.context!, listen: false);
+        final ProfileProvider profileProvider =
+            Provider.of<ProfileProvider>(Get.context!, listen: false);
         profileProvider.getUserInfo();
-      }else if(tempToken != null){
-        print("-----------------------(TEMP TOKEN) : User Input: $userInput , FromPage: $fromPage");
-        await verificationProvider.sendVerificationCode(buildContext, splashProvider.configModel!, userInput, type: type, fromPage: fromPage);
+      } else if (tempToken != null) {
+        debugPrint(
+            "-----------------------(TEMP TOKEN) : User Input: $userInput , FromPage: $fromPage");
+        await verificationProvider.sendVerificationCode(
+            buildContext, splashProvider.configModel!, userInput,
+            type: type, fromPage: fromPage);
       }
       responseModel = ResponseModel(token != null, 'verification');
-
     } else {
-
-      _loginErrorMessage = ErrorResponseModel.fromJson(apiResponse.error).errors![0].message;
-      responseModel = ResponseModel(false,_loginErrorMessage);
+      _loginErrorMessage =
+          ErrorResponseModel.fromJson(apiResponse.error).errors![0].message;
+      responseModel = ResponseModel(false, _loginErrorMessage);
     }
     _isLoading = false;
     notifyListeners();
@@ -163,8 +170,8 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> updateToken() async {
-    if(await authRepo!.getDeviceToken() != '@'){
-      print('-----HERE AM I 2');
+    if (await authRepo!.getDeviceToken() != '@') {
+      debugPrint('-----HERE AM I 2');
       await authRepo!.updateToken();
     }
   }
@@ -174,15 +181,20 @@ class AuthProvider with ChangeNotifier {
     resendButtonLoading = true;
     notifyListeners();
 
-    print("-------------------(FORGET PASSWORD)------------UserInput: $userInput------- and Type:$type");
+    debugPrint(
+        "-------------------(FORGET PASSWORD)------------UserInput: $userInput------- and Type:$type");
 
-    ApiResponseModel apiResponse = await authRepo!.forgetPassword(userInput, type);
+    ApiResponseModel apiResponse =
+        await authRepo!.forgetPassword(userInput, type);
     ResponseModel responseModel;
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      responseModel = ResponseModel(true, apiResponse.response!.data["message"]);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      responseModel =
+          ResponseModel(true, apiResponse.response!.data["message"]);
     } else {
-      responseModel = ResponseModel(false, ApiCheckerHelper.getError(apiResponse).errors?.first.message);
+      responseModel = ResponseModel(
+          false, ApiCheckerHelper.getError(apiResponse).errors?.first.message);
     }
     resendButtonLoading = false;
     _isLoading = false;
@@ -191,40 +203,50 @@ class AuthProvider with ChangeNotifier {
     return responseModel;
   }
 
-  Future<void> firebaseOtpLogin(BuildContext context, {required String phoneNumber, required String session, required String otp, bool isForgetPassword = false}) async {
-
+  Future<void> firebaseOtpLogin(BuildContext context,
+      {required String phoneNumber,
+      required String session,
+      required String otp,
+      bool isForgetPassword = false}) async {
     _isLoading = true;
     notifyListeners();
     ApiResponseModel apiResponse = await authRepo!.firebaseAuthVerify(
-      session: session, phoneNumber: phoneNumber,
-      otp: otp, isForgetPassword: isForgetPassword,
+      session: session,
+      phoneNumber: phoneNumber,
+      otp: otp,
+      isForgetPassword: isForgetPassword,
     );
 
-    print("---------------(FIREBASE OTP LOGIN)--------------$phoneNumber, $session, $otp, $isForgetPassword");
+    debugPrint(
+        "---------------(FIREBASE OTP LOGIN)--------------$phoneNumber, $session, $otp, $isForgetPassword");
 
-
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       Map map = apiResponse.response!.data;
       String? token;
       String? tempToken;
 
-      print("-------------(FIREBASE API)-----------${map.toString()}");
+      debugPrint("-------------(FIREBASE API)-----------${map.toString()}");
 
-      try{
+      try {
         token = map["token"];
         tempToken = map["temp_token"];
-      }catch(error){
-        print("Error $error");
+      } catch (error) {
+        debugPrint("Error $error");
       }
 
-      if(isForgetPassword) {
-        RouteHelper.getNewPassRoute(context, phoneNumber, otp, action: RouteAction.push);
-      }else{
-        if(token != null) {
-          String? countryCode = PhoneNumberCheckerHelper.getCountryCode(phoneNumber);
-          String? phone = PhoneNumberCheckerHelper.getPhoneNumber(phoneNumber, countryCode ?? '');
+      if (isForgetPassword) {
+        RouteHelper.getNewPassRoute(context, phoneNumber, otp,
+            action: RouteAction.push);
+      } else {
+        if (token != null) {
+          String? countryCode =
+              PhoneNumberCheckerHelper.getCountryCode(phoneNumber);
+          String? phone = PhoneNumberCheckerHelper.getPhoneNumber(
+              phoneNumber, countryCode ?? '');
           await updateAuthToken(token);
-          final ProfileProvider profileProvider = Provider.of<ProfileProvider>(Get.context!, listen: false);
+          final ProfileProvider profileProvider =
+              Provider.of<ProfileProvider>(Get.context!, listen: false);
           profileProvider.getUserInfo();
           saveUserData(UserLogData(
             countryCode: countryCode,
@@ -233,9 +255,11 @@ class AuthProvider with ChangeNotifier {
             password: null,
             loginType: FromPage.otp.name,
           ));
-          RouteHelper.getMainRoute(context, action: RouteAction.pushReplacement);
-        }else if(tempToken != null){
-          RouteHelper.getOtpRegistrationScreen(context, tempToken, phoneNumber, action: RouteAction.pushReplacement);
+          RouteHelper.getMainRoute(context,
+              action: RouteAction.pushReplacement);
+        } else if (tempToken != null) {
+          RouteHelper.getOtpRegistrationScreen(context, tempToken, phoneNumber,
+              action: RouteAction.pushReplacement);
         }
       }
     } else {
@@ -246,20 +270,29 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<ResponseModel> resetPassword(String? userInput, String? resetToken, String password, String confirmPassword, {required String type}) async {
+  Future<ResponseModel> resetPassword(String? userInput, String? resetToken,
+      String password, String confirmPassword,
+      {required String type}) async {
     _isForgotPasswordLoading = true;
     notifyListeners();
 
-    print("------------------------------------(RESET PASSWORD)----------------UserInput: $userInput, Reset Token: $resetToken, Password: $password, ConfirmPassword: $confirmPassword and Type: $type");
+    debugPrint(
+        "------------------------------------(RESET PASSWORD)----------------UserInput: $userInput, Reset Token: $resetToken, Password: $password, ConfirmPassword: $confirmPassword and Type: $type");
 
-    ApiResponseModel apiResponse = await authRepo!.resetPassword(userInput, resetToken, password, confirmPassword, type: type);
+    ApiResponseModel apiResponse = await authRepo!.resetPassword(
+        userInput, resetToken, password, confirmPassword,
+        type: type);
 
     ResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      print("--------------------------(RESET PASSWORD)------------${apiResponse.response?.data}");
-      responseModel = ResponseModel(true, apiResponse.response!.data["message"]);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      debugPrint(
+          "--------------------------(RESET PASSWORD)------------${apiResponse.response?.data}");
+      responseModel =
+          ResponseModel(true, apiResponse.response!.data["message"]);
     } else {
-      responseModel = ResponseModel(false, ApiCheckerHelper.getError(apiResponse).errors![0].message);
+      responseModel = ResponseModel(
+          false, ApiCheckerHelper.getError(apiResponse).errors![0].message);
     }
 
     _isForgotPasswordLoading = false;
@@ -273,8 +306,10 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> clearSharedData() async {
-    final WishListProvider wishListProvider = Provider.of<WishListProvider>(Get.context!, listen: false);
-    final CartProvider cartProvider = Provider.of<CartProvider>(Get.context!, listen: false);
+    final WishListProvider wishListProvider =
+        Provider.of<WishListProvider>(Get.context!, listen: false);
+    final CartProvider cartProvider =
+        Provider.of<CartProvider>(Get.context!, listen: false);
 
     _isLoading = true;
     notifyListeners();
@@ -296,28 +331,35 @@ class AuthProvider with ChangeNotifier {
   //   return auth;
   // }
 
-  Future<ResponseModel> registerWithOtp (BuildContext context, String name, {String? email, required String phone}) async{
+  Future<ResponseModel> registerWithOtp(BuildContext context, String name,
+      {String? email, required String phone}) async {
     _isLoading = true;
     _loginErrorMessage = '';
     notifyListeners();
-    print("----------------------(REGISTER WITH OTP)----------- Email : $email , Phone: $phone , Name $name");
-    ApiResponseModel apiResponse = await authRepo!.registerWithOtp(name, email: email, phone: phone);
+    debugPrint(
+        "----------------------(REGISTER WITH OTP)----------- Email : $email , Phone: $phone , Name $name");
+    ApiResponseModel apiResponse =
+        await authRepo!.registerWithOtp(name, email: email, phone: phone);
     ResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      print("----------------------(REGISTER WITH OTP)----------- API RESPONSE: ${apiResponse.response?.data}");
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      debugPrint(
+          "----------------------(REGISTER WITH OTP)----------- API RESPONSE: ${apiResponse.response?.data}");
       String? token;
       Map map = apiResponse.response!.data;
-      if(map.containsKey('token')){
+      if (map.containsKey('token')) {
         token = map["token"];
       }
-      if(token != null){
+      if (token != null) {
         await updateAuthToken(token);
-        final ProfileProvider profileProvider = Provider.of<ProfileProvider>(Get.context!, listen: false);
+        final ProfileProvider profileProvider =
+            Provider.of<ProfileProvider>(Get.context!, listen: false);
         profileProvider.getUserInfo();
       }
       responseModel = ResponseModel(token != null, 'verification');
     } else {
-      _loginErrorMessage = ApiCheckerHelper.getError(apiResponse).errors![0].message;
+      _loginErrorMessage =
+          ApiCheckerHelper.getError(apiResponse).errors![0].message;
       showCustomSnackBar(_loginErrorMessage ?? '', context);
       responseModel = ResponseModel(false, _loginErrorMessage);
     }
@@ -326,38 +368,42 @@ class AuthProvider with ChangeNotifier {
     return responseModel;
   }
 
-  Future<(ResponseModel, String?)> registerWithSocialMedia (BuildContext context, String name, {required String email, String? phone}) async{
+  Future<(ResponseModel, String?)> registerWithSocialMedia(
+      BuildContext context, String name,
+      {required String email, String? phone}) async {
     _isLoading = true;
     _loginErrorMessage = '';
     notifyListeners();
-    ApiResponseModel apiResponse = await authRepo!.registerWithSocialMedia(name, email: email, phone: phone);
+    ApiResponseModel apiResponse = await authRepo!
+        .registerWithSocialMedia(name, email: email, phone: phone);
     ResponseModel responseModel;
     String? token;
     String? tempToken;
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       Map map = apiResponse.response!.data;
-      if(map.containsKey('token')){
+      if (map.containsKey('token')) {
         token = map["token"];
       }
-      if(map.containsKey('temp_token')){
+      if (map.containsKey('temp_token')) {
         tempToken = map["temp_token"];
       }
 
-      if(token != null){
+      if (token != null) {
         await updateAuthToken(token);
-        final ProfileProvider profileProvider = Provider.of<ProfileProvider>(Get.context!, listen: false);
+        final ProfileProvider profileProvider =
+            Provider.of<ProfileProvider>(Get.context!, listen: false);
         profileProvider.getUserInfo();
         responseModel = ResponseModel(true, 'verification');
-      }else if(tempToken != null){
+      } else if (tempToken != null) {
         responseModel = ResponseModel(true, 'verification');
-      }else{
+      } else {
         responseModel = ResponseModel(false, '');
       }
-
     } else {
-      _loginErrorMessage = ApiCheckerHelper.getError(apiResponse).errors![0].message;
+      _loginErrorMessage =
+          ApiCheckerHelper.getError(apiResponse).errors![0].message;
       showCustomSnackBar(_loginErrorMessage ?? '', context);
       responseModel = ResponseModel(false, _loginErrorMessage);
     }
@@ -366,40 +412,43 @@ class AuthProvider with ChangeNotifier {
     return (responseModel, tempToken);
   }
 
-  Future<(ResponseModel?, String?)> existingAccountCheck (BuildContext context, {required String email, required int userResponse, required String medium}) async{
+  Future<(ResponseModel?, String?)> existingAccountCheck(BuildContext context,
+      {required String email,
+      required int userResponse,
+      required String medium}) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponseModel apiResponse = await authRepo!.existingAccountCheck(email: email, userResponse: userResponse, medium: medium);
+    ApiResponseModel apiResponse = await authRepo!.existingAccountCheck(
+        email: email, userResponse: userResponse, medium: medium);
     ResponseModel responseModel;
     String? token;
     String? tempToken;
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-
-
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       Map map = apiResponse.response!.data;
 
-      if(map.containsKey('token')){
+      if (map.containsKey('token')) {
         token = map["token"];
       }
 
-      if(map.containsKey('temp_token')){
+      if (map.containsKey('temp_token')) {
         tempToken = map["temp_token"];
       }
 
-      if(token != null){
+      if (token != null) {
         await updateAuthToken(token);
-        final ProfileProvider profileProvider = Provider.of<ProfileProvider>(Get.context!, listen: false);
+        final ProfileProvider profileProvider =
+            Provider.of<ProfileProvider>(Get.context!, listen: false);
         profileProvider.getUserInfo();
         responseModel = ResponseModel(true, 'token');
-      } else if(tempToken != null){
+      } else if (tempToken != null) {
         responseModel = ResponseModel(true, 'tempToken');
-      } else{
+      } else {
         responseModel = ResponseModel(true, '');
       }
-
-
     } else {
-      _loginErrorMessage = ApiCheckerHelper.getError(apiResponse).errors![0].message;
+      _loginErrorMessage =
+          ApiCheckerHelper.getError(apiResponse).errors![0].message;
       showCustomSnackBar(_loginErrorMessage ?? '', context);
       responseModel = ResponseModel(false, _loginErrorMessage);
     }
@@ -408,14 +457,17 @@ class AuthProvider with ChangeNotifier {
     return (responseModel, tempToken);
   }
 
-  Future  socialLogin(SocialLoginModel socialLogin, Function callback) async {
+  Future socialLogin(SocialLoginModel socialLogin, Function callback) async {
     _isLoading = true;
     notifyListeners();
-    print('-----------------(SOCIAL LOGIN API)---> ${socialLogin.toJson()}');
+    debugPrint(
+        '-----------------(SOCIAL LOGIN API)---> ${socialLogin.toJson()}');
     ApiResponseModel apiResponse = await authRepo!.socialLogin(socialLogin);
     _isLoading = false;
-    if (apiResponse.response?.statusCode == 200 && apiResponse.response != null) {
-      print("-----------------------(SOCIAL LOGIN API)-----------${apiResponse.response?.data}");
+    if (apiResponse.response?.statusCode == 200 &&
+        apiResponse.response != null) {
+      debugPrint(
+          "-----------------------(SOCIAL LOGIN API)-----------${apiResponse.response?.data}");
       Map map = apiResponse.response?.data;
       String? message = '';
       String? token = '';
@@ -423,138 +475,147 @@ class AuthProvider with ChangeNotifier {
       String? email;
       UserInfoModel? userInfoModel;
 
-      try{
+      try {
         message = map['error_message'] ?? '';
-      }catch(e){
+      } catch (e) {
         debugPrint("Error :$e");
       }
 
-      try{
+      try {
         token = map['token'];
-      }catch(e){
+      } catch (e) {
         debugPrint("Error :$e");
       }
 
-      try{
+      try {
         tempToken = map['temp_token'];
-      }catch(e){
+      } catch (e) {
         debugPrint("Error :$e");
       }
 
-      try{
+      try {
         email = map['email'];
-      }catch(e){
+      } catch (e) {
         debugPrint("Error :$e");
       }
 
-
-      if(map.containsKey('user')){
-        try{
+      if (map.containsKey('user')) {
+        try {
           userInfoModel = UserInfoModel.fromJson(map['user']);
-          print("--------------(SOCIAL Name)--------------${socialLogin.name}");
-          print("--------------(SOCIAL Email)--------------${socialLogin.email}");
-          print("--------------(SOCIAL Medium)--------------${socialLogin.medium}");
-          callback(true, null, message, null, userInfoModel, socialLogin.medium, socialLogin.email, socialLogin.name);
-        }catch(e){
+          debugPrint(
+              "--------------(SOCIAL Name)--------------${socialLogin.name}");
+          debugPrint(
+              "--------------(SOCIAL Email)--------------${socialLogin.email}");
+          debugPrint(
+              "--------------(SOCIAL Medium)--------------${socialLogin.medium}");
+          callback(true, null, message, null, userInfoModel, socialLogin.medium,
+              socialLogin.email, socialLogin.name);
+        } catch (e) {
           debugPrint("Error :$e");
         }
       }
 
-      if(token != null){
+      if (token != null) {
         await updateAuthToken(token);
-        final ProfileProvider profileProvider = Provider.of<ProfileProvider>(Get.context!, listen: false);
+        final ProfileProvider profileProvider =
+            Provider.of<ProfileProvider>(Get.context!, listen: false);
         profileProvider.getUserInfo();
-        callback(true, token, message,null, null, null, null, null);
+        callback(true, token, message, null, null, null, null, null);
       }
 
-      if(tempToken != null){
-        print("--------------(SOCIAL)--------------${socialLogin.name}");
-        callback(true, null, message, tempToken, null, null, socialLogin.email ?? email, socialLogin.name);
+      if (tempToken != null) {
+        debugPrint("--------------(SOCIAL)--------------${socialLogin.name}");
+        callback(true, null, message, tempToken, null, null,
+            socialLogin.email ?? email, socialLogin.name);
       }
       notifyListeners();
-    }else {
-      callback(false, '', ApiCheckerHelper.getError(apiResponse).errors?.first.message, null, null, null, null, null);
+    } else {
+      callback(
+          false,
+          '',
+          ApiCheckerHelper.getError(apiResponse).errors?.first.message,
+          null,
+          null,
+          null,
+          null,
+          null);
       notifyListeners();
     }
   }
 
   Future<void> socialLogout() async {
-    final UserInfoModel user = Provider.of<ProfileProvider>(Get.context!, listen: false).userInfoModel!;
-    if(user.loginMedium!.toLowerCase() == SocialLoginOptionsEnum.google.name) {
-      try{
+    final UserInfoModel user =
+        Provider.of<ProfileProvider>(Get.context!, listen: false)
+            .userInfoModel!;
+    if (user.loginMedium!.toLowerCase() == SocialLoginOptionsEnum.google.name) {
+      try {
         // await _googleSignIn.signOut();
         await googleSignOut();
-      }catch(e){
+      } catch (e) {
         log("Error: $e");
       }
-    }else if(user.loginMedium!.toLowerCase() == SocialLoginOptionsEnum.facebook.name){
-     // await FacebookAuth.instance.logOut();
+    } else if (user.loginMedium!.toLowerCase() ==
+        SocialLoginOptionsEnum.facebook.name) {
+      // await FacebookAuth.instance.logOut();
     }
   }
 
-  Future<void> googleSignOut() async{
+  Future<void> googleSignOut() async {
     // await _googleSignIn.disconnect();
   }
 
-
-
-
-
-
-  bool updateIsUpdateTernsStatus({bool isUpdate = true, bool? value}){
-
-    if(value != null) {
+  bool updateIsUpdateTernsStatus({bool isUpdate = true, bool? value}) {
+    if (value != null) {
       _isAgreeTerms = value;
-
-    }else{
+    } else {
       _isAgreeTerms = !_isAgreeTerms;
-
     }
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
-
     }
 
     return _isAgreeTerms;
   }
 
-  void setCountSocialLoginOptions ({int? count, bool isReload = false}){
-    if(isReload){
+  void setCountSocialLoginOptions({int? count, bool isReload = false}) {
+    if (isReload) {
       _countSocialLoginOptions = 0;
-    }else{
+    } else {
       _countSocialLoginOptions = count ?? 0;
     }
   }
 
-  void toggleIsNumberLogin ({bool? value, bool isUpdate = true}) {
-    if(value == null){
+  void toggleIsNumberLogin({bool? value, bool isUpdate = true}) {
+    if (value == null) {
       _isNumberLogin = !_isNumberLogin;
-    }else{
+    } else {
       _isNumberLogin = value;
     }
 
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  String? getGuestId()=> isLoggedIn() ? null : authRepo?.getGuestId();
+  String? getGuestId() => isLoggedIn() ? null : authRepo?.getGuestId();
 
   Future<void> addOrUpdateGuest() async {
-    String? fcmToken = await  authRepo?.getDeviceToken();
+    String? fcmToken = await authRepo?.getDeviceToken();
     ApiResponseModel apiResponse = await authRepo!.addOrUpdateGuest(fcmToken);
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200
-        && apiResponse.response?.data != null && apiResponse.response?.data.isNotEmpty &&  apiResponse.response?.data['guest']['id'] != null) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200 &&
+        apiResponse.response?.data != null &&
+        apiResponse.response?.data.isNotEmpty &&
+        apiResponse.response?.data['guest']['id'] != null) {
+      debugPrint(
+          '-------------------(GUEST ID)--------${apiResponse.response?.data['guest']['id'].toString()}');
 
-      print('-------------------(GUEST ID)--------${apiResponse.response?.data['guest']['id'].toString()}');
+      authRepo?.saveGuestId(
+          '${apiResponse.response?.data['guest']['id'].toString()}');
 
-      authRepo?.saveGuestId('${apiResponse.response?.data['guest']['id'].toString()}');
-
-      print('---------------------(GUEST ID IN SHARED PREF)-----${authRepo?.sharedPreferences?.getString(AppConstants.guestId)}');
-
+      debugPrint(
+          '---------------------(GUEST ID IN SHARED PREF)-----${authRepo?.sharedPreferences?.getString(AppConstants.guestId)}');
     }
   }
-
-
 }

@@ -10,7 +10,8 @@ class OnBoardingProvider with ChangeNotifier {
   final OnBoardingRepo? onboardingRepo;
   final SharedPreferences? sharedPreferences;
 
-  OnBoardingProvider({required this.onboardingRepo, required this.sharedPreferences}) {
+  OnBoardingProvider(
+      {required this.onboardingRepo, required this.sharedPreferences}) {
     _loadShowOnBoardingStatus();
   }
   final List<OnBoardingModel> _onBoardingList = [];
@@ -26,22 +27,26 @@ class OnBoardingProvider with ChangeNotifier {
     _selectedIndex = index;
     notifyListeners();
   }
+
   void _loadShowOnBoardingStatus() async {
-    _showOnBoardingStatus = sharedPreferences!.getBool(AppConstants.onBoardingSkip) ?? false;
+    _showOnBoardingStatus =
+        sharedPreferences!.getBool(AppConstants.onBoardingSkip) ?? false;
   }
+
   void toggleShowOnBoardingStatus() {
     sharedPreferences!.setBool(AppConstants.onBoardingSkip, true);
   }
 
   void initBoardingList(BuildContext context) async {
-    ApiResponseModel apiResponse = await onboardingRepo!.getOnBoardingList(context);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    ApiResponseModel apiResponse =
+        await onboardingRepo!.getOnBoardingList(context);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _onBoardingList.clear();
       _onBoardingList.addAll(apiResponse.response!.data);
-      if(kDebugMode){
-        print("onboarding list: $_onBoardingList");
+      if (kDebugMode) {
+        debugPrint("onboarding list: $_onBoardingList");
       }
-
     }
     notifyListeners();
   }

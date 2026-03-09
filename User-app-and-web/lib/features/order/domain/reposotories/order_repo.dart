@@ -25,8 +25,8 @@ class OrderRepo {
   Future<ApiResponseModel> getOrderDetails(
       String orderID, String? phoneNumber) async {
     if (kDebugMode) {
-      print("Order Id: $orderID");
-      print("Phone number ===> $phoneNumber");
+      debugPrint("Order Id: $orderID");
+      debugPrint("Phone number ===> $phoneNumber");
     }
 
     try {
@@ -57,8 +57,8 @@ class OrderRepo {
   Future<ApiResponseModel> trackOrder(
       String? orderID, String? phoneNumber) async {
     if (kDebugMode) {
-      print("Order Id: $orderID");
-      print("Phone number: $phoneNumber");
+      debugPrint("Order Id: $orderID");
+      debugPrint("Phone number: $phoneNumber");
     }
     try {
       final response = await dioClient!.post(AppConstants.trackUri, data: {

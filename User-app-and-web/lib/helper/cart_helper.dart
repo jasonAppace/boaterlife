@@ -49,19 +49,21 @@ class CartHelper {
       }
     }
 
+    double? discountedPrice = PriceConverterHelper.convertWithDiscount(
+        price, product.discount, product.discountType);
+
+    double taxAmount = discountedPrice! -
+        PriceConverterHelper.convertWithDiscount(
+            discountedPrice, product.tax, product.taxType)!;
+
     cartModel = CartModel(
       product.id,
       price,
-      PriceConverterHelper.convertWithDiscount(
-          price, product.discount, product.discountType),
+      double.parse(discountedPrice.toStringAsFixed(2)),
       variation,
-      (price! -
-          PriceConverterHelper.convertWithDiscount(
-              price, product.discount, product.discountType)!),
+      double.parse((price! - discountedPrice).toStringAsFixed(2)),
       quantity ?? 1,
-      price -
-          PriceConverterHelper.convertWithDiscount(
-              price, product.tax, product.taxType)!,
+      double.parse(taxAmount.toStringAsFixed(2)),
       stock,
       product,
     );

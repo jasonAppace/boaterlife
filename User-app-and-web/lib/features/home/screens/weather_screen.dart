@@ -83,7 +83,7 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen>
 
       await fetchWeatherData();
     } catch (e) {
-      print('Location error: ${e.toString()}');
+      debugPrint('Location error: ${e.toString()}');
       fetchWeatherData();
       _loadWindyMap();
     }
@@ -125,7 +125,7 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen>
           'https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_gusts_10m&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m&daily=temperature_2m_max,temperature_2m_min&timezone=auto&temperature_unit=fahrenheit&wind_speed_unit=mph'));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print('API Response: $data'); // Debug output
+        debugPrint('API Response: $data'); // Debug output
 
         setState(() {
           weatherData = data;
@@ -643,7 +643,7 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen>
                   // Optional: Hide loading indicator
                 },
                 onReceivedError: (controller, request, error) {
-                  print('WebView error: ${error.description}');
+                  debugPrint('WebView error: ${error.description}');
                 },
               ),
             ),

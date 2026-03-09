@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
     authProvider.toggleIsNumberLogin(value: false, isUpdate: false);
 
     UserLogData? userData = authProvider.getUserData();
-    print("------------USER DATA---------------${userData?.toJson()}");
+    debugPrint("------------USER DATA---------------${userData?.toJson()}");
 
     _emailNumberFocus.addListener(() {
       setState(() {});
@@ -72,10 +72,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 userData.phoneNumber ?? '', userData.countryCode ?? '') ??
             '';
         authProvider.toggleIsNumberLogin(value: true, isUpdate: false);
-        print(
+        debugPrint(
             "--------------------IS Number Login-----------------${authProvider.isNumberLogin}");
         _countryDialCode ??= userData.countryCode;
-        print(
+        debugPrint(
             "--------------------Country CODE---------------- ${userData.countryCode}");
       } else if (userData.email != null) {
         _emailOrPhoneController!.text = userData.email ?? '';

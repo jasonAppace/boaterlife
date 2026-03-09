@@ -373,7 +373,7 @@ class _AddressMapWidgetState extends State<AddressMapWidget> {
   void _onCameraIdle(LocationProvider locationProvider) {
     if (onCameraIdolAction) {
       if (widget.address != null && !widget.fromCheckout) {
-        print(
+        debugPrint(
             "----------(CAMERA IDLE IF )-------${widget.address?.toJson().toString()}");
         //print("----------(CAMERA POSITION)_------${}")
 
@@ -381,7 +381,7 @@ class _AddressMapWidgetState extends State<AddressMapWidget> {
         _updateAddress = true;
       } else {
         if (_updateAddress) {
-          print(
+          debugPrint(
               "----------(CAMERA IDLE)-------${widget.address?.toJson().toString()}");
 
           locationProvider.updatePosition(_cameraPosition, true, null, true);

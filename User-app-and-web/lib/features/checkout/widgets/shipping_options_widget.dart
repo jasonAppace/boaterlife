@@ -174,8 +174,8 @@ class _ShippingOptionsWidgetState extends State<ShippingOptionsWidget> {
         'items': widget.cartItems,
       };
 
-      print('Shipping request payload: ${json.encode(request)}');
-      print(request.toString());
+      debugPrint('Shipping request payload: ${json.encode(request)}');
+      debugPrint(request.toString());
 
       final response = await http.post(
         Uri.parse('${AppConstants.baseUrl}${AppConstants.getShippmentOptions}'),
@@ -186,8 +186,8 @@ class _ShippingOptionsWidgetState extends State<ShippingOptionsWidget> {
         body: json.encode(request),
       );
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = ShippingResponse.fromJson(json.decode(response.body));

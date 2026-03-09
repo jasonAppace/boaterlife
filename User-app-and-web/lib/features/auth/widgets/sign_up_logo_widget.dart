@@ -16,7 +16,7 @@ class SignUpLogoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final logoPath = Images.getLogoByCountryCode(countryCode);
-    print(
+    debugPrint(
         '----(SIGN UP LOGO WIDGET)---- Country Code: $countryCode, Logo Path: $logoPath');
 
     return Container(

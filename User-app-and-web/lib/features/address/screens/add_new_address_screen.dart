@@ -242,7 +242,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
             .configModel!
             .countryCode
             ?.toUpperCase());
-    print(
+    debugPrint(
         '-----(FIRST COUNTRY CODE)-----${addressProvider.countryCode} | Country: ${addressProvider.selectedCountryCode}');
 
     locationProvider.setPickedAddressLatLon(null, null, isUpdate: false);
@@ -255,7 +255,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
     addressProvider.setAddressStatusMessage = '';
     addressProvider.setErrorMessage = '';
 
-    print(
+    debugPrint(
         "-------------(LOCATION)-----------${widget.address?.toJson().toString()}");
 
     if (widget.isUpdateEnable && widget.address != null) {
@@ -272,7 +272,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
           locationProvider.setPickedAddressLatLon(
               widget.address?.latitude ?? '', widget.address?.longitude ?? '');
 
-          print(
+          debugPrint(
               "----------------(LOCATION)---------${locationProvider.pickedAddressLongitude} and ${locationProvider.pickedAddressLatitude}");
 
           locationProvider.updatePosition(
@@ -290,9 +290,9 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
 
       _contactPersonNameController.text =
           '${widget.address!.contactPersonName}';
-      print(
+      debugPrint(
           '--------------(PHONE NUMBER)-----------${widget.address?.contactPersonNumber}');
-      print(
+      debugPrint(
           '--------------(CountryCode)-----------${PhoneNumberCheckerHelper.getCountryCode('${widget.address!.contactPersonNumber}') ?? ''}');
 
       addressProvider.setCountryCode(PhoneNumberCheckerHelper.getCountryCode(
@@ -309,8 +309,10 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
       _stateController.text = widget.address!.stateIso ?? '';
       _cityController.text = widget.address!.city ?? '';
       _zipController.text = widget.address!.zipCode ?? '';
-      print("----------------(STATE)--------------${widget.address!.stateIso}");
-      print("----------------(ZIP)--------------${widget.address!.zipCode}");
+      debugPrint(
+          "----------------(STATE)--------------${widget.address!.stateIso}");
+      debugPrint(
+          "----------------(ZIP)--------------${widget.address!.zipCode}");
 
       if (widget.address!.addressType == 'Home') {
         addressProvider.updateAddressIndex(0, false);
@@ -339,15 +341,15 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
       _cityController.text = widget.address?.city ?? '';
       _zipController.text = widget.address?.zipCode ?? '';
 
-      print(
+      debugPrint(
           '--------------------(ELSE)---------------${userModel?.phone}---------');
-      print(
+      debugPrint(
           '--------------------(ELSE)----------------${PhoneNumberCheckerHelper.getCountryCode(userModel?.phone)}');
-      print(
+      debugPrint(
           '--------------------(ELSE)-------------------${_contactPersonNumberController.text}');
-      print(
+      debugPrint(
           '--------------------(ELSE)-------------------${PhoneNumberCheckerHelper.getPhoneNumber(userModel?.phone ?? '', addressProvider.countryCode ?? '') ?? ''}');
-      print(
+      debugPrint(
           '-------------------(ELSE)------------${addressProvider.countryCode}');
     }
   }

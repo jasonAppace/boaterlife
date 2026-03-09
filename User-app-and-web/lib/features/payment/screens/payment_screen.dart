@@ -131,7 +131,7 @@ class MyInAppBrowser extends InAppBrowser {
   @override
   Future onBrowserCreated() async {
     if (kDebugMode) {
-      print("\n\nBrowser Created!\n\n");
+      debugPrint("\n\nBrowser Created!\n\n");
     }
   }
 
@@ -140,7 +140,7 @@ class MyInAppBrowser extends InAppBrowser {
     url,
   ) async {
     if (kDebugMode) {
-      print("\n\nStarted: $url\n\n");
+      debugPrint("\n\nStarted: $url\n\n");
     }
     _pageRedirect(url.toString());
   }
@@ -149,7 +149,7 @@ class MyInAppBrowser extends InAppBrowser {
   Future onLoadStop(url) async {
     pullToRefreshController?.endRefreshing();
     if (kDebugMode) {
-      print("\n\nStopped: $url\n\n");
+      debugPrint("\n\nStopped: $url\n\n");
     }
     _pageRedirect(url.toString());
   }
@@ -158,7 +158,7 @@ class MyInAppBrowser extends InAppBrowser {
   void onLoadError(url, code, message) {
     pullToRefreshController?.endRefreshing();
     if (kDebugMode) {
-      print("Can't load [$url] Error: $message");
+      debugPrint("Can't load [$url] Error: $message");
     }
   }
 
@@ -168,7 +168,7 @@ class MyInAppBrowser extends InAppBrowser {
       pullToRefreshController?.endRefreshing();
     }
     if (kDebugMode) {
-      print("Progress: $progress");
+      debugPrint("Progress: $progress");
     }
   }
 
@@ -203,7 +203,7 @@ class MyInAppBrowser extends InAppBrowser {
     // }
 
     if (kDebugMode) {
-      print("\n\nBrowser closed!\n\n");
+      debugPrint("\n\nBrowser closed!\n\n");
     }
   }
 
@@ -211,7 +211,7 @@ class MyInAppBrowser extends InAppBrowser {
   Future<NavigationActionPolicy> shouldOverrideUrlLoading(
       navigationAction) async {
     if (kDebugMode) {
-      print("\n\nOverride ${navigationAction.request.url}\n\n");
+      debugPrint("\n\nOverride ${navigationAction.request.url}\n\n");
     }
     return NavigationActionPolicy.ALLOW;
   }
@@ -224,7 +224,7 @@ class MyInAppBrowser extends InAppBrowser {
   @override
   void onConsoleMessage(consoleMessage) {
     if (kDebugMode) {
-      print("""
+      debugPrint("""
     console output:
       message: ${consoleMessage.message}
       messageLevel: ${consoleMessage.messageLevel.toValue()}
@@ -241,9 +241,9 @@ class MyInAppBrowser extends InAppBrowser {
       bool isCancel = url.contains('cancel') && checkedUrl;
 
       if (kDebugMode) {
-        print(
+        debugPrint(
             '----------------payment status -----$isCancel -- $isSuccess -- $isFailed');
-        print('------------------url --- $url');
+        debugPrint('------------------url --- $url');
       }
 
       if (isSuccess || isFailed || isCancel) {

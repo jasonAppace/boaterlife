@@ -1,4 +1,3 @@
-
 import 'package:hexacom_user/common/enums/product_filter_type_enum.dart';
 import 'package:hexacom_user/data/datasource/remote/dio/dio_client.dart';
 import 'package:hexacom_user/data/datasource/remote/exception/api_error_handler.dart';
@@ -12,9 +11,9 @@ class ProductRepo {
 
   ProductRepo({required this.dioClient});
 
-  Future<ApiResponseModel> getLatestProductList(int offset, int limit, ProductFilterType? filterType) async {
+  Future<ApiResponseModel> getLatestProductList(
+      int offset, int limit, ProductFilterType? filterType) async {
     try {
-
       final response = await dioClient!.get(
         '${AppConstants.latestProductUri}?limit=$limit&&offset=$offset${filterType != null ? '&sort_by=${ProductHelper.getProductFilterTypeValue(filterType)}' : ''}',
       );
@@ -59,16 +58,19 @@ class ProductRepo {
 
   Future<ApiResponseModel> submitReview(ReviewBodyModel reviewBody) async {
     try {
-      final response = await dioClient!.post(AppConstants.reviewUri, data: reviewBody);
+      final response =
+          await dioClient!.post(AppConstants.reviewUri, data: reviewBody);
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-  Future<ApiResponseModel> submitDeliveryManReview(ReviewBodyModel reviewBody) async {
+  Future<ApiResponseModel> submitDeliveryManReview(
+      ReviewBodyModel reviewBody) async {
     try {
-      final response = await dioClient!.post(AppConstants.deliverManReviewUri, data: reviewBody);
+      final response = await dioClient!
+          .post(AppConstants.deliverManReviewUri, data: reviewBody);
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
@@ -77,15 +79,19 @@ class ProductRepo {
 
   Future<ApiResponseModel> getProductReviewList(int? productID) async {
     try {
-      final response = await dioClient!.get('${AppConstants.productReviewUri}$productID');
+      final response =
+          await dioClient!.get('${AppConstants.productReviewUri}$productID');
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
-  Future<ApiResponseModel> getFlashSale(int offset, ProductFilterType? filterType) async {
+
+  Future<ApiResponseModel> getFlashSale(
+      int offset, ProductFilterType? filterType) async {
     try {
-      final response = await dioClient!.get('${AppConstants.flashSale}?limit=15&&offset=$offset${filterType != null ? '&sort_by=${ProductHelper.getProductFilterTypeValue(filterType)}' : ''}');
+      final response = await dioClient!.get(
+          '${AppConstants.flashSale}?limit=15&&offset=$offset${filterType != null ? '&sort_by=${ProductHelper.getProductFilterTypeValue(filterType)}' : ''}');
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
@@ -100,5 +106,4 @@ class ProductRepo {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
-
 }

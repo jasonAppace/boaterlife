@@ -11,21 +11,18 @@ class LanguageProvider with ChangeNotifier {
 
   int? get selectIndex => _selectIndex;
 
-
   LanguageModel? _selectedLanguageModel;
   LanguageModel? get selectedLanguageModel => _selectedLanguageModel;
-
 
   void setSelectIndex(int? index) {
     _selectIndex = index;
     notifyListeners();
   }
 
-  void setSelectedLanguageModel(LanguageModel language){
+  void setSelectedLanguageModel(LanguageModel language) {
     _selectedLanguageModel = language;
     notifyListeners();
   }
-
 
   List<LanguageModel> _languages = [];
 
@@ -35,7 +32,8 @@ class LanguageProvider with ChangeNotifier {
     if (query.isEmpty) {
       _languages.clear();
       _languages = languageRepo!.getAllLanguages(context: context);
-      print("----------------(SEARCH LANGUAGE)------------${_languages.length}");
+      debugPrint(
+          "----------------(SEARCH LANGUAGE)------------${_languages.length}");
       notifyListeners();
     } else {
       _selectIndex = -1;
@@ -52,6 +50,5 @@ class LanguageProvider with ChangeNotifier {
   void initializeAllLanguages(BuildContext context) {
     _languages = [];
     _languages = languageRepo?.getAllLanguages(context: context) ?? [];
-
   }
 }

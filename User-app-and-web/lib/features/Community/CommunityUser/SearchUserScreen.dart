@@ -97,7 +97,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                               itemBuilder: (context, index) {
                                 return InkWell(
                                   onTap: () {
-                                    print("Searched User Tapped");
+                                    debugPrint("Searched User Tapped");
 
                                     Navigator.push(
                                       context,

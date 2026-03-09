@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 
 String getTranslated(String? key, BuildContext context) {
   String? text = key;
-  try{
+  try {
     text = AppLocalization.of(context)!.translate(key);
-  }catch (error){
+  } catch (error) {
     if (kDebugMode) {
-      print('not localized --- $error');
+      debugPrint('not localized --- $error');
     }
   }
   return text ?? '';

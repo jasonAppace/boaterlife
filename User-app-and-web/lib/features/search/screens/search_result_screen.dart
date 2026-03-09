@@ -390,10 +390,10 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                                                     BorderRadius
                                                                         .circular(
                                                                             10),
-                                                                border: Border.all(
-                                                                    color: ColorResources
-                                                                        .colorGrey,
-                                                                    width: 1),
+                                                                // border: Border.all(
+                                                                //     color: ColorResources
+                                                                //         .colorGrey,
+                                                                //     width: 1),
                                                               ),
                                                               child: ProductCardWidget(
                                                                   product:

@@ -8,7 +8,6 @@ import 'package:hexacom_user/common/widgets/custom_button_widget.dart';
 import 'package:hexacom_user/common/widgets/custom_web_title_widget.dart';
 import 'package:hexacom_user/common/widgets/footer_web_widget.dart';
 import 'package:hexacom_user/common/widgets/not_logged_in_screen.dart';
-import 'package:hexacom_user/features/Community/Widgets/custom_button.dart';
 import 'package:hexacom_user/features/address/providers/address_provider.dart';
 import 'package:hexacom_user/features/auth/providers/auth_provider.dart';
 import 'package:hexacom_user/features/cart/providers/cart_provider.dart';
@@ -17,8 +16,6 @@ import 'package:hexacom_user/features/checkout/widgets/delivery_address_widget.d
 import 'package:hexacom_user/features/checkout/widgets/details_view_widget.dart';
 import 'package:hexacom_user/features/checkout/widgets/map_view_widget.dart';
 import 'package:hexacom_user/features/checkout/widgets/place_order_button_view.dart';
-import 'package:hexacom_user/features/checkout/widgets/zip_code_view_widget.dart';
-import 'package:hexacom_user/features/order/enums/delivery_charge_type.dart';
 import 'package:hexacom_user/features/order/providers/order_provider.dart';
 import 'package:hexacom_user/features/profile/providers/profile_provider.dart';
 import 'package:hexacom_user/features/splash/providers/splash_provider.dart';
@@ -144,10 +141,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   // FIXED: Add method to handle carrier selection
   void _handleCarrierSelection(Carrier selectedCarrier, String shipmentID) {
-    print('=== CARRIER SELECTION ===');
-    print('Selected carrier: ${selectedCarrier.servicelevelName}');
-    print('Carrier amount: ${selectedCarrier.amount}');
-    print('Shipment ID: $shipmentID');
+    debugPrint('=== CARRIER SELECTION ===');
+    debugPrint('Selected carrier: ${selectedCarrier.servicelevelName}');
+    debugPrint('Carrier amount: ${selectedCarrier.amount}');
+    debugPrint('Shipment ID: $shipmentID');
 
     setState(() {
       _carierSelected = selectedCarrier;
@@ -178,7 +175,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         'distance';
     bool selfPickup = widget.orderType == 'self_pickup';
 
-    print("----------(Guest ID)----${authProvider.getGuestId()}");
+    debugPrint("----------(Guest ID)----${authProvider.getGuestId()}");
     final bool isRoute = (_isLoggedIn ||
         (configModel.isGuestCheckout! && authProvider.getGuestId() != null));
 

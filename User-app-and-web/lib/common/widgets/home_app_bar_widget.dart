@@ -4,12 +4,9 @@ import 'package:hexacom_user/features/cart/providers/cart_provider.dart';
 import 'package:hexacom_user/features/splash/providers/splash_provider.dart';
 import 'package:hexacom_user/helper/cart_helper.dart';
 import 'package:hexacom_user/helper/responsive_helper.dart';
-import 'package:hexacom_user/utill/app_constants.dart';
 import 'package:hexacom_user/utill/color_resources.dart';
-import 'package:hexacom_user/utill/dimensions.dart';
 import 'package:hexacom_user/utill/images.dart';
 import 'package:hexacom_user/utill/routes.dart';
-import 'package:hexacom_user/utill/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,12 +34,12 @@ class HomeAppBarWidget extends StatelessWidget {
             )
           : null,
       title: Consumer<SplashProvider>(
-          builder: (context, splash, child) => Row(
+          builder: (context, splash, child) => const Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: const CustomAssetImageWidget(Images.logo,
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: CustomAssetImageWidget(Images.logo,
                         width: 80, height: 50),
                   ),
                   // const SizedBox(width: 10),
@@ -87,7 +84,7 @@ class HomeAppBarWidget extends StatelessWidget {
                     color: Colors.black.withOpacity(0.5),
                     blurRadius: 10,
                     spreadRadius: 2,
-                    offset: Offset(0, 1),
+                    offset: const Offset(0, 1),
                   )
                 ],
               ),
@@ -95,7 +92,7 @@ class HomeAppBarWidget extends StatelessWidget {
                 radius: 18,
                 backgroundColor:
                     ColorResources.getOnBoardingShadeColor(context),
-                child: CustomAssetImageWidget(
+                child: const CustomAssetImageWidget(
                   Images.couponSvg,
                   height: 18,
                   width: 18,
@@ -118,7 +115,7 @@ class HomeAppBarWidget extends StatelessWidget {
                     color: Colors.black.withOpacity(0.5),
                     blurRadius: 10,
                     spreadRadius: 2,
-                    offset: Offset(0, 1),
+                    offset: const Offset(0, 1),
                   )
                 ],
               ),
@@ -126,7 +123,7 @@ class HomeAppBarWidget extends StatelessWidget {
                 radius: 18,
                 backgroundColor:
                     ColorResources.getOnBoardingShadeColor(context),
-                child: CustomAssetImageWidget(
+                child: const CustomAssetImageWidget(
                   Images.notificationSvg,
                   height: 18,
                   width: 18,

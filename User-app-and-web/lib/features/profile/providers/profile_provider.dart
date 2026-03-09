@@ -12,44 +12,40 @@ class ProfileProvider with ChangeNotifier {
   final ProfileRepo? profileRepo;
   ProfileProvider({required this.profileRepo});
 
-
   UserInfoModel? _userInfoModel;
   UserInfoModel? get userInfoModel => _userInfoModel;
   String? _countryCode;
-
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   String? get countryCode => _countryCode;
 
-
-
   Future<void> getUserInfo() async {
     ApiResponseModel apiResponse = await profileRepo!.getUserInfo();
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _userInfoModel = UserInfoModel.fromJson(apiResponse.response!.data);
       profileRepo!.clearUserId().then((value) {
         saveUserId('${_userInfoModel!.id}');
       });
-
     } else {
       ApiCheckerHelper.checkApi(apiResponse);
-
     }
 
     notifyListeners();
   }
 
-
-
-  Future<ResponseModel> updateUserInfo(UserInfoModel updateUserModel, String password, XFile?  file, String token) async {
+  Future<ResponseModel> updateUserInfo(UserInfoModel updateUserModel,
+      String password, XFile? file, String token) async {
     _isLoading = true;
     notifyListeners();
 
     ResponseModel responseModel;
-    print("---------(UPDATE USER INFO)------------${updateUserModel.toJson().toString()}");
-    http.StreamedResponse response = await profileRepo!.updateProfile(updateUserModel, password, file, token);
+    debugPrint(
+        "---------(UPDATE USER INFO)------------${updateUserModel.toJson().toString()}");
+    http.StreamedResponse response = await profileRepo!
+        .updateProfile(updateUserModel, password, file, token);
 
     Map map = jsonDecode(await response.stream.bytesToString());
 
@@ -57,11 +53,8 @@ class ProfileProvider with ChangeNotifier {
       String? message = map["message"];
       _userInfoModel = updateUserModel;
       responseModel = ResponseModel(true, message);
-
-    }
-    else {
+    } else {
       responseModel = ResponseModel(false, '${map['errors'][0]['message']}');
-
     }
 
     _isLoading = false;
@@ -71,17 +64,15 @@ class ProfileProvider with ChangeNotifier {
 
   void saveUserId(String userId) => profileRepo!.saveUserID(userId);
 
-  String getUserId()=> profileRepo!.getUserId();
+  String getUserId() => profileRepo!.getUserId();
 
-  void setCountryCode (String countryCode, {bool isUpdate = true}){
-    if(!countryCode.contains('+')){
+  void setCountryCode(String countryCode, {bool isUpdate = true}) {
+    if (!countryCode.contains('+')) {
       countryCode = "+$countryCode";
     }
     _countryCode = countryCode;
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
-
-
 }

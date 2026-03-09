@@ -332,7 +332,7 @@ class OrderItemButtonView extends StatelessWidget {
                 convert.utf8.encode(ResponsiveHelper.isWeb() ? webUrl : url));
             String selectedUrl =
                 '${AppConstants.baseUrl}/payment-mobile?token=$tokenUrl&&payment_method=${orderList![index].paymentMethod}&&payment_platform=${kIsWeb ? 'web' : 'app'}';
-            print("selectedUrl: $selectedUrl");
+            debugPrint("selectedUrl: $selectedUrl");
             if (ResponsiveHelper.isWeb()) {
               html.window.open(selectedUrl, "_self");
             } else {

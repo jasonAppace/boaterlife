@@ -15,59 +15,78 @@ class LocationSearchDialogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final LocationProvider locationProvider = Provider.of<LocationProvider>(context, listen: false);
-    final AddressProvider addressProvider = Provider.of<AddressProvider>(context, listen: false);
+    final LocationProvider locationProvider =
+        Provider.of<LocationProvider>(context, listen: false);
+    final AddressProvider addressProvider =
+        Provider.of<AddressProvider>(context, listen: false);
 
-    return Scrollable(viewportBuilder: (context, _)=> Container(
-        margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault).copyWith(top: 80),
+    return Scrollable(
+      viewportBuilder: (context, _) => Container(
+        margin: const EdgeInsets.symmetric(
+                horizontal: Dimensions.paddingSizeDefault)
+            .copyWith(top: 80),
         alignment: Alignment.topCenter,
         child: Material(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: SizedBox(width: Dimensions.webScreenWidth, child: TypeAheadField<Prediction>(
-            builder: (context, controller, focusNode) => TextField(
-              controller: controller,
-              focusNode: focusNode,
-              textInputAction: TextInputAction.search,
-              autofocus: true,
-              textCapitalization: TextCapitalization.words,
-              keyboardType: TextInputType.streetAddress,
-              decoration: InputDecoration(
-                hintText: getTranslated('search_location', context),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(style: BorderStyle.none, width: 0),
-                ),
-                hintStyle: rubikMedium.copyWith(
-                  fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor,
-                ),
-                filled: true, fillColor: Theme.of(context).cardColor,
-              ),
-              style: rubikMedium.copyWith(
-                color: Theme.of(context).textTheme.bodyLarge!.color, fontSize: Dimensions.fontSizeLarge,
-              ),
-            ),
-            suggestionsCallback: (pattern) async {
-              return await addressProvider.searchAddress(context, pattern);
-            },
-            itemBuilder: (context, Prediction suggestion) {
-              return Padding(
-                padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                child: Row(children: [
-                  const Icon(Icons.location_on),
-                  Expanded(
-                    child: Text(suggestion.description!, maxLines: 1, overflow: TextOverflow.ellipsis, style: rubikMedium.copyWith(
-                      color: Theme.of(context).textTheme.bodyLarge!.color, fontSize: Dimensions.fontSizeLarge,
-                    )),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child: SizedBox(
+              width: Dimensions.webScreenWidth,
+              child: TypeAheadField<Prediction>(
+                builder: (context, controller, focusNode) => TextField(
+                  controller: controller,
+                  focusNode: focusNode,
+                  textInputAction: TextInputAction.search,
+                  autofocus: true,
+                  textCapitalization: TextCapitalization.words,
+                  keyboardType: TextInputType.streetAddress,
+                  decoration: InputDecoration(
+                    hintText: getTranslated('search_location', context),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide:
+                          const BorderSide(style: BorderStyle.none, width: 0),
+                    ),
+                    hintStyle: rubikMedium.copyWith(
+                      fontSize: Dimensions.fontSizeDefault,
+                      color: Theme.of(context).disabledColor,
+                    ),
+                    filled: true,
+                    fillColor: Theme.of(context).cardColor,
                   ),
-                ]),
-              );
-            },
-            onSelected: (Prediction suggestion) {
-              print("-----------------(ON SELECTED)----------${suggestion.toJson().toString()}");
-              locationProvider.setLocation(suggestion.placeId, suggestion.description, mapController);
-              Navigator.pop(context);
-            },
-          )),
+                  style: rubikMedium.copyWith(
+                    color: Theme.of(context).textTheme.bodyLarge!.color,
+                    fontSize: Dimensions.fontSizeLarge,
+                  ),
+                ),
+                suggestionsCallback: (pattern) async {
+                  return await addressProvider.searchAddress(context, pattern);
+                },
+                itemBuilder: (context, Prediction suggestion) {
+                  return Padding(
+                    padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                    child: Row(children: [
+                      const Icon(Icons.location_on),
+                      Expanded(
+                        child: Text(suggestion.description!,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: rubikMedium.copyWith(
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge!.color,
+                              fontSize: Dimensions.fontSizeLarge,
+                            )),
+                      ),
+                    ]),
+                  );
+                },
+                onSelected: (Prediction suggestion) {
+                  debugPrint(
+                      "-----------------(ON SELECTED)----------${suggestion.toJson().toString()}");
+                  locationProvider.setLocation(suggestion.placeId,
+                      suggestion.description, mapController);
+                  Navigator.pop(context);
+                },
+              )),
         ),
       ),
     );

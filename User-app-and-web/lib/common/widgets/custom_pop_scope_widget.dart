@@ -5,46 +5,46 @@ import 'package:hexacom_user/helper/responsive_helper.dart';
 import 'package:hexacom_user/localization/language_constrants.dart';
 import 'package:hexacom_user/utill/images.dart';
 
-
 class CustomPopScopeWidget extends StatefulWidget {
   final Widget child;
   final Function()? onPopInvoked;
   final bool isExit;
-  const CustomPopScopeWidget({super.key, required this.child, this.onPopInvoked, this.isExit = true});
+  const CustomPopScopeWidget(
+      {super.key, required this.child, this.onPopInvoked, this.isExit = true});
 
   @override
   State<CustomPopScopeWidget> createState() => _CustomPopScopeWidgetState();
 }
 
 class _CustomPopScopeWidgetState extends State<CustomPopScopeWidget> {
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: ResponsiveHelper.isDesktop(context),
       onPopInvokedWithResult: (didPop, result) async {
-        print('--------is null-------${widget.onPopInvoked != null}');
+        debugPrint('--------is null-------${widget.onPopInvoked != null}');
 
         if (widget.onPopInvoked != null) {
-         await widget.onPopInvoked!();
-        }else{
-          if(didPop) {
+          await widget.onPopInvoked!();
+        } else {
+          if (didPop) {
             return;
           }
 
-          if(!Navigator.canPop(context) && widget.isExit) {
+          if (!Navigator.canPop(context) && widget.isExit) {
             ResponsiveHelper.showDialogOrBottomSheet(
-                context, CustomAlertDialogWidget(
-              title: getTranslated('close_the_app', context),
-              subTitle: getTranslated('do_you_want_to_close_and', context),
-              rightButtonText: getTranslated('exit', context),
-              image: Images.logOut,
-              onPressRight: () {
-                SystemNavigator.pop();
-              },
-            ));
-          }else {
-            if(Navigator.canPop(context)) {
+                context,
+                CustomAlertDialogWidget(
+                  title: getTranslated('close_the_app', context),
+                  subTitle: getTranslated('do_you_want_to_close_and', context),
+                  rightButtonText: getTranslated('exit', context),
+                  image: Images.logOut,
+                  onPressRight: () {
+                    SystemNavigator.pop();
+                  },
+                ));
+          } else {
+            if (Navigator.canPop(context)) {
               Navigator.pop(context);
             }
           }

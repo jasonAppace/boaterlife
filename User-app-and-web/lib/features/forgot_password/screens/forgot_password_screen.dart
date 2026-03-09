@@ -293,7 +293,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                                           userInput);
                                             }
 
-                                            print(
+                                            debugPrint(
                                                 "-----------------(Forgot Password)--------UserInput $userInput and $isNumber and $isNumberValid");
 
                                             if (_emailOrPhoneController

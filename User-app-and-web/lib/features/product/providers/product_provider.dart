@@ -27,7 +27,6 @@ class ProductProvider extends ChangeNotifier {
   int offset = 1;
   ProductDetailsModel? _productDetailsModel;
 
-
   Product? get product => _product;
   ProductModel? get latestProductModel => _latestProductModel;
   List<Product>? get offerProductList => _offerProductList;
@@ -38,46 +37,58 @@ class ProductProvider extends ChangeNotifier {
   int get tabIndex => _tabIndex;
   ProductDetailsModel? get productDetailsModel => _productDetailsModel;
 
-
   NewArrivalProductsModel? _newArrivalProductsModel;
-  NewArrivalProductsModel? get newArrivalProductsModel => _newArrivalProductsModel;
+  NewArrivalProductsModel? get newArrivalProductsModel =>
+      _newArrivalProductsModel;
 
-  void getLatestProductList(int offset, {ProductFilterType? filterType, bool isUpdate = true, int? limit = 15}) async {
-    if(offset == 1) {
+  void getLatestProductList(int offset,
+      {ProductFilterType? filterType,
+      bool isUpdate = true,
+      int? limit = 15}) async {
+    if (offset == 1) {
       _latestProductModel = null;
 
-      if(isUpdate) {
+      if (isUpdate) {
         notifyListeners();
       }
-
     }
-    ApiResponseModel apiResponse = await productRepo!.getLatestProductList(offset, limit ?? 15, filterType);
+    ApiResponseModel apiResponse = await productRepo!
+        .getLatestProductList(offset, limit ?? 15, filterType);
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-
-      if(offset == 1){
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      if (offset == 1) {
         _latestProductModel = ProductModel.fromJson(apiResponse.response?.data);
       } else {
-        _latestProductModel!.totalSize = ProductModel.fromJson(apiResponse.response?.data).totalSize;
-        _latestProductModel!.offset = ProductModel.fromJson(apiResponse.response?.data).offset;
-        _latestProductModel!.products!.addAll(ProductModel.fromJson(apiResponse.response?.data).products!);
+        _latestProductModel!.totalSize =
+            ProductModel.fromJson(apiResponse.response?.data).totalSize;
+        _latestProductModel!.offset =
+            ProductModel.fromJson(apiResponse.response?.data).offset;
+        _latestProductModel!.products!.addAll(
+            ProductModel.fromJson(apiResponse.response?.data).products!);
       }
 
       _isLoading = false;
       notifyListeners();
     } else {
-      showCustomSnackBar(ApiCheckerHelper.getError(apiResponse).errors?.first.message, Get.context!);
+      showCustomSnackBar(
+          ApiCheckerHelper.getError(apiResponse).errors?.first.message,
+          Get.context!);
     }
   }
 
   Future<void> getProductDetails(Product product, CartModel? cart) async {
-    if(product.name != null) {
+    if (product.name != null) {
       _product = product;
-    }else {
+    } else {
       _product = null;
-      ApiResponseModel apiResponse = await productRepo!.getProductDetails(product.id.toString());
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-        _productDetailsModel = ProductDetailsModel.fromJson(apiResponse.response!.data);
+      ApiResponseModel apiResponse =
+          await productRepo!.getProductDetails(product.id.toString());
+      if (apiResponse.response != null &&
+          apiResponse.response!.statusCode == 200) {
+        debugPrint(apiResponse.response!.data.toString(), wrapWidth: 1024);
+        _productDetailsModel =
+            ProductDetailsModel.fromJson(apiResponse.response!.data);
         _product = _productDetailsModel?.product;
       } else {
         ApiCheckerHelper.checkApi(apiResponse);
@@ -87,11 +98,13 @@ class ProductProvider extends ChangeNotifier {
   }
 
   Future<void> getOfferProductList(bool reload) async {
-    if(offerProductList == null || reload) {
+    if (offerProductList == null || reload) {
       ApiResponseModel apiResponse = await productRepo!.getOfferProductList();
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      if (apiResponse.response != null &&
+          apiResponse.response!.statusCode == 200) {
         _offerProductList = [];
-        apiResponse.response!.data.forEach((offerProduct) => _offerProductList!.add(Product.fromJson(offerProduct)));
+        apiResponse.response!.data.forEach((offerProduct) =>
+            _offerProductList!.add(Product.fromJson(offerProduct)));
       } else {
         ApiCheckerHelper.checkApi(apiResponse);
       }
@@ -99,30 +112,34 @@ class ProductProvider extends ChangeNotifier {
     }
   }
 
-
   Future<void> getNewArrivalProducts(int offset, bool reload) async {
-    if(reload) {
+    if (reload) {
       _newArrivalProductsModel = null;
       notifyListeners();
     }
 
-    ApiResponseModel? response = await productRepo!.getNewArrivalProducts(offset);
-    if (response.response != null && response.response?.data != null && response.response?.statusCode == 200) {
-      if(offset == 1){
-        _newArrivalProductsModel = NewArrivalProductsModel.fromJson(response.response?.data);
+    ApiResponseModel? response =
+        await productRepo!.getNewArrivalProducts(offset);
+    if (response.response != null &&
+        response.response?.data != null &&
+        response.response?.statusCode == 200) {
+      if (offset == 1) {
+        _newArrivalProductsModel =
+            NewArrivalProductsModel.fromJson(response.response?.data);
       } else {
-        _newArrivalProductsModel!.totalSize = NewArrivalProductsModel.fromJson(response.response?.data).totalSize;
-        _newArrivalProductsModel!.offset = NewArrivalProductsModel.fromJson(response.response?.data).offset;
-        _newArrivalProductsModel!.products!.addAll(NewArrivalProductsModel.fromJson(response.response?.data).products!);
+        _newArrivalProductsModel!.totalSize =
+            NewArrivalProductsModel.fromJson(response.response?.data).totalSize;
+        _newArrivalProductsModel!.offset =
+            NewArrivalProductsModel.fromJson(response.response?.data).offset;
+        _newArrivalProductsModel!.products!.addAll(
+            NewArrivalProductsModel.fromJson(response.response?.data)
+                .products!);
       }
       notifyListeners();
-
     } else {
       ApiCheckerHelper.checkApi(response);
     }
-
   }
-
 
   void showBottomLoader() {
     _isLoading = true;
@@ -137,10 +154,10 @@ class ProductProvider extends ChangeNotifier {
   void initDataLoad(Product? product, CartModel? cart, {bool isUpdate = true}) {
     _tabIndex = 0;
     _variationIndex = [];
-    if(cart != null) {
+    if (cart != null) {
       _quantity = cart.quantity;
       List<String> variationTypes = [];
-      if(cart.variation!.isNotEmpty &&  cart.variation![0].type != null) {
+      if (cart.variation!.isNotEmpty && cart.variation![0].type != null) {
         variationTypes.addAll(cart.variation![0].type!.split('-'));
       }
       int varIndex = 0;
@@ -154,22 +171,21 @@ class ProductProvider extends ChangeNotifier {
         }
         varIndex++;
       }
-    }else {
+    } else {
       _quantity = 1;
       product?.choiceOptions?.forEach((element) => _variationIndex?.add(0));
-
     }
     //todo check listener
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
   void setProductQuantity(bool isIncrement, int? stock, BuildContext context) {
     if (isIncrement) {
-      if(_quantity! >= stock!) {
+      if (_quantity! >= stock!) {
         showCustomSnackBar(getTranslated('out_of_stock', context), context);
-      }else {
+      } else {
         _quantity = _quantity! + 1;
       }
     } else {
@@ -188,6 +204,4 @@ class ProductProvider extends ChangeNotifier {
     _tabIndex = index;
     notifyListeners();
   }
-
-
 }

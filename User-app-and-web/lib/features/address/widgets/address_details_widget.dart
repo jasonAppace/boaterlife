@@ -94,9 +94,10 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
   void initState() {
     super.initState();
     fetchStates();
-    print(
+    debugPrint(
         "----------------(STATE)--------------${widget.stateController.text}");
-    print("----------------(ZIP)--------------${widget.zipController.text}");
+    debugPrint(
+        "----------------(ZIP)--------------${widget.zipController.text}");
   }
 
   Future<void> fetchStates() async {
@@ -127,12 +128,12 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
             }
           });
         }
-        print(selectedState != null
+        debugPrint(selectedState != null
             ? "Selected state: ${selectedState!.name}"
             : "No state selected");
       }
     } catch (e) {
-      print('Error fetching states: $e');
+      debugPrint('Error fetching states: $e');
       // Show error message to user
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -151,7 +152,7 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
 
   void _showStatePicker() {
     // Add debug print to check if method is called
-    print('_showStatePicker called with ${states.length} states');
+    debugPrint('_showStatePicker called with ${states.length} states');
 
     if (states.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -226,7 +227,7 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
                         : 0,
                   ),
                   onSelectedItemChanged: (int selectedItem) {
-                    print(
+                    debugPrint(
                         'Selected item: $selectedItem, State: ${states[selectedItem].name}');
                     setState(() {
                       selectedState = states[selectedItem];
@@ -283,7 +284,7 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
           Selector<LocationProvider, String?>(
             selector: (context, locationProvider) => locationProvider.address,
             builder: (context, address, child) {
-              print(
+              debugPrint(
                   "-------------(Address)--------------${locationProvider.address}");
               widget.locationTextController.text =
                   locationProvider.address ?? '';
@@ -387,7 +388,8 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
           // // Replace the GestureDetector widget with this:
           InkWell(
             onTap: () {
-              print('State picker tapped. States available: ${states.length}');
+              debugPrint(
+                  'State picker tapped. States available: ${states.length}');
               if (isLoadingStates) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

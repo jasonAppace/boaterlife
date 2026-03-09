@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hexacom_user/utill/app_constants.dart';
 
 class DioService {
@@ -14,30 +15,31 @@ class DioService {
       InterceptorsWrapper(
         onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
           // Do something before request is sent
-          print('onRequest');
-          print(options.path);
-          print(options.method);
+          debugPrint('onRequest');
+          debugPrint(options.path);
+          debugPrint(options.method);
           _dio!.options.headers.putIfAbsent(
               HttpHeaders.acceptHeader, () => Headers.jsonContentType);
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          print('onResponse');
-          print(response.statusCode);
-          print(response.requestOptions.path);
-          print('success: ${response.data['success']}');
-          print('message: ${response.data['message']}');
+          debugPrint('onResponse');
+          debugPrint(response.statusCode.toString());
+          debugPrint(response.requestOptions.path);
+          debugPrint('success: ${response.data['success']}');
+          debugPrint('message: ${response.data['message']}');
           return handler.next(response);
         },
-        onError: (DioError error, ErrorInterceptorHandler handler) {
+        onError: (DioException error, ErrorInterceptorHandler handler) {
           if (error.response?.statusCode == 401) {
-            print(error.response);
-            print('DioError - trying again - ${error.response?.statusCode}');
-            print(error.error ?? 'NUll from dioerror');
+            debugPrint(error.response.toString());
+            debugPrint(
+                'DioError - trying again - ${error.response?.statusCode}');
+            debugPrint(error.error.toString() ?? 'NUll from dioerror');
           } else {
-            print(error.response);
-            print(error.response?.statusCode);
-            print(error.message);
+            debugPrint(error.response.toString());
+            debugPrint(error.response?.statusCode.toString());
+            debugPrint(error.message);
           }
           return handler.next(error);
         },

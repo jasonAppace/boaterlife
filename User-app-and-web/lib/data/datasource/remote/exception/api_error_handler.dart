@@ -14,7 +14,6 @@ class ApiErrorHandler {
     if (error is Exception) {
       try {
         if (error is DioException) {
-          
           switch (error.type) {
             case DioExceptionType.cancel:
               errorDescription = "Request to API server was cancelled";
@@ -22,7 +21,7 @@ class ApiErrorHandler {
 
             case DioExceptionType.receiveTimeout:
               errorDescription =
-              "Receive timeout in connection with API server";
+                  "Receive timeout in connection with API server";
               break;
             case DioExceptionType.badResponse:
               switch (error.response!.statusCode) {
@@ -33,41 +32,50 @@ class ApiErrorHandler {
                 default:
                   ErrorResponseModel? errorResponse;
                   try {
-                    errorResponse = ErrorResponseModel.fromJson(error.response!.data);
-                  }catch(e) {
+                    errorResponse =
+                        ErrorResponseModel.fromJson(error.response!.data);
+                  } catch (e) {
                     if (kDebugMode) {
-                      print('error is -> ${e.toString()}');
+                      debugPrint('error is -> ${e.toString()}');
                     }
                   }
 
-                  if (errorResponse != null && errorResponse.errors != null && errorResponse.errors!.isNotEmpty) {
+                  if (errorResponse != null &&
+                      errorResponse.errors != null &&
+                      errorResponse.errors!.isNotEmpty) {
                     if (kDebugMode) {
-                      print('error----------------== ${errorResponse.errors![0].message} || error: ${error.response!.requestOptions.uri}');
+                      debugPrint(
+                          'error----------------== ${errorResponse.errors![0].message} || error: ${error.response!.requestOptions.uri}');
                     }
                     errorDescription = errorResponse.toJson();
                   } else {
                     errorDescription =
-                    "Failed to load data - status code: ${error.response!.statusCode}";
+                        "Failed to load data - status code: ${error.response!.statusCode}";
                   }
               }
               break;
             case DioExceptionType.sendTimeout:
-              errorDescription = getTranslated('send_timeout_with_server', Get.context!);
+              errorDescription =
+                  getTranslated('send_timeout_with_server', Get.context!);
               break;
             case DioExceptionType.connectionTimeout:
-              errorDescription = getTranslated('send_timeout_with_server', Get.context!);
+              errorDescription =
+                  getTranslated('send_timeout_with_server', Get.context!);
               break;
             case DioExceptionType.badCertificate:
-              errorDescription = getTranslated('incorrect_certificate', Get.context!);
+              errorDescription =
+                  getTranslated('incorrect_certificate', Get.context!);
               break;
             case DioExceptionType.connectionError:
-              errorDescription = '${getTranslated('unavailable_to_process_data', Get.context!)} ${ AppMode.demo == AppConstants.appMode
-                  ? error.response?.requestOptions.path  : error.response!.statusCode}' ;
+              errorDescription =
+                  '${getTranslated('unavailable_to_process_data', Get.context!)} ${AppMode.demo == AppConstants.appMode ? error.response?.requestOptions.path : error.response!.statusCode}';
               break;
             case DioExceptionType.unknown:
-              debugPrint('error----------------== ${error.response?.requestOptions.path} || ${error.response?.statusCode} ${error.response?.data}');
+              debugPrint(
+                  'error----------------== ${error.response?.requestOptions.path} || ${error.response?.statusCode} ${error.response?.data}');
 
-              errorDescription = getTranslated('unavailable_to_process_data', Get.context!);
+              errorDescription =
+                  getTranslated('unavailable_to_process_data', Get.context!);
               break;
           }
         } else {

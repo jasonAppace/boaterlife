@@ -143,7 +143,7 @@ class RouteHelper {
   static String getVerifyRoute(
       BuildContext context, String userInput, String fromPage,
       {String? session, RouteAction? action}) {
-    print("-------(GET VERIFY)---------$userInput and $fromPage");
+    debugPrint("-------(GET VERIFY)---------$userInput and $fromPage");
 
     String data = Uri.encodeComponent(jsonEncode(userInput));
     String authSession = base64Url.encode(utf8.encode(session ?? ''));
@@ -364,7 +364,8 @@ class RouteHelper {
           Get.context?.go(path);
         } else {
           GoRouter.of(context).go(path);
-          print('-------------(PATH WEB PUSH REMOVE)------$path and $route');
+          debugPrint(
+              '-------------(PATH WEB PUSH REMOVE)------$path and $route');
         }
         if (kIsWeb) {
           historyUrlStrategy.replaceState(null, '', '/');
@@ -374,25 +375,26 @@ class RouteHelper {
           Get.context?.pushReplacement(path);
         } else {
           GoRouter.of(context).pushReplacement(path);
-          print('-------------(PATH WEB REPLACEMENT)------$path and $route');
+          debugPrint(
+              '-------------(PATH WEB REPLACEMENT)------$path and $route');
         }
       } else {
         if (context == null) {
           Get.context?.push(path);
         } else {
           GoRouter.of(context).push(path);
-          print('-------------(PATH WEB PUSH)------$path and $route');
+          debugPrint('-------------(PATH WEB PUSH)------$path and $route');
         }
       }
     } else {
       if (route == RouteAction.pushNamedAndRemoveUntil) {
-        print('-------------(PATH)------$path and $route');
+        debugPrint('-------------(PATH)------$path and $route');
         Get.context?.go(path);
       } else if (route == RouteAction.pushReplacement) {
-        print('-------------(PATH)------$path and $route');
+        debugPrint('-------------(PATH)------$path and $route');
         Get.context?.pushReplacement(path);
       } else {
-        print('-------------(PATH)------$path and $route');
+        debugPrint('-------------(PATH)------$path and $route');
         Get.context?.push(path);
       }
     }
@@ -425,7 +427,7 @@ class RouteHelper {
   }
 
   static String? _getPath(GoRouterState state) {
-    print(
+    debugPrint(
         '----------------(STATE)------------------------${state.fullPath}?${state.uri.query}');
     return '${state.fullPath}?${state.uri.query}';
   }
@@ -494,7 +496,7 @@ class RouteHelper {
       GoRoute(
           path: verify,
           builder: (context, state) {
-            print(
+            debugPrint(
                 "----------(FROMPAGE IN VERIFY)-----------${state.uri.queryParameters['fromPage']}");
 
             return _routeHandler(
@@ -562,7 +564,7 @@ class RouteHelper {
       GoRoute(
           path: productImages,
           builder: (context, state) {
-            print(
+            debugPrint(
                 '-------------(PRODUCT IMAGES)---------------${state.uri.queryParameters['images']}');
 
             return _routeHandler(

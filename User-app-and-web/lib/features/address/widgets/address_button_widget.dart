@@ -125,8 +125,8 @@ class AddressButtonWidget extends StatelessWidget {
     bool isValidPhone =
         PhoneNumberCheckerHelper.isPhoneValidWithCountryCode(phone);
 
-    print("---------------(PHONE)-----------------$phone");
-    print("---------------(IS VALID PHONE)--------$isValidPhone");
+    debugPrint("---------------(PHONE)-----------------$phone");
+    debugPrint("---------------(IS VALID PHONE)--------$isValidPhone");
 
     if (!isValidPhone) {
       showCustomSnackBar(
@@ -184,9 +184,9 @@ class AddressButtonWidget extends StatelessWidget {
             city: cityController.text,
             zipCode: zipController.text);
 
-        print(
+        debugPrint(
             '-------(ADDRESS IS )--------${addressModel.toJson().toString()}');
-        print(
+        debugPrint(
             '-------(ADDRESS LAT LONG)-----${locationProvider.pickedAddressLatitude} and ${locationProvider.pickedAddressLongitude}');
 
         if (isUpdateEnable) {
@@ -224,7 +224,7 @@ class AddressButtonWidget extends StatelessWidget {
             }
           });
         } else {
-          print(
+          debugPrint(
               '---------------------(Address Model)------------${addressModel.toJson().toString()}');
 
           await addressProvider
@@ -234,7 +234,7 @@ class AddressButtonWidget extends StatelessWidget {
               if (fromCheckout) {
                 await addressProvider.initAddressList();
                 checkoutProvider.setOrderAddressIndex(-1);
-                print("--------(HERE AM I)--------");
+                debugPrint("--------(HERE AM I)--------");
                 CheckOutHelper.selectDeliveryAddressAuto(
                     orderType: checkoutProvider.orderType,
                     isLoggedIn: true,

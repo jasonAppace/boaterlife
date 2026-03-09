@@ -64,7 +64,6 @@ class OrderProvider extends ChangeNotifier {
     ApiResponseModel apiResponse = await orderRepo!.getOrderList();
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
-      // debugPrint(apiResponse.response!.data.toString(), wrapWidth: 1024);
       _runningOrderList = [];
       _historyOrderList = [];
       apiResponse.response!.data.forEach((order) {
@@ -207,7 +206,7 @@ class OrderProvider extends ChangeNotifier {
       String orderID = apiResponse.response!.data['order_id'].toString();
       callback(context, true, message, orderID);
     } else {
-      print("Error ==> ${apiResponse.toString()}");
+      debugPrint("Error ==> ${apiResponse.toString()}");
       callback(context, false,
           ApiCheckerHelper.getError(apiResponse).errors![0].message, '-1');
     }

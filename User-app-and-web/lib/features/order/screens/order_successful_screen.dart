@@ -32,8 +32,8 @@ class _OrderSuccessfulScreenState extends State<OrderSuccessfulScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('----------(ORDER ID)--------${widget.orderID}');
-    print(
+    debugPrint('----------(ORDER ID)--------${widget.orderID}');
+    debugPrint(
         '----------(ORDER ID with parse to INT)--------${int.parse(widget.orderID!)}');
 
     final size = MediaQuery.of(context).size;

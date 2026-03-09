@@ -52,7 +52,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       await splashProvider.initConfig();
     }
     await locationProvider.initAddressList();
-    print(
+    debugPrint(
         '-----(ORDER DETAILS)-----${widget.isFromTrackOrderPage} and ${widget.userPhoneNumber}');
 
     String? phone = widget.userPhoneNumber;

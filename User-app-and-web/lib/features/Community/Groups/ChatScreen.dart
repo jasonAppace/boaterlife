@@ -34,7 +34,8 @@ class FeedChatScreen extends StatefulWidget {
   final String? userID;
   final String? userName;
 
-  FeedChatScreen({this.groupID, required this.chatType, this.userID, this.userName});
+  FeedChatScreen(
+      {this.groupID, required this.chatType, this.userID, this.userName});
 
   @override
   _FeedChatScreenState createState() => _FeedChatScreenState();
@@ -67,17 +68,18 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
           onAuthorizer: _onAuthorizer,
           onError: (message, code, exception) {
             if (kDebugMode) {
-              print('Pusher error: $message');
+              debugPrint('Pusher error: $message');
             }
           },
           onSubscriptionSucceeded: (channelName, data) {
             if (kDebugMode) {
-              print('Subscribed to channel: $channelName');
+              debugPrint('Subscribed to channel: $channelName');
             }
           },
           onSubscriptionError: (channelName, error) {
             if (kDebugMode) {
-              print('Error subscribing to channel: $channelName, error: $error');
+              debugPrint(
+                  'Error subscribing to channel: $channelName, error: $error');
             }
           });
 
@@ -87,11 +89,11 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
         channelName: 'private-boaterslife',
         onEvent: (event) {
           if (kDebugMode) {
-            print(event);
+            debugPrint(event.toString());
           }
           if (event.eventName == 'messaging') {
             if (kDebugMode) {
-              print('New message received: ${event.data}');
+              debugPrint('New message received: ${event.data}');
             }
             _refreshAndScroll(true);
           }
@@ -99,12 +101,13 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Error initializing Pusher: $e');
+        debugPrint('Error initializing Pusher: $e');
       }
     }
   }
 
-  Future<dynamic> _onAuthorizer(String channelName, String socketId, dynamic additionalData) async {
+  Future<dynamic> _onAuthorizer(
+      String channelName, String socketId, dynamic additionalData) async {
     final dio = Dio();
     final mainViewModel = locator<MainViewModel>();
     final token = mainViewModel.userToken;
@@ -124,7 +127,7 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
 
       if (response.statusCode == 200) {
         if (kDebugMode) {
-          print('Pusher Auth Check');
+          debugPrint('Pusher Auth Check');
         }
         try {
           var jsonString = response.data["data"];
@@ -132,12 +135,13 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
           return data;
         } catch (e) {
           if (kDebugMode) {
-            print('Error parsing JSON response: $e');
+            debugPrint('Error parsing JSON response: $e');
           }
           throw Exception('Authentication failed');
         }
       } else {
-        throw Exception('Authentication failed. Status code: ${response.statusCode}');
+        throw Exception(
+            'Authentication failed. Status code: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Authentication failed');
@@ -153,9 +157,11 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
     final model = locator<MainViewModel>();
 
     if (widget.chatType == "Group") {
-      await model.doGroupChatMessages(context, model.userToken ?? "", widget.groupID ?? "");
+      await model.doGroupChatMessages(
+          context, model.userToken ?? "", widget.groupID ?? "");
     } else {
-      await model.doIndividualChatMessages(context, model.userToken ?? "", widget.userID ?? "");
+      await model.doIndividualChatMessages(
+          context, model.userToken ?? "", widget.userID ?? "");
     }
     if (mounted) {
       setState(() {
@@ -182,7 +188,8 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final SplashProvider splashProvider = Provider.of<SplashProvider>(context, listen: false);
+    final SplashProvider splashProvider =
+        Provider.of<SplashProvider>(context, listen: false);
     return ViewModelBuilder<MainViewModel>.reactive(
       viewModelBuilder: () => locator<MainViewModel>(),
       disposeViewModel: false,
@@ -203,7 +210,12 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
                   title: 'Chat',
                   suffixIcon2: Images.kebebMenuIc,
                   onSuffixButtonPressed2: () {
-                    Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: GroupDetailScreen(groupID: int.parse(widget.groupID ?? "0"))));
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.rightToLeft,
+                            child: GroupDetailScreen(
+                                groupID: int.parse(widget.groupID ?? "0"))));
                   },
                 ),
                 SizedBox(
@@ -214,7 +226,11 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
                   child: ListView.builder(
                     padding: EdgeInsets.zero,
                     controller: _scrollController,
-                    itemCount: widget.chatType == "Group" ? model.allGroupChatMessagesData?.messages?.length ?? 0 : model.allIndividualChatMessagesData?.messages?.length ?? 0,
+                    itemCount: widget.chatType == "Group"
+                        ? model.allGroupChatMessagesData?.messages?.length ?? 0
+                        : model.allIndividualChatMessagesData?.messages
+                                ?.length ??
+                            0,
                     itemBuilder: (context, index) {
                       GroupChatMessagesModel? groupChatMessages;
                       Message? message;
@@ -225,7 +241,8 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
                         groupChatMessages = model.allGroupChatMessagesData;
                         message = groupChatMessages?.messages?[index];
                       } else {
-                        individualChatMessages = model.allIndividualChatMessagesData;
+                        individualChatMessages =
+                            model.allIndividualChatMessagesData;
                         messageIndi = individualChatMessages?.messages?[index];
                       }
 
@@ -233,21 +250,33 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
                         return const SizedBox();
                       }
 
-                      final isSentByMe = widget.chatType == "Group" ? message?.fromId.toString() == model.userID : messageIndi?.fromId.toString() == model.userID;
+                      final isSentByMe = widget.chatType == "Group"
+                          ? message?.fromId.toString() == model.userID
+                          : messageIndi?.fromId.toString() == model.userID;
 
-                      final profileImageUrl =
-                          widget.chatType == "Group" ? '${splashProvider.baseUrls!.customerImageUrl}/' '${message?.user?.image ?? ""}' : messageIndi?.user?.image ?? "";
+                      final profileImageUrl = widget.chatType == "Group"
+                          ? '${splashProvider.baseUrls!.customerImageUrl}/'
+                              '${message?.user?.image ?? ""}'
+                          : messageIndi?.user?.image ?? "";
 
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 10.0),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+                          mainAxisAlignment: isSentByMe
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
                           children: [
                             if (isSentByMe)
                               Text(
-                                widget.chatType == "Group" ? message?.updatedAt ?? "" : messageIndi?.updatedAt ?? "",
-                                style: TextStyle(fontFamily: FontUtils.urbanistMedium, fontSize: 12, color: ColorUtils.hintGrey),
+                                widget.chatType == "Group"
+                                    ? message?.updatedAt ?? ""
+                                    : messageIndi?.updatedAt ?? "",
+                                style: TextStyle(
+                                    fontFamily: FontUtils.urbanistMedium,
+                                    fontSize: 12,
+                                    color: ColorUtils.hintGrey),
                               ),
                             if (isSentByMe)
                               SizedBox(
@@ -258,8 +287,10 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
                                 borderRadius: BorderRadius.circular(25),
                                 child: CachedNetworkImage(
                                   imageUrl: profileImageUrl,
-                                  placeholder: (context, url) => const CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
                                   width: 40,
                                   height: 40,
                                   fit: BoxFit.cover,
@@ -268,7 +299,8 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
                             if (!isSentByMe) const SizedBox(width: 8),
                             Flexible(
                               child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 15),
                                   decoration: BoxDecoration(
                                     color: ColorUtils.white,
                                     borderRadius: BorderRadius.circular(10),
@@ -282,19 +314,26 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
                                     ],
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        widget.chatType == "Group" ? message?.user?.name ?? "" : messageIndi?.user?.name ?? "",
+                                        widget.chatType == "Group"
+                                            ? message?.user?.name ?? ""
+                                            : messageIndi?.user?.name ?? "",
                                         style: TextStyle(
                                           fontFamily: rubikBold.fontFamily,
                                           fontWeight: rubikBold.fontWeight,
                                           fontSize: 14,
-                                          color: isSentByMe ? Theme.of(context).primaryColor : ColorUtils.black,
+                                          color: isSentByMe
+                                              ? Theme.of(context).primaryColor
+                                              : ColorUtils.black,
                                         ),
                                       ),
                                       Text(
-                                        widget.chatType == "Group" ? message?.body ?? "" : messageIndi?.body ?? "",
+                                        widget.chatType == "Group"
+                                            ? message?.body ?? ""
+                                            : messageIndi?.body ?? "",
                                         style: TextStyle(
                                           fontFamily: FontUtils.urbanistRegular,
                                           fontSize: 14,
@@ -310,8 +349,10 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
                                 borderRadius: BorderRadius.circular(25),
                                 child: CachedNetworkImage(
                                   imageUrl: profileImageUrl,
-                                  placeholder: (context, url) => const CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
                                   width: 40,
                                   height: 40,
                                   fit: BoxFit.cover,
@@ -323,8 +364,13 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
                               ),
                             if (!isSentByMe)
                               Text(
-                                widget.chatType == "Group" ? message?.updatedAt ?? "" : messageIndi?.updatedAt ?? "",
-                                style: TextStyle(fontFamily: FontUtils.urbanistMedium, fontSize: 12, color: ColorUtils.hintGrey),
+                                widget.chatType == "Group"
+                                    ? message?.updatedAt ?? ""
+                                    : messageIndi?.updatedAt ?? "",
+                                style: TextStyle(
+                                    fontFamily: FontUtils.urbanistMedium,
+                                    fontSize: 12,
+                                    color: ColorUtils.hintGrey),
                               ),
                           ],
                         ),
@@ -332,14 +378,21 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
                     },
                   ),
                 ),
-                (widget.chatType == "Group" ? (model.allGroupChatMessagesData?.blocked == 1) : ((model.allIndividualChatMessagesData?.blockedBy?.length ?? 0) > 0))
+                (widget.chatType == "Group"
+                        ? (model.allGroupChatMessagesData?.blocked == 1)
+                        : ((model.allIndividualChatMessagesData?.blockedBy
+                                    ?.length ??
+                                0) >
+                            0))
                     ? Container(
                         width: double.infinity,
-                        color:Theme.of(context).primaryColor,
+                        color: Theme.of(context).primaryColor,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 42.0, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 42.0, vertical: 12),
                           child: TextWidget(
-                            textValue: "You can't send messages to this group because you are blocked by this user.",
+                            textValue:
+                                "You can't send messages to this group because you are blocked by this user.",
                             textColor: ColorUtils.white,
                             fontFamily: FontUtils.urbanistSemiBold,
                             fontSize: 14,
@@ -348,7 +401,8 @@ class _FeedChatScreenState extends State<FeedChatScreen> {
                         ),
                       )
                     : Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0, vertical: 12),
                         child: Row(
                           children: [
                             Expanded(

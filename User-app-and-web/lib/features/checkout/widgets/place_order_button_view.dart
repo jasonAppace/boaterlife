@@ -184,13 +184,13 @@ class PlaceOrderButtonView extends StatelessWidget {
                       carrier_id: carrier_id,
                       deliveryCharge: selfPickup ? 0 : delivery_charge);
                   if (placeOrderBody.paymentMethod == 'cash_on_delivery') {
-                    print(
+                    debugPrint(
                         '------------(PLACE ORDER MODEL cash)-------------${placeOrderBody.toJson().toString()}');
 
                     orderProvider.placeOrder(
                         context, placeOrderBody, _callback);
                   } else {
-                    print(
+                    debugPrint(
                         '------------(PLACE ORDER MODEL card)-------------${placeOrderBody.toJson().toString()}');
                     orderProvider.placeOrder(context, placeOrderBody,
                         (context, isSuccess, message, orderID) {
@@ -215,7 +215,7 @@ class PlaceOrderButtonView extends StatelessWidget {
                             .encode(ResponsiveHelper.isWeb() ? webUrl : url));
                         String selectedUrl =
                             '${AppConstants.baseUrl}/payment-mobile?token=$tokenUrl&&payment_method=${checkoutProvider.selectedPaymentMethod?.getWay}&&payment_platform=${kIsWeb ? 'web' : 'app'}';
-                        print("selectedUrl: $selectedUrl");
+                        debugPrint("selectedUrl: $selectedUrl");
                         if (ResponsiveHelper.isWeb()) {
                           html.window.open(selectedUrl, "_self");
                         } else {

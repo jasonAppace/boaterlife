@@ -153,12 +153,12 @@ class LocationProvider with ChangeNotifier {
 
         if (fromAddress) {
           _currentPosition = position;
-          print(
+          debugPrint(
               "-------(HERE IT IS)--------- ${_currentPosition.toJson().toString()}");
         } else {
           _pickPosition = position;
 
-          print(
+          debugPrint(
               "-------(HERE IT IS ELSE)--------- ${_pickPosition.toJson().toString()}");
         }
 
@@ -167,11 +167,11 @@ class LocationProvider with ChangeNotifier {
               cameraPosition.target.latitude, cameraPosition.target.longitude));
           if (fromAddress) {
             _address = addressFromGeocode;
-            print(
+            debugPrint(
                 "-----(ADDRESS IN FROM ADDRESS)--------- ${_address.toString()}");
           } else {
             _pickAddress = addressFromGeocode;
-            print(
+            debugPrint(
                 "-----(ADDRESS IN FROM PICK ADDRESS)--------- ${_pickAddress.toString()}");
           }
         } else {
@@ -211,7 +211,7 @@ class LocationProvider with ChangeNotifier {
     PlacesDetailsResponse detail =
         PlacesDetailsResponse.fromJson(response.response?.data);
 
-    print(
+    debugPrint(
         '------------(SET LOCATION)------------${detail.result.geometry?.toJson().toString()}');
 
     _pickPosition = Position(
@@ -227,13 +227,13 @@ class LocationProvider with ChangeNotifier {
       headingAccuracy: 1,
     );
 
-    print(
+    debugPrint(
         '---------------------(API LOCATION)------${detail.result.geometry!.location.lat} and ${detail.result.geometry!.location.lng}');
 
-    print(
+    debugPrint(
         '------------(SET LOCATION 2)------------${_pickPosition.toJson().toString()}');
-    print('------------(SET LOCATION 3)------------$address');
-    print('------------(SET LOCATION 4)------------$_pickAddress');
+    debugPrint('------------(SET LOCATION 3)------------$address');
+    debugPrint('------------(SET LOCATION 4)------------$_pickAddress');
 
     _pickAddress = address;
     _address = address;

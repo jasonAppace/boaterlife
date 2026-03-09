@@ -77,7 +77,7 @@ class CheckOutHelper {
     final AddressProvider addressProvider = context.read<AddressProvider>();
     final OrderProvider orderProvider = context.read<OrderProvider>();
 
-    print('---------------(5)--------------- $isAvailable');
+    debugPrint('---------------(5)--------------- $isAvailable');
     if (isAvailable) {
       addressProvider.updateAddressIndex(index, fromAddressList);
       checkoutProvider.setOrderAddressIndex(index, notify: true);
@@ -92,7 +92,7 @@ class CheckOutHelper {
           }
           checkoutProvider.savePaymentMethod(index: null, method: null);
         }
-        print('------------------------(6)-------------');
+        debugPrint('------------------------(6)-------------');
         showDialog(
             context: Get.context!,
             builder: (context) => Center(
@@ -121,7 +121,7 @@ class CheckOutHelper {
           ),
         );
 
-        print(
+        debugPrint(
             '-----------------(DISTANCE)---------${checkoutProvider.distance}---------');
 
         Navigator.pop(Get.context!);
@@ -144,7 +144,7 @@ class CheckOutHelper {
                     },
                   ));
         } else {
-          print('---------(6)--------------');
+          debugPrint('---------(6)--------------');
           checkoutProvider.getCheckOutData?.copyWith(
               deliveryCharge: CheckOutHelper.getDeliveryCharge(
             context: Get.context!,
@@ -167,7 +167,7 @@ class CheckOutHelper {
               Get.context!);
         }
       } else {
-        print('---------(6)--------------');
+        debugPrint('---------(6)--------------');
         checkoutProvider.getCheckOutData?.copyWith(
             deliveryCharge: CheckOutHelper.getDeliveryCharge(
           context: Get.context!,
@@ -181,7 +181,7 @@ class CheckOutHelper {
         ));
         orderProvider.setDeliveryCharge(
             checkoutProvider.getCheckOutData?.deliveryCharge);
-        print(
+        debugPrint(
             "-----------------------(OrderProvider delivery Charge)------${orderProvider.deliveryCharge}");
       }
     } else {
@@ -204,13 +204,15 @@ class CheckOutHelper {
     final SplashProvider splashProvider = context.read<SplashProvider>();
     final CheckoutProvider checkoutProvider = context.read<CheckoutProvider>();
 
-    print(
+    debugPrint(
         "---------------(DeliveryCharge Order Amount)-----------------$orderAmount");
-    print("---------------(DeliveryCharge Discount)-----------------$discount");
-    print(
+    debugPrint(
+        "---------------(DeliveryCharge Discount)-----------------$discount");
+    debugPrint(
         "---------------(DeliveryCharge OrderType)-----------------${orderProvider.orderType}");
-    print("---------------(DeliveryCharge Distance)-----------------$distance");
-    print(
+    debugPrint(
+        "---------------(DeliveryCharge Distance)-----------------$distance");
+    debugPrint(
         "---------------(DeliveryCharge Delivery Charge Per Km)----------${getDeliveryChargePerKm(context)}");
 
     double deliveryCharge = 0;
@@ -236,7 +238,7 @@ class CheckOutHelper {
       }
     }
 
-    print(
+    debugPrint(
         "---------------(DELIVERY CHARGE)--------Delivery Charge $deliveryCharge");
     return deliveryCharge;
   }
@@ -260,17 +262,17 @@ class CheckOutHelper {
       lastOrderAddress: lastAddress,
     );
 
-    print('---------------(2)--------------');
-    print(
+    debugPrint('---------------(2)--------------');
+    debugPrint(
         '----------------(2) Delivery Address -----${deliveryAddress?.toJson().toString()}');
 
     if (isLoggedIn &&
         orderType == 'delivery' &&
         deliveryAddress != null &&
         locationProvider.getAddressIndex(deliveryAddress) != null) {
-      print('--------------(3)---------------');
+      debugPrint('--------------(3)---------------');
       if (isSelectDeliveryAddress(deliveryAddress)) {
-        print('----------(4)-------------');
+        debugPrint('----------(4)-------------');
 
         await CheckOutHelper.selectDeliveryAddress(
           Get.context!,
@@ -344,16 +346,16 @@ class CheckOutHelper {
     bool isSelectDeliveryAddress = false;
     bool hasLatLon = (deliveryAddress.latitude?.isNotEmpty ?? false) &&
         (deliveryAddress.longitude?.isNotEmpty ?? false);
-    print('--------------(HAS LAT LON)-------------$hasLatLon');
+    debugPrint('--------------(HAS LAT LON)-------------$hasLatLon');
     if (hasLatLon) {
       //isSelectDeliveryAddress = getDeliveryChargeType(Get.context!) == DeliveryChargeType.distance.name;
       isSelectDeliveryAddress = true;
-      print(
+      debugPrint(
           "------------(IS SELECTED DELIVERY ADDRESS IF)-----------$isSelectDeliveryAddress");
     } else {
       isSelectDeliveryAddress = !(getDeliveryChargeType(Get.context!) ==
           DeliveryChargeType.distance.name);
-      print(
+      debugPrint(
           "------------(IS SELECTED DELIVERY ADDRESS Else)-----------$isSelectDeliveryAddress");
     }
 

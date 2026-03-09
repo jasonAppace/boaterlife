@@ -98,7 +98,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 .configModel!
                 .countryCode ??
             'US';
-    print(
+    debugPrint(
         '----(CREATE ACCOUNT SCREEN)---- Config Country Code: $configCountryCode');
 
     // Map country code to dial code
@@ -119,16 +119,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       // Try to get from map first, then fall back to CountryCode parser
       if (countryDialCodeMap.containsKey(_selectedCountryCode)) {
         _countryDialCode = countryDialCodeMap[_selectedCountryCode];
-        print(
+        debugPrint(
             '----(CREATE ACCOUNT SCREEN)---- Using mapped dial code: $_countryDialCode');
       } else {
         _countryDialCode =
             CountryCode.fromCountryCode(_selectedCountryCode ?? "").dialCode;
-        print(
+        debugPrint(
             '----(CREATE ACCOUNT SCREEN)---- Using parser dial code: $_countryDialCode');
       }
     } catch (e) {
-      print(
+      debugPrint(
           '----(CREATE ACCOUNT SCREEN)---- Error parsing country code: $e, using default US (+1)');
       _countryDialCode = '+1';
     }
@@ -302,7 +302,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         setState(() {
                           _countryDialCode = countryCode.dialCode;
                           _selectedCountryCode = countryCode.code;
-                          print(
+                          debugPrint(
                               '----(CREATE ACCOUNT SCREEN)---- Country changed to: ${countryCode.code}, Dial code: ${countryCode.dialCode}');
                         });
                       },

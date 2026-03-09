@@ -97,17 +97,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _lastNameController?.text = userInfoModel.lName ?? '';
 
           if (userInfoModel.phone?.isNotEmpty ?? false) {
-            print(
+            debugPrint(
                 '----------------(USER INFO MODEL)------------${userInfoModel.phone}');
             authProvider.toggleIsNumberLogin(value: true, isUpdate: false);
             countryCode = PhoneNumberCheckerHelper.getCountryCode(
                 profileProvider.userInfoModel?.phone);
-            print('----------------(USER INFO MODEL)-------------$countryCode');
+            debugPrint(
+                '----------------(USER INFO MODEL)-------------$countryCode');
             _phoneNumberController?.text =
                 PhoneNumberCheckerHelper.getPhoneNumber(
                     profileProvider.userInfoModel?.phone ?? '',
                     countryCode ?? '')!;
-            print(
+            debugPrint(
                 '----------------(USER INFO MODEL)-------------${_phoneNumberController?.text}');
             profileProvider.setCountryCode(countryCode ?? '', isUpdate: true);
           }
@@ -390,7 +391,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 Provider.of<AuthProvider>(
                                                     context,
                                                     listen: false);
-                                            print(
+                                            debugPrint(
                                                 "---------------------(IS NUMBER LOGIN)--------------${authProvider.isNumberLogin}");
 
                                             return Selector<
@@ -562,7 +563,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               String lastName =
                                   _lastNameController?.text.trim() ?? '';
 
-                              print(
+                              debugPrint(
                                   "-----------(Profile Screen Country)------------$countryCode");
 
                               String phoneNumber =
@@ -573,7 +574,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               String confirmPassword =
                                   _confirmPasswordController?.text.trim() ?? '';
 
-                              print(
+                              debugPrint(
                                   "-----------(Profile Screen Phone)------------$phoneNumber");
 
                               bool isPhoneValid = PhoneNumberCheckerHelper
@@ -634,9 +635,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 updateUserInfoModel.email =
                                     _emailController?.text;
 
-                                print(
+                                debugPrint(
                                     '-------------------(USER HERE)---------------------');
-                                print(
+                                debugPrint(
                                     '-------------------(USer MODEL)--------------------${updateUserInfoModel.toJson().toString()}');
                                 ResponseModel responseModel =
                                     await profileProvider.updateUserInfo(

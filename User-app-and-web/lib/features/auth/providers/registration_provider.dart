@@ -27,63 +27,70 @@ class RegistrationProvider with ChangeNotifier {
   String? _errorMessage = '';
   String? get errorMessage => _errorMessage;
 
-  set setErrorMessage(String? value)=> _errorMessage = value;
+  set setErrorMessage(String? value) => _errorMessage = value;
 
-
-
-
-  Future<ResponseModel> registration(BuildContext context, SignUpModel signUpModel, ConfigModel config) async {
-
-    final AuthProvider authProvider = Provider.of<AuthProvider>(Get.context!, listen: false);
-    final VerificationProvider verificationProvider = Provider.of<VerificationProvider>(Get.context!, listen: false);
+  Future<ResponseModel> registration(
+      BuildContext context, SignUpModel signUpModel, ConfigModel config) async {
+    final AuthProvider authProvider =
+        Provider.of<AuthProvider>(Get.context!, listen: false);
+    final VerificationProvider verificationProvider =
+        Provider.of<VerificationProvider>(Get.context!, listen: false);
 
     _isLoading = true;
     notifyListeners();
 
-    print('------------(REGISTRATION)-------------- SignUpModel: ${signUpModel.toJson()}');
+    debugPrint(
+        '------------(REGISTRATION)-------------- SignUpModel: ${signUpModel.toJson()}');
 
     ApiResponseModel apiResponse = await authRepo!.registration(signUpModel);
     ResponseModel responseModel;
     String? token;
     String? tempToken;
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      showCustomSnackBar(getTranslated('registration_successful', context), Get.context!, isError: false);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      showCustomSnackBar(
+          getTranslated('registration_successful', context), Get.context!,
+          isError: false);
 
-      print("-----------------(REGISTRATION API) Api response : ${apiResponse.response?.data}");
+      debugPrint(
+          "-----------------(REGISTRATION API) Api response : ${apiResponse.response?.data}");
       Map map = apiResponse.response?.data;
 
-      if(map.containsKey('token')){
+      if (map.containsKey('token')) {
         token = map["token"];
-      }else if(map.containsKey('temporary_token')){
+      } else if (map.containsKey('temporary_token')) {
         tempToken = map["temporary_token"];
       }
 
-      if(token != null){
-        await authProvider.login(context, signUpModel.phone!, signUpModel.password, VerificationType.phone.name, fromPage : FromPage.registration.name);
+      if (token != null) {
+        await authProvider.login(context, signUpModel.phone!,
+            signUpModel.password, VerificationType.phone.name,
+            fromPage: FromPage.registration.name);
         responseModel = ResponseModel(true, 'successful');
-
-      }else{
+      } else {
         String type;
         String userInput;
-        if(AuthHelper.isFirebaseVerificationEnable(config) && AuthHelper.isPhoneVerificationEnable(config)){
+        if (AuthHelper.isFirebaseVerificationEnable(config) &&
+            AuthHelper.isPhoneVerificationEnable(config)) {
           type = VerificationType.phone.name;
           userInput = signUpModel.phone!;
-        }else if(!AuthHelper.isFirebaseVerificationEnable(config) && AuthHelper.isPhoneVerificationEnable(config)){
+        } else if (!AuthHelper.isFirebaseVerificationEnable(config) &&
+            AuthHelper.isPhoneVerificationEnable(config)) {
           type = VerificationType.phone.name;
           userInput = signUpModel.phone!;
-        }else {
+        } else {
           type = VerificationType.email.name;
           userInput = signUpModel.email!;
         }
 
-        verificationProvider.sendVerificationCode(context, config, userInput, type: type, fromPage: FromPage.login.name);
+        verificationProvider.sendVerificationCode(context, config, userInput,
+            type: type, fromPage: FromPage.login.name);
         responseModel = ResponseModel(false, null);
       }
-
     } else {
-
-      _errorMessage = ApiCheckerHelper.getError(apiResponse).errors?.first.message;
+      _errorMessage =
+          ApiCheckerHelper.getError(apiResponse).errors?.first.message;
       responseModel = ResponseModel(false, _errorMessage);
     }
 
@@ -92,5 +99,4 @@ class RegistrationProvider with ChangeNotifier {
 
     return responseModel;
   }
-
 }

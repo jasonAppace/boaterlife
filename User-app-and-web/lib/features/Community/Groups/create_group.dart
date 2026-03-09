@@ -112,7 +112,7 @@ class _CreateGroupState extends State<CreateGroup> {
                                 setState(() {
                                   selectedImage = image;
                                 });
-                                print(
+                                debugPrint(
                                     "Image Path check thisss: ${selectedImage?.path}");
                               },
                             ),
