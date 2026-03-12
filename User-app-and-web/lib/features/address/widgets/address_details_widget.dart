@@ -314,18 +314,18 @@ class _AddressDetailsWidgetState extends State<AddressDetailsWidget> {
           //       color: Theme.of(context).hintColor.withOpacity(0.6)),
           // ),
           const SizedBox(height: Dimensions.paddingSizeDefault),
-          CustomTextFieldWidget(
-            hintText: getTranslated('ex_10_th', context),
-            isShowBorder: true,
-            inputType: TextInputType.streetAddress,
-            inputAction: TextInputAction.next,
-            focusNode: widget.stateNode,
-            nextFocus: widget.houseNode,
-            controller: widget.streetNumberController,
-            maxLength: 50,
-            fillColor: Colors.white,
-          ),
-          const SizedBox(height: Dimensions.paddingSizeLarge),
+          // CustomTextFieldWidget(
+          //   hintText: getTranslated('ex_10_th', context),
+          //   isShowBorder: true,
+          //   inputType: TextInputType.streetAddress,
+          //   inputAction: TextInputAction.next,
+          //   focusNode: widget.stateNode,
+          //   nextFocus: widget.houseNode,
+          //   controller: widget.streetNumberController,
+          //   maxLength: 50,
+          //   fillColor: Colors.white,
+          // ),
+          // const SizedBox(height: Dimensions.paddingSizeLarge),
 
           // House/Floor Number
           // Text(

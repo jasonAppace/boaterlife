@@ -179,7 +179,7 @@ class AddressButtonWidget extends StatelessWidget {
                 : null,
             floorNumber: floorNumberController.text,
             houseNumber: houseNumberController.text,
-            streetNumber: streetNumberController.text,
+            streetNumber: locationProvider.address,
             stateIso: stateController.text,
             city: cityController.text,
             zipCode: zipController.text);

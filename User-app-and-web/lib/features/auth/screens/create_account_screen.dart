@@ -298,6 +298,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       inputType: TextInputType.phone,
                       countryDialCode: 'US',
                       fillColor: Colors.white,
+                      maxLength: 10,
                       onCountryChanged: (countryCode) {
                         setState(() {
                           _countryDialCode = countryCode.dialCode;
