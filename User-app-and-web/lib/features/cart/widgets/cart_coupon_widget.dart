@@ -80,6 +80,60 @@ class CartCouponWidget extends StatelessWidget {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  onSubmitted: (value) {
+                    if (couponTextController.text.isNotEmpty &&
+                        !coupon.isLoading) {
+                      if (coupon.discount! < 1) {
+                        coupon
+                            .applyCoupon(couponTextController.text, totalAmount)
+                            .then((discount) {
+                          if (discount! > 0) {
+                            showCustomSnackBar(
+                                '${getTranslated('you_got', context)} ${splashProvider.configModel!.currencySymbol}${discount.toStringAsFixed(2)} ${getTranslated('discount', context)}',
+                                context,
+                                isError: false);
+                          } else {
+                            showCustomSnackBar(
+                                getTranslated('invalid_code_or', context),
+                                context);
+                          }
+                        });
+                      } else {
+                        coupon.removeCouponData(true);
+                      }
+                    } else if (couponTextController.text.isEmpty) {
+                      showCustomSnackBar(
+                          getTranslated('enter_a_Coupon_code', context),
+                          context);
+                    }
+                  },
+                  onEditingComplete: () {
+                    if (couponTextController.text.isNotEmpty &&
+                        !coupon.isLoading) {
+                      if (coupon.discount! < 1) {
+                        coupon
+                            .applyCoupon(couponTextController.text, totalAmount)
+                            .then((discount) {
+                          if (discount! > 0) {
+                            showCustomSnackBar(
+                                '${getTranslated('you_got', context)} ${splashProvider.configModel!.currencySymbol}${discount.toStringAsFixed(2)} ${getTranslated('discount', context)}',
+                                context,
+                                isError: false);
+                          } else {
+                            showCustomSnackBar(
+                                getTranslated('invalid_code_or', context),
+                                context);
+                          }
+                        });
+                      } else {
+                        coupon.removeCouponData(true);
+                      }
+                    } else if (couponTextController.text.isEmpty) {
+                      showCustomSnackBar(
+                          getTranslated('enter_a_Coupon_code', context),
+                          context);
+                    }
+                  },
                 ),
               ),
               InkWell(
@@ -92,7 +146,7 @@ class CartCouponWidget extends StatelessWidget {
                           .then((discount) {
                         if (discount! > 0) {
                           showCustomSnackBar(
-                              '${getTranslated('you_got', context)}${splashProvider.configModel!.currencySymbol}$discount ${getTranslated('discount', context)}',
+                              '${getTranslated('you_got', context)} ${splashProvider.configModel!.currencySymbol}${discount.toStringAsFixed(2)} ${getTranslated('discount', context)}',
                               context,
                               isError: false);
                         } else {
