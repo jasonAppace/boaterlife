@@ -116,12 +116,14 @@ class CartDetailsWidget extends StatelessWidget {
               const SizedBox(height: 10),
 
               if (isLoggedIn) ...[
-                CartItemWidget(
-                  title: getTranslated('coupon_discount', context),
-                  subTitle:
-                      '- ${PriceConverterHelper.convertPrice(Provider.of<CouponProvider>(context).discount)}',
-                  style: rubikMedium.copyWith(
-                      fontSize: Dimensions.fontSizeDefault),
+                Consumer<CouponProvider>(
+                  builder: (context, coupon, child) => CartItemWidget(
+                    title: getTranslated('coupon_discount', context),
+                    subTitle:
+                        '- ${PriceConverterHelper.convertPrice(coupon.discount)}',
+                    style: rubikMedium.copyWith(
+                        fontSize: Dimensions.fontSizeDefault),
+                  ),
                 ),
                 const SizedBox(height: 10),
               ],

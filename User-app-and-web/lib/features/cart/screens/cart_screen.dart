@@ -45,8 +45,8 @@ class CartScreen extends StatelessWidget {
       appBar: CustomAppBarWidget(
           title: getTranslated('my_cart', context),
           isBackButtonExist: fromDetails),
-      body: Consumer<CartProvider>(
-        builder: (context, cart, child) {
+      body: Consumer2<CartProvider, CouponProvider>(
+        builder: (context, cart, coupon, child) {
           double? deliveryCharge = 0;
           (Provider.of<CheckoutProvider>(context).orderType == 'delivery' &&
                   !kmWiseCharge)
@@ -81,11 +81,8 @@ class CartScreen extends StatelessWidget {
           discount = double.parse(discount.toStringAsFixed(2));
           tax = double.parse(tax.toStringAsFixed(2));
 
-          double total = itemPrice -
-              discount +
-              tax -
-              Provider.of<CouponProvider>(context).discount! +
-              deliveryCharge!;
+          double total =
+              itemPrice - discount + tax - coupon.discount! + deliveryCharge!;
 
           return cart.cartList.isNotEmpty
               ? Container(
