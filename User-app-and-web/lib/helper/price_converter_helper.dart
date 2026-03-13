@@ -14,7 +14,7 @@ class PriceConverterHelper {
       if (discountType == 'amount') {
         price = price! - discount;
       } else if (discountType == 'percent') {
-        price = price! - ((discount / 100) * price);
+        price = price! - ((discount * price) / 100);
       }
     }
     return configModel.currencySymbolPosition == 'left'
@@ -29,7 +29,11 @@ class PriceConverterHelper {
     if (discountType == 'amount') {
       price = price! - discount!;
     } else if (discountType == 'percent') {
-      price = price! - ((discount! / 100) * price);
+      double p = price!;
+      double d = discount!;
+      price = p - ((d * p) / 100);
+      // price = (price! * discount!) / 100;
+      // price = price - discount;
     }
     return price;
   }
@@ -40,7 +44,7 @@ class PriceConverterHelper {
     if (type == 'amount') {
       calculatedAmount = discount * quantity;
     } else if (type == 'percent') {
-      calculatedAmount = (discount / 100) * (amount * quantity);
+      calculatedAmount = (discount * (amount * quantity)) / 100;
     }
     return calculatedAmount;
   }

@@ -16,6 +16,7 @@ import 'package:hexacom_user/localization/language_constrants.dart';
 import 'package:hexacom_user/utill/color_resources.dart';
 import 'package:hexacom_user/utill/dimensions.dart';
 import 'package:hexacom_user/utill/images.dart';
+import 'package:hexacom_user/helper/price_converter_helper.dart';
 import 'package:provider/provider.dart';
 
 class CartScreen extends StatelessWidget {
@@ -58,14 +59,31 @@ class CartScreen extends StatelessWidget {
           double discount = 0;
           double tax = 0;
           for (var cartModel in cart.cartList) {
-            itemPrice = itemPrice + (cartModel!.price! * cartModel.quantity!);
-            discount =
-                discount + (cartModel.discountAmount! * cartModel.quantity!);
-            tax = tax + (cartModel.taxAmount! * cartModel.quantity!);
+            double unitPrice = cartModel!.price!;
+            double unitDiscount = cartModel.discountAmount!;
+            int quantity = cartModel.quantity!;
+
+            itemPrice += (unitPrice * quantity);
+            discount += (unitDiscount * quantity);
+
+            // Calculate tax on (Price - Discount) as requested
+            double unitDiscountedPrice = unitPrice - unitDiscount;
+            tax += PriceConverterHelper.calculation(
+              unitDiscountedPrice,
+              cartModel.product!.tax ?? 0,
+              cartModel.product!.taxType ?? 'percent',
+              quantity,
+            );
           }
-          double subTotal = itemPrice + tax;
-          double total = subTotal -
-              discount -
+
+          // Round components to 2 decimal places to match display and prevent minor summation errors
+          itemPrice = double.parse(itemPrice.toStringAsFixed(2));
+          discount = double.parse(discount.toStringAsFixed(2));
+          tax = double.parse(tax.toStringAsFixed(2));
+
+          double total = itemPrice -
+              discount +
+              tax -
               Provider.of<CouponProvider>(context).discount! +
               deliveryCharge!;
 

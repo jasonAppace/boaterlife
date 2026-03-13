@@ -10,16 +10,39 @@ GroupPostModel _$GroupPostModelFromJson(Map<String, dynamic> json) =>
     GroupPostModel(
       status: json['status'] as bool?,
       message: json['message'] as String?,
-      data: (json['data'] as List<dynamic>?)
-          ?.map((e) => PostData.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      paginatedData: json['data'] == null
+          ? null
+          : DataWrapper.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$GroupPostModelToJson(GroupPostModel instance) =>
     <String, dynamic>{
       'status': instance.status,
       'message': instance.message,
+      'data': instance.paginatedData,
+    };
+
+DataWrapper _$DataWrapperFromJson(Map<String, dynamic> json) => DataWrapper(
+      data: (json['data'] as List<dynamic>?)
+          ?.map((e) => PostData.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      path: json['path'] as String?,
+      perPage: (json['per_page'] as num?)?.toInt(),
+      nextCursor: json['next_cursor'] as String?,
+      nextPageUrl: json['next_page_url'] as String?,
+      prevCursor: json['prev_cursor'] as String?,
+      prevPageUrl: json['prev_page_url'] as String?,
+    );
+
+Map<String, dynamic> _$DataWrapperToJson(DataWrapper instance) =>
+    <String, dynamic>{
       'data': instance.data,
+      'path': instance.path,
+      'per_page': instance.perPage,
+      'next_cursor': instance.nextCursor,
+      'next_page_url': instance.nextPageUrl,
+      'prev_cursor': instance.prevCursor,
+      'prev_page_url': instance.prevPageUrl,
     };
 
 PostData _$PostDataFromJson(Map<String, dynamic> json) => PostData(
@@ -28,6 +51,12 @@ PostData _$PostDataFromJson(Map<String, dynamic> json) => PostData(
       description: json['description'] as String?,
       content:
           (json['content'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      status: json['status'] as String?,
+      isFlagged: (json['is_flagged'] as num?)?.toInt(),
+      moderationReason: json['moderation_reason'] as String?,
+      moderatedBy: json['moderated_by'] as String?,
+      moderatedAt: json['moderated_at'] as String?,
+      moderationNotes: json['moderation_notes'] as String?,
       userId: (json['user_id'] as num?)?.toInt(),
       groupId: (json['group_id'] as num?)?.toInt(),
       createdAt: json['created_at'] as String?,
@@ -51,6 +80,12 @@ Map<String, dynamic> _$PostDataToJson(PostData instance) => <String, dynamic>{
       'title': instance.title,
       'description': instance.description,
       'content': instance.content,
+      'status': instance.status,
+      'is_flagged': instance.isFlagged,
+      'moderation_reason': instance.moderationReason,
+      'moderated_by': instance.moderatedBy,
+      'moderated_at': instance.moderatedAt,
+      'moderation_notes': instance.moderationNotes,
       'user_id': instance.userId,
       'group_id': instance.groupId,
       'created_at': instance.createdAt,
@@ -112,6 +147,12 @@ GroupData _$GroupDataFromJson(Map<String, dynamic> json) => GroupData(
       active: (json['active'] as num?)?.toInt(),
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
+      status: json['status'] as String?,
+      isFlagged: (json['is_flagged'] as num?)?.toInt(),
+      moderationReason: json['moderation_reason'] as String?,
+      moderatedBy: json['moderated_by'] as String?,
+      moderatedAt: json['moderated_at'] as String?,
+      moderationNotes: json['moderation_notes'] as String?,
     );
 
 Map<String, dynamic> _$GroupDataToJson(GroupData instance) => <String, dynamic>{
@@ -123,6 +164,12 @@ Map<String, dynamic> _$GroupDataToJson(GroupData instance) => <String, dynamic>{
       'active': instance.active,
       'created_at': instance.createdAt,
       'updated_at': instance.updatedAt,
+      'status': instance.status,
+      'is_flagged': instance.isFlagged,
+      'moderation_reason': instance.moderationReason,
+      'moderated_by': instance.moderatedBy,
+      'moderated_at': instance.moderatedAt,
+      'moderation_notes': instance.moderationNotes,
     };
 
 CommentData _$CommentDataFromJson(Map<String, dynamic> json) => CommentData(

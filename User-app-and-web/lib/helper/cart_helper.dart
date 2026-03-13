@@ -59,11 +59,11 @@ class CartHelper {
     cartModel = CartModel(
       product.id,
       price,
-      double.parse(discountedPrice.toStringAsFixed(2)),
+      discountedPrice,
       variation,
-      double.parse((price! - discountedPrice).toStringAsFixed(2)),
+      (price! - discountedPrice),
       quantity ?? 1,
-      double.parse(taxAmount.toStringAsFixed(2)),
+      taxAmount,
       stock,
       product,
     );

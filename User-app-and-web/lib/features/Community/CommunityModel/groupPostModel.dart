@@ -6,9 +6,13 @@ part 'groupPostModel.g.dart';
 class GroupPostModel {
   final bool? status;
   final String? message;
-  final List<PostData>? data;
+  @JsonKey(name: 'data')
+  final DataWrapper? paginatedData;
 
-  GroupPostModel({this.status, this.message, this.data});
+  // For backward compatibility with existing UI code
+  List<PostData>? get data => paginatedData?.data;
+
+  GroupPostModel({this.status, this.message, this.paginatedData});
 
   factory GroupPostModel.fromJson(Map<String, dynamic> json) =>
       _$GroupPostModelFromJson(json);
@@ -17,11 +21,53 @@ class GroupPostModel {
 }
 
 @JsonSerializable()
+class DataWrapper {
+  final List<PostData>? data;
+  final String? path;
+  @JsonKey(name: 'per_page')
+  final int? perPage;
+  @JsonKey(name: 'next_cursor')
+  final String? nextCursor;
+  @JsonKey(name: 'next_page_url')
+  final String? nextPageUrl;
+  @JsonKey(name: 'prev_cursor')
+  final String? prevCursor;
+  @JsonKey(name: 'prev_page_url')
+  final String? prevPageUrl;
+
+  DataWrapper({
+    this.data,
+    this.path,
+    this.perPage,
+    this.nextCursor,
+    this.nextPageUrl,
+    this.prevCursor,
+    this.prevPageUrl,
+  });
+
+  factory DataWrapper.fromJson(Map<String, dynamic> json) =>
+      _$DataWrapperFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DataWrapperToJson(this);
+}
+
+@JsonSerializable()
 class PostData {
   final int? id;
   final String? title;
   final String? description;
   final List<String>? content;
+  final String? status;
+  @JsonKey(name: 'is_flagged')
+  final int? isFlagged;
+  @JsonKey(name: 'moderation_reason')
+  final String? moderationReason;
+  @JsonKey(name: 'moderated_by')
+  final String? moderatedBy;
+  @JsonKey(name: 'moderated_at')
+  final String? moderatedAt;
+  @JsonKey(name: 'moderation_notes')
+  final String? moderationNotes;
   @JsonKey(name: 'user_id')
   final int? userId;
   @JsonKey(name: 'group_id')
@@ -40,6 +86,12 @@ class PostData {
     this.title,
     this.description,
     this.content,
+    this.status,
+    this.isFlagged,
+    this.moderationReason,
+    this.moderatedBy,
+    this.moderatedAt,
+    this.moderationNotes,
     this.userId,
     this.groupId,
     this.createdAt,
@@ -131,6 +183,17 @@ class GroupData {
   final String? createdAt;
   @JsonKey(name: 'updated_at')
   final String? updatedAt;
+  final String? status;
+  @JsonKey(name: 'is_flagged')
+  final int? isFlagged;
+  @JsonKey(name: 'moderation_reason')
+  final String? moderationReason;
+  @JsonKey(name: 'moderated_by')
+  final String? moderatedBy;
+  @JsonKey(name: 'moderated_at')
+  final String? moderatedAt;
+  @JsonKey(name: 'moderation_notes')
+  final String? moderationNotes;
 
   GroupData({
     this.id,
@@ -141,6 +204,12 @@ class GroupData {
     this.active,
     this.createdAt,
     this.updatedAt,
+    this.status,
+    this.isFlagged,
+    this.moderationReason,
+    this.moderatedBy,
+    this.moderatedAt,
+    this.moderationNotes,
   });
 
   factory GroupData.fromJson(Map<String, dynamic> json) =>
