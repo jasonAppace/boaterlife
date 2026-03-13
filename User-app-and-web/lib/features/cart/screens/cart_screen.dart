@@ -19,16 +19,40 @@ import 'package:hexacom_user/utill/images.dart';
 import 'package:hexacom_user/helper/price_converter_helper.dart';
 import 'package:provider/provider.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   final bool fromDetails;
   const CartScreen({super.key, this.fromDetails = false});
 
   @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  late final TextEditingController couponController;
+
+  @override
+  void initState() {
+    super.initState();
+    couponController = TextEditingController();
+
+    // Clear any existing coupon once when the cart screen is first opened.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = this.context;
+      Provider.of<CouponProvider>(context, listen: false)
+          .removeCouponData(false);
+      Provider.of<CheckoutProvider>(context, listen: false)
+          .setOrderType('delivery', notify: false);
+    });
+  }
+
+  @override
+  void dispose() {
+    couponController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Provider.of<CouponProvider>(context, listen: false).removeCouponData(false);
-    Provider.of<CheckoutProvider>(context, listen: false)
-        .setOrderType('delivery', notify: false);
-    final TextEditingController couponController = TextEditingController();
     final height = MediaQuery.of(context).size.height;
     bool isSelfPickupActive =
         Provider.of<SplashProvider>(context, listen: false)
@@ -44,7 +68,7 @@ class CartScreen extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBarWidget(
           title: getTranslated('my_cart', context),
-          isBackButtonExist: fromDetails),
+          isBackButtonExist: widget.fromDetails),
       body: Consumer2<CartProvider, CouponProvider>(
         builder: (context, cart, coupon, child) {
           double? deliveryCharge = 0;

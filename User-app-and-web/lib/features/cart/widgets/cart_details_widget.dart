@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../widgets/cart_item_widget.dart';
 
-class CartDetailsWidget extends StatelessWidget {
+class CartDetailsWidget extends StatefulWidget {
   final bool isSelfPickupActive;
   final bool kmWiseCharge;
   final double itemPrice;
@@ -36,13 +36,18 @@ class CartDetailsWidget extends StatelessWidget {
   });
 
   @override
+  State<CartDetailsWidget> createState() => _CartDetailsWidgetState();
+}
+
+class _CartDetailsWidgetState extends State<CartDetailsWidget> {
+  @override
   Widget build(BuildContext context) {
     final bool isLoggedIn =
         Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
 
     return Column(
       children: [
-        isSelfPickupActive
+        widget.isSelfPickupActive
             ? Container(
                 padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
                 decoration: BoxDecoration(
@@ -62,16 +67,17 @@ class CartDetailsWidget extends StatelessWidget {
                       SelectDeliveryTypeWidget(
                           value: 'delivery',
                           title: getTranslated('delivery', context),
-                          kmWiseFee: kmWiseCharge),
+                          kmWiseFee: widget.kmWiseCharge),
                       SelectDeliveryTypeWidget(
                           value: 'self_pickup',
                           title: getTranslated('self_pickup', context),
-                          kmWiseFee: kmWiseCharge),
+                          kmWiseFee: widget.kmWiseCharge),
                     ]),
               )
             : const SizedBox(),
         SizedBox(
-            height: isSelfPickupActive ? Dimensions.paddingSizeDefault : 0),
+            height:
+                widget.isSelfPickupActive ? Dimensions.paddingSizeDefault : 0),
         Container(
           padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
           decoration: BoxDecoration(
@@ -86,14 +92,15 @@ class CartDetailsWidget extends StatelessWidget {
               if (isLoggedIn)
                 const SizedBox(height: Dimensions.paddingSizeSmall),
               CartCouponWidget(
-                  couponTextController: couponController, totalAmount: total),
+                  couponTextController: widget.couponController,
+                  totalAmount: widget.total),
               //
               const SizedBox(height: Dimensions.paddingSizeLarge),
 
               // Total
               CartItemWidget(
                 title: getTranslated('items_price', context),
-                subTitle: PriceConverterHelper.convertPrice(itemPrice),
+                subTitle: PriceConverterHelper.convertPrice(widget.itemPrice),
                 style:
                     rubikSemiBold.copyWith(fontSize: Dimensions.fontSizeLarge),
               ),
@@ -101,7 +108,7 @@ class CartDetailsWidget extends StatelessWidget {
 
               CartItemWidget(
                 title: getTranslated('tax', context),
-                subTitle: PriceConverterHelper.convertPrice(tax),
+                subTitle: PriceConverterHelper.convertPrice(widget.tax),
                 style:
                     rubikMedium.copyWith(fontSize: Dimensions.fontSizeDefault),
               ),
@@ -109,7 +116,8 @@ class CartDetailsWidget extends StatelessWidget {
 
               CartItemWidget(
                 title: getTranslated('discount', context),
-                subTitle: '- ${PriceConverterHelper.convertPrice(discount)}',
+                subTitle:
+                    '- ${PriceConverterHelper.convertPrice(widget.discount)}',
                 style:
                     rubikSemiBold.copyWith(fontSize: Dimensions.fontSizeLarge),
               ),
@@ -140,20 +148,21 @@ class CartDetailsWidget extends StatelessWidget {
 
               CartItemWidget(
                 title: getTranslated(
-                    kmWiseCharge ? 'subtotal' : 'total_amount', context),
-                subTitle: PriceConverterHelper.convertPrice(total),
+                    widget.kmWiseCharge ? 'subtotal' : 'total_amount', context),
+                subTitle: PriceConverterHelper.convertPrice(widget.total),
                 style: rubikBold.copyWith(
                   fontSize: Dimensions.fontSizeLarge,
                 ),
               ),
 
-              SizedBox(height: ResponsiveHelper.isDesktop(context) ? 10 : 0),
+              SizedBox(
+                  height: ResponsiveHelper.isDesktop(context) ? 10 : 0),
               if (ResponsiveHelper.isDesktop(context))
                 ButtonViewWidget(
-                  itemPrice: itemPrice,
-                  total: total,
-                  deliveryCharge: deliveryCharge,
-                  discount: discount,
+                  itemPrice: widget.itemPrice,
+                  total: widget.total,
+                  deliveryCharge: widget.deliveryCharge,
+                  discount: widget.discount,
                 ),
             ],
           ),

@@ -12,7 +12,7 @@ import 'package:hexacom_user/helper/custom_snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CartCouponWidget extends StatelessWidget {
+class CartCouponWidget extends StatefulWidget {
   final TextEditingController couponTextController;
   final double totalAmount;
   const CartCouponWidget({
@@ -21,6 +21,11 @@ class CartCouponWidget extends StatelessWidget {
     required this.totalAmount,
   }) : super(key: key);
 
+  @override
+  State<CartCouponWidget> createState() => _CartCouponWidgetState();
+}
+
+class _CartCouponWidgetState extends State<CartCouponWidget> {
   @override
   Widget build(BuildContext context) {
     final SplashProvider splashProvider =
@@ -52,7 +57,7 @@ class CartCouponWidget extends StatelessWidget {
               ),
               Expanded(
                 child: TextField(
-                  controller: couponTextController,
+                  controller: widget.couponTextController,
                   style: rubikRegular,
                   decoration: InputDecoration(
                     hintText: getTranslated('apply_coupon', context),
@@ -81,68 +86,45 @@ class CartCouponWidget extends StatelessWidget {
                     ),
                   ),
                   onSubmitted: (value) {
-                    if (couponTextController.text.isNotEmpty &&
-                        !coupon.isLoading) {
-                      if (coupon.discount! < 1) {
-                        coupon
-                            .applyCoupon(couponTextController.text, totalAmount)
-                            .then((discount) {
-                          if (discount! > 0) {
-                            showCustomSnackBar(
-                                '${getTranslated('you_got', context)} ${splashProvider.configModel!.currencySymbol}${discount.toStringAsFixed(2)} ${getTranslated('discount', context)}',
-                                context,
-                                isError: false);
-                          } else {
-                            showCustomSnackBar(
-                                getTranslated('invalid_code_or', context),
-                                context);
-                          }
-                        });
-                      } else {
-                        coupon.removeCouponData(true);
-                      }
-                    } else if (couponTextController.text.isEmpty) {
-                      showCustomSnackBar(
-                          getTranslated('enter_a_Coupon_code', context),
-                          context);
-                    }
+                    FocusScope.of(context).unfocus();
                   },
-                  onEditingComplete: () {
-                    if (couponTextController.text.isNotEmpty &&
-                        !coupon.isLoading) {
-                      if (coupon.discount! < 1) {
-                        coupon
-                            .applyCoupon(couponTextController.text, totalAmount)
-                            .then((discount) {
-                          if (discount! > 0) {
-                            showCustomSnackBar(
-                                '${getTranslated('you_got', context)} ${splashProvider.configModel!.currencySymbol}${discount.toStringAsFixed(2)} ${getTranslated('discount', context)}',
-                                context,
-                                isError: false);
-                          } else {
-                            showCustomSnackBar(
-                                getTranslated('invalid_code_or', context),
-                                context);
-                          }
-                        });
-                      } else {
-                        coupon.removeCouponData(true);
-                      }
-                    } else if (couponTextController.text.isEmpty) {
-                      showCustomSnackBar(
-                          getTranslated('enter_a_Coupon_code', context),
-                          context);
-                    }
-                  },
+                  // onEditingComplete: () {
+                  //   FocusScope.of(context).unfocus();
+                  //   if (widget.couponTextController.text.isNotEmpty &&
+                  //       !coupon.isLoading) {
+                  //     if (coupon.discount! < 1) {
+                  //       coupon
+                  //           .applyCoupon(widget.couponTextController.text, widget.totalAmount)
+                  //           .then((discount) {
+                  //         if (discount! > 0) {
+                  //           showCustomSnackBar(
+                  //               '${getTranslated('you_got', context)} ${splashProvider.configModel!.currencySymbol}${discount.toStringAsFixed(2)} ${getTranslated('discount', context)}',
+                  //               context,
+                  //               isError: false);
+                  //         } else {
+                  //           showCustomSnackBar(
+                  //               getTranslated('invalid_code_or', context),
+                  //               context);
+                  //         }
+                  //       });
+                  //     } else {
+                  //       coupon.removeCouponData(true);
+                  //     }
+                  //   } else if (widget.couponTextController.text.isEmpty) {
+                  //     showCustomSnackBar(
+                  //         getTranslated('enter_a_Coupon_code', context),
+                  //         context);
+                  //   }
+                  // },
                 ),
               ),
               InkWell(
                 onTap: () {
-                  if (couponTextController.text.isNotEmpty &&
+                  if (widget.couponTextController.text.isNotEmpty &&
                       !coupon.isLoading) {
                     if (coupon.discount! < 1) {
                       coupon
-                          .applyCoupon(couponTextController.text, totalAmount)
+                          .applyCoupon(widget.couponTextController.text, widget.totalAmount)
                           .then((discount) {
                         if (discount! > 0) {
                           showCustomSnackBar(
@@ -158,7 +140,7 @@ class CartCouponWidget extends StatelessWidget {
                     } else {
                       coupon.removeCouponData(true);
                     }
-                  } else if (couponTextController.text.isEmpty) {
+                  } else if (widget.couponTextController.text.isEmpty) {
                     showCustomSnackBar(
                         getTranslated('enter_a_Coupon_code', context), context);
                   }
